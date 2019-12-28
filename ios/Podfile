@@ -5,7 +5,7 @@ require_relative '../node_modules/react-native-unimodules/cocoapods'
 target 'ravr' do
 
   rnPrefix = "../node_modules/react-native"
-  
+
   # React Native and its dependencies
   pod 'FBLazyVector', :path => "#{rnPrefix}/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "#{rnPrefix}/Libraries/FBReactNativeSpec"
@@ -40,7 +40,10 @@ target 'ravr' do
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   # Automatically detect installed unimodules
   use_unimodules!
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
 end
