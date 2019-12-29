@@ -22,5 +22,9 @@
     "signIn": "Sign In",
     "yes": "Do you want to explore with Ravr?",
     "createAccount": "Yes, Create my account!"
+  },
+  "forgotPassword": {
+    "resetAccount": "Reset my account.",
+    "reset": "Reset"
   }
 }

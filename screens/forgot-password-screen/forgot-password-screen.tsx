@@ -16,7 +16,7 @@ import Firebase from '../../config/FirebaseClient'
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
-import { logInUserAsync, notify} from "../../redux/auth"
+import { setAuthEmail, notify} from "../../redux/auth"
 import { ApplicationState } from "../../redux";
 
 // styles
@@ -30,8 +30,8 @@ import { Button } from "../../components/button";
 import {logInUserPayload} from "../../services/api";
 
 interface DispatchProps {
-  loginUser: (values: MyFormValues) => void
   notify: (message: string, type: string) => void
+  setAuthEmail: (email: string) => void
 }
 
 interface StateProps {
@@ -41,12 +41,11 @@ interface StateProps {
 
 interface MyFormValues {
   email: string
-  password: string
 }
 
-interface AuthSignUpProps extends NavigationScreenProps {}
+interface ForgotPasswordScreenProps extends NavigationScreenProps {}
 
-type Props = DispatchProps & StateProps & AuthSignUpProps
+type Props = DispatchProps & StateProps & ForgotPasswordScreenProps
 
 const backgroundImageStyle: ImageStyle = {
   width: '100%',
@@ -77,20 +76,6 @@ const signInTextStyle: TextStyle = {
   width: Layout.window.width / 1.5,
 }
 
-const FORGOT_PASSWORD_LINK_BUTTON: ViewStyle = {
-  alignItems: "flex-start",
-  justifyContent: "flex-start",
-  marginRight: Layout.window.width / 2.5
-}
-
-const FORGOT_PASSWORD__LINK_TEXT: TextStyle = {
-  // color: colors.blue1,
-  paddingLeft: 18,
-  fontSize: 12,
-  fontFamily: fonts.gibsonRegular,
-  textTransform: 'uppercase'
-}
-
 const FIELD: ViewStyle = {
   alignItems: 'center'
 }
@@ -111,48 +96,23 @@ const CONTINUE_BUTTON_TEXT: TextStyle = {
   textTransform: 'uppercase'
 }
 
-const termsAndConditions: TextStyle = {
-  fontSize: 14,
-  marginLeft: 20,
-  marginTop: 20,
-  color: colors.white,
-  fontFamily: fonts.latoRegular,
-  textAlign: 'left',
-  width: Layout.window.width / 1.1
-}
-
-const bottomTextStyle: TextStyle = {
-  fontSize: 14,
-  marginLeft: 20,
-  marginTop: 35,
-  color: colors.white,
-  fontFamily: fonts.latoRegular,
-  textAlign: 'left',
-  width: Layout.window.width / 1.5
-}
-
-class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
+class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
   
   emailInput: NativeMethodsMixinStatic | any
-  passwordInput: NativeMethodsMixinStatic | any
   
   submit = values => {
-    const { notify } = this.props
-    try {
-      Firebase.auth()
-        .signInWithEmailAndPassword(values.email, values.password)
-        .then((success) => {
-          console.tron.log(success)
-          this.props.loginUser({email: values.email, password: success.user.uid})
-        })
-        .catch(error =>{
-          console.tron.log(error)
-          notify(`${error.message}`, 'danger')
-        })
-    } catch ({message}) {
-      console.tron.log(error)
-      notify(`${message}`, 'danger')
-    }
+    const { notify, navigation, setAuthEmail } = this.props
+    Firebase
+      .auth()
+      .sendPasswordResetEmail(values.email)
+      .then((user) => {
+        notify(`Please check your email...`, 'success')
+        navigation.goBack()
+        setAuthEmail(values.email)
+      })
+      .catch(({ message }) => {
+        notify(`${message}`, 'danger')
+      })
   }
   
   public render(): React.ReactNode {
@@ -161,12 +121,12 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
     } = this.props
     return (
       <ImageBackground
-        source={images.bkImage}
+        source={images.manBk}
         style={backgroundImageStyle}
         resizeMethod={'scale'}
         resizeMode='cover'
       >
-
+        
         <View
           style={{
             height: '10%',
@@ -184,7 +144,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
             />
           </TouchableOpacity>
         </View>
-
+        
         <View
           style={{
             height: '15%',
@@ -192,13 +152,13 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
           }}
         >
           <Text
-      
+            
             style={signInTextStyle}
           >
-            {translate(`signUpScreen.welcomeText`)}
+            {translate(`forgotPassword.resetAccount`)}
           </Text>
         </View>
-  
+        
         <Formik
           initialValues={{
             email: authEmail,
@@ -217,7 +177,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
               handleSubmit
             }: FormikProps<MyFormValues>) => (
             <View>
-        
+              
               <View
                 style={FIELD}
               >
@@ -238,72 +198,27 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                     this.emailInput = i
                   }}
                 />
-          
-                <TextField
-                  name="password"
-                  secureTextEntry
-                  placeholderTx="common.passwordPlaceHolder"
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  autoCapitalize="none"
-                  returnKeyType="done"
-                  isInvalid={!isValid}
-                  fieldError={errors.password}
-                  forwardedRef={i => {
-                    this.passwordInput = i
-                  }}
-                  onSubmitEditing={() => handleSubmit()}
-                />
-          
-                <Button
-                  style={FORGOT_PASSWORD_LINK_BUTTON}
-                  textStyle={FORGOT_PASSWORD__LINK_TEXT}
-                  preset="link"
-                  tx="signUpScreen.forgotPassword"
-                  onPress={() => navigation.navigate('forgotPassword')}
-                />
-          
+                
                 <Button
                   style={CONTINUE_BUTTON}
                   textStyle={CONTINUE_BUTTON_TEXT}
                   disabled={!isValid || isLoading}
                   onPress={() => handleSubmit()}
-                  tx={`signUpScreen.signIn`}
+                  tx={`forgotPassword.reset`}
                 />
               </View>
             </View>
           )}
         </Formik>
-  
-        <Text
-    
-          style={bottomTextStyle}
-        >
-          {translate("signUpScreen.yes")}
-        </Text>
-  
-        <TouchableOpacity
-          // onPress={() => navigation.goBack()}
-        >
-  
-          <Text
       
-            style={termsAndConditions}
-          >
-            {translate(`signUpScreen.createAccount`)}
-    
-          </Text>
-        </TouchableOpacity>
-
       </ImageBackground>
     )
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  loginUser: values => dispatch(logInUserAsync(values as logInUserPayload)),
-  notify: (message: string, type: string) => dispatch(notify(message, type))
+  notify: (message: string, type: string) => dispatch(notify(message, type)),
+  setAuthEmail: (email: string) => dispatch(setAuthEmail(email))
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -312,7 +227,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   isLoading: state.auth.loading
 });
 
-export const AuthSignInScreen = connect<StateProps>(
+export const ForgotPasswordScreen = connect<StateProps>(
   mapStateToProps,
   mapDispatchToProps
-)(AuthSignUp)
+)(ForgotPassword)

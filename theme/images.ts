@@ -3,8 +3,10 @@ export const images = {
   appLogo: require("../assets/app-logo.png"),
   googleLogo: require("../assets/google-logo.png"),
   facebookLogo: require("../assets/facebook-logo.png"),
-  background: require("../assets/background-3.png"),
+  background: require("../assets/background.png"),
   backIcon: require("../assets/icons-back.png"),
+  bkImage: require("../assets/bk-image.png"),
+  manBk: require("../assets/man-bk.png"),
 }
 
 export type ImageTypes = keyof typeof images

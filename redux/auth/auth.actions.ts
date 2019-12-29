@@ -701,39 +701,32 @@ export const logInUserAsync = ({
   }
 }
 
-// export const forgotPasswordAsync = (email : string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
-//   dispatch,
-// ) => {
-//   dispatch(setAuthEmail(email))
-//
-//   try {
-//     const result = await apiForgotPassword(email)
-//     const { status, message, data } = result.data
-//
-//     if (status) {
-//       Toast.show({ text: `${message}`, type: 'success', position: 'top', duration: 3000,
-//         style: {
-//           marginTop: Layout.window.height / 2,
-//           width: Layout.window.width / 3,
-//           alignSelf: 'center'
-//         } })
-//       dispatch(NavigationActions.navigate({ routeName: "auth" }))
-//     } else {
-//       Toast.show({ text: `${message}`, type: 'danger', position: 'top', duration: 3000,
-//         style: {
-//           marginTop: Layout.window.height / 2,
-//           width: Layout.window.width / 3,
-//           alignSelf: 'center'
-//         } })
-//     }
-//   } catch (error) {
-//     Toast.show({ text: `Reset Password failed`, type: 'danger', position: 'top', duration: 3000,
-//       style: {
-//         marginTop: Layout.window.height / 2,
-//         width: Layout.window.width / 3,
-//         alignSelf: 'center'
-//       } })
-//   }
-// }
-//
-//
+export const forgotPasswordAsync = ({email}): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+) => {
+  console.log(email)
+  dispatch(setAuthEmail(email))
+
+  try {
+    const result = await apiForgotPassword(email)
+    const { status, message, data } = result.data
+
+    if (status) {
+      Toast.show({ text: `${message}`, type: 'success', position: 'top', duration: 3000,
+        style: {
+          marginTop: Layout.window.height / 2,
+          width: Layout.window.width / 3,
+          alignSelf: 'center'
+        } })
+      
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(NavigationActions.navigate({ routeName: "auth" }))
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+    }
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+  }
+}
+
+

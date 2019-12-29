@@ -13,7 +13,7 @@ const CONTAINER = (
   hasBorder: boolean = true
 ): ViewStyle => ({
   borderWidth: hasBorder ? 2 : 0,
-  borderColor: isInvalid ? colors.error : colors.white,
+  borderColor: isInvalid ? colors.purple : colors.white,
   borderRadius: 100,
   minWidth: Layout.window.width / 1.2,
   maxWidth: Layout.window.width / 1.2,
