@@ -1,0 +1,26 @@
+{
+  "common": {
+    "appName": "Ravr",
+    "slogan": "Everywhere you’ve always wanted to be, is here!",
+    "emailPlaceHolder": "jane@doe.com",
+    "passwordPlaceHolder": "********",
+    "fieldRequired": "This field is required",
+    "fieldValidEmail": "Must be a valid email"
+  },
+  "landingScreen": {
+    "email": "Continue with Email",
+    "or": "or",
+    "more": "More Options",
+    "termsAndConditions": "By tapping Continue a user linked agreements and then must click the ",
+    "termsAndConditions_01": "“Agree and Continue”",
+    "termsAndConditions_02": " box which further makes it clear to the user that an agreement is taking place."
+  },
+  "signUpScreen": {
+    "welcomeText": "Welcome to Ravr.",
+    "emailPlaceHolder": "Welcome to Ravr.",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "yes": "Do you want to explore with Ravr?",
+    "createAccount": "Yes, Create my account!"
+  }
+}

@@ -14,6 +14,7 @@
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
 #import <UMReactNativeAdapter/UMModuleRegistryAdapter.h>
 #import "RNSplashScreen.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
 
@@ -34,6 +35,9 @@
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
+  // Add any custom logic here.
   [RNSplashScreen show];
 
   return YES;
@@ -54,5 +58,7 @@
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
 }
+
+
 
 @end

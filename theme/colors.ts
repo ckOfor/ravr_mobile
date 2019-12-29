@@ -59,6 +59,8 @@ export const colors = {
   casal: "#2f6574",
   primary: "#FFF",
   monochromatic: "#454F63",
+  purple: "#3a203b",
+  gray: "#606060",
   fade: "#9BA0AA",
 
   /**

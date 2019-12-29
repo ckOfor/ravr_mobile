@@ -68,11 +68,10 @@ class App extends React.Component<Props, State> {
   loadResourcesAsync = async () => {
     await Promise.all([
       Asset.loadAsync([
-        // require('./assets/app-logo.png'),
-        // require('./assets/location-icon.png'),
-        // require('./assets/search-icon.png'),
-        // require('./assets/landing-page-background-image.png'),
-        // require('./assets/splash.png'),
+        require('./assets/land-bk.png'),
+        require('./assets/app-logo.png'),
+        require('./assets/google-logo.png'),
+        require('./assets/facebook-logo.png'),
       ]),
       Font.loadAsync({
         "Gibson-Bold": require("./assets/fonts/gibson-bold.ttf"),
@@ -80,6 +79,7 @@ class App extends React.Component<Props, State> {
         "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
         "Roboto": require('native-base/Fonts/Roboto.ttf'),
         "Roboto_medium": require('native-base/Fonts/Roboto_medium.ttf'),
+        "Rockwell": require('./assets/fonts/rockwell.ttf'),
       }),
     ])
     
