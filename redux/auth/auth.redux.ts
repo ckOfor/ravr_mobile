@@ -90,16 +90,7 @@ export function authReducer(
         ...state,
         email: action.payload
       }
-    case SET_AUTH_FIRST_NAME:
-      return {
-        ...state,
-        firstName: action.payload
-      }
-    case SET_AUTH_LAST_NAME:
-      return {
-        ...state,
-        lastName: action.payload
-      }
+   
     case SET_AUTH_PHONE:
       return {
         ...state,

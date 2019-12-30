@@ -6,6 +6,7 @@ import * as Facebook from 'expo-facebook';
 import { ApplicationState } from ".."
 import firebase from 'react-native-firebase';
 import { AsyncStorage } from 'react-native';
+import Firebase from '../../config/FirebaseClient'
 import {NavigationActions} from "react-navigation";
 import {
   logInUserPayload,
@@ -479,6 +480,7 @@ export const facebookAuthenticationSignInAsync = (): ThunkAction<
       dispatch(setAuthPicture(user.picture.data.url))
       dispatch(setAuthUserID(user.id))
       dispatch(setAuthType('facebook'))
+      dispatch(socialAuthenticationSuccess())
       
       dispatch(logInWithSocialAuth())
     } else {
@@ -486,7 +488,7 @@ export const facebookAuthenticationSignInAsync = (): ThunkAction<
       dispatch(socialAuthenticationFailure())
     }
   } catch ({ message }) {
-    dispatch(socialAuthenticationSuccess())
+    dispatch(socialAuthenticationFailure())
     dispatch(notify(`${message}`, 'danger'))
   }
 }
@@ -511,7 +513,7 @@ export const logInWithSocialAuth = (): ThunkAction<void, ApplicationState, null,
   getState
 ) => {
   const { email, FCMToken, uid } = getState().auth
-
+  dispatch(socialAuthentication())
   try {
     const result = await apiLogInWithSocial({
       email, FCMToken, password: uid
@@ -528,7 +530,7 @@ export const logInWithSocialAuth = (): ThunkAction<void, ApplicationState, null,
         dispatch(notify( `${message}`, 'success'))
         dispatch(logInUserWithFacebookSuccess(email))
         dispatch(logInUserWithGmailSuccess(email))
-        // dispatch(NavigationActions.navigate({ routeName: "home" }))
+        dispatch(NavigationActions.navigate({ routeName: "home" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
@@ -560,6 +562,8 @@ export const signUpWithSocialAuth = (): ThunkAction<
   const notificationId = getState().auth.FCMToken;
   const authType = getState().auth.authType;
   const userType = 'tourist';
+  
+  dispatch(socialAuthentication())
 
   const payload = {
     fullName,
@@ -584,7 +588,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
       dispatch(notify( `${message}`, 'success'))
       dispatch(logInUserWithFacebookSuccess(email))
       dispatch(logInUserWithGmailSuccess(email))
-      // dispatch(NavigationActions.navigate({ routeName: "home" }))
+      dispatch(NavigationActions.navigate({ routeName: "home" }))
 
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -593,6 +597,76 @@ export const signUpWithSocialAuth = (): ThunkAction<
 
   } catch ({ message }){
     dispatch(notify(`${message}`, 'danger'))
+    dispatch(socialAuthenticationFailure())
+  }
+}
+
+
+export const signUpWithEmailAuth = ({ email, fullName }, password: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  console.tron.log(email, fullName, password, "getState().authgetState().auth")
+  
+  dispatch(socialAuthentication())
+  
+  const userType = 'tourist';
+  const notificationId = getState().auth.FCMToken;
+  const authType = 'email';
+  
+  const payload = {
+    fullName,
+    email,
+    password,
+    notificationId,
+    authType,
+    userType
+  }
+  
+  console.tron.log(payload)
+  
+  try {
+    const result = await apiSignUpWithSocialAuth(payload)
+    const { status, message, data } = result.data
+    console.log(result)
+    
+    if (status) {
+      dispatch(socialAuthenticationSuccess())
+      
+      dispatch(setUser(data))
+      dispatch(setAuthEmail(email))
+      dispatch(notify( `${message}`, 'success'))
+      dispatch(logInUserWithFacebookSuccess(email))
+      dispatch(logInUserWithEmailSuccess(email))
+      
+      try {
+        Firebase.auth()
+          .currentUser
+          .sendEmailVerification()
+          .then((success) => {
+            console.tron.log(success)
+            dispatch(notify(`We have sent a verification link to ${email}`, 'success'))
+            dispatch(NavigationActions.navigate({ routeName: "authSignIn" }))
+          })
+          .catch(error =>{
+            console.tron.log(error)
+            dispatch(notify(`${error.message}`, 'danger'))
+          })
+      } catch ({message}) {
+        console.tron.log(message)
+        dispatch(notify(`${message}`, 'danger'))
+      }
+      
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+    }
+    dispatch(socialAuthenticationFailure())
+    
+  } catch ({ message }){
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(socialAuthenticationFailure())
   }
 }
 
@@ -688,7 +762,7 @@ export const logInUserAsync = ({
         dispatch(notify(`${message}`, 'success'))
         dispatch(setUser(data))
         dispatch(logInUserWithEmailSuccess({ email }))
-        // dispatch(NavigationActions.navigate({ routeName: "home" }))
+        dispatch(NavigationActions.navigate({ routeName: "home" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
@@ -697,6 +771,7 @@ export const logInUserAsync = ({
     }
   } catch ({ message }) {
     console.log(message )
+    dispatch(socialAuthenticationFailure())
     dispatch(notify(`${message}`, 'danger'))
   }
 }

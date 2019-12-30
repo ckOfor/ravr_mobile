@@ -8,7 +8,7 @@ import {
 } from "react-native"
 
 // third-party libraries
-import { NavigationScreenProps } from "react-navigation"
+import {NavigationActions, NavigationScreenProps} from "react-navigation"
 import {Formik, FormikProps, useFormik} from "formik";
 import * as Yup from "yup";
 import Firebase from '../../config/FirebaseClient'
@@ -124,7 +124,7 @@ const termsAndConditions: TextStyle = {
 const bottomTextStyle: TextStyle = {
   fontSize: 14,
   marginLeft: 20,
-  marginTop: 35,
+  marginTop: Layout.window.height / 8,
   color: colors.white,
   fontFamily: fonts.latoRegular,
   textAlign: 'left',
@@ -142,18 +142,35 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
       Firebase.auth()
         .signInWithEmailAndPassword(values.email, values.password)
         .then((success) => {
-          console.tron.log(success)
-          this.props.loginUser({email: values.email, password: success.user.uid})
+          console.tron.log(success.user.emailVerified)
+          
+          if(!success.user.emailVerified) {
+            Firebase.auth()
+              .currentUser
+              .sendEmailVerification()
+              .then((success) => {
+                console.tron.log(success)
+                notify(`We have sent a verification link to ${values.email}`, 'success')
+              })
+              .catch(error =>{
+                console.tron.log(error)
+                notify(`${error.message}`, 'danger')
+              })
+            return
+          } else {
+            this.props.loginUser({email: values.email, password: success.user.uid})
+          }
+          
         })
         .catch(error =>{
-          console.tron.log(error)
           notify(`${error.message}`, 'danger')
         })
     } catch ({message}) {
-      console.tron.log(error)
       notify(`${message}`, 'danger')
     }
   }
+  
+  sendVerificationEmail
   
   public render(): React.ReactNode {
     const {
@@ -170,7 +187,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         <View
           style={{
             height: '10%',
-            marginTop: Layout.window.height / 10,
+            marginTop: Layout.window.height / 20,
           }}
         >
           <TouchableOpacity
@@ -178,7 +195,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
           >
             <Image
               style={APP_LOGO}
-              source={images.backIcon}
+              source={images.appLogo}
               resizeMethod={'auto'}
               resizeMode='cover'
             />
@@ -188,7 +205,6 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         <View
           style={{
             height: '15%',
-            marginTop: Layout.window.height / 20,
           }}
         >
           <Text
@@ -226,7 +242,6 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                   keyboardType="email-address"
                   placeholderTx="common.emailPlaceHolder"
                   value={values.email}
-                  onEndEditing={(values) => console.tron.log(values.text)}
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                   autoCapitalize="none"
@@ -284,7 +299,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         </Text>
   
         <TouchableOpacity
-          // onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('authSignUp')}
         >
   
           <Text

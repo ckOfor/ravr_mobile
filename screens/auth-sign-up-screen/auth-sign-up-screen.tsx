@@ -4,19 +4,19 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic
+  TouchableOpacity, NativeMethodsMixinStatic, Keyboard
 } from "react-native"
 
 // third-party libraries
 import { NavigationScreenProps } from "react-navigation"
-import {Formik, FormikProps, useFormik} from "formik";
+import {Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import Firebase from '../../config/FirebaseClient'
 
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
-import { setAuthEmail, notify} from "../../redux/auth"
+import { notify, signUpWithEmailAuth } from "../../redux/auth"
 import { ApplicationState } from "../../redux";
 
 // styles
@@ -26,12 +26,9 @@ import { translate } from "../../i18n";
 import { TextField } from "../../components/text-field";
 import { Button } from "../../components/button";
 
-// API
-import {logInUserPayload} from "../../services/api";
-
 interface DispatchProps {
   notify: (message: string, type: string) => void
-  setAuthEmail: (email: string) => void
+  signUpWithEmailAuth: ({ email, fullName }, password: string) => void
 }
 
 interface StateProps {
@@ -40,12 +37,15 @@ interface StateProps {
 }
 
 interface MyFormValues {
+  fullName: string
   email: string
+  password: string
+  confirmPassword: string
 }
 
-interface ForgotPasswordScreenProps extends NavigationScreenProps {}
+interface AuthSignUpProps extends NavigationScreenProps {}
 
-type Props = DispatchProps & StateProps & ForgotPasswordScreenProps
+type Props = DispatchProps & StateProps & AuthSignUpProps
 
 const backgroundImageStyle: ImageStyle = {
   width: '100%',
@@ -54,8 +54,17 @@ const backgroundImageStyle: ImageStyle = {
 }
 
 const schema = Yup.object().shape({
+  fullName: Yup.string()
+    .min(4, "common.fieldTooShort")
+    .required("common.fieldRequired"),
   email: Yup.string()
     .email("common.fieldValidEmail")
+    .required("common.fieldRequired"),
+  password: Yup.string()
+    .min(4, "common.fieldTooShort")
+    .required("common.fieldRequired"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'common.passwordMatch')
     .required("common.fieldRequired"),
 })
 
@@ -85,7 +94,7 @@ const CONTINUE_BUTTON: ViewStyle = {
   justifyContent: "center",
   borderRadius: 100,
   width: Layout.window.width / 1.4,
-  marginTop: Layout.window.height / 20,
+  marginTop: Layout.window.height / 25,
   backgroundColor: colors.purple
 }
 
@@ -95,7 +104,6 @@ const CONTINUE_BUTTON_TEXT: TextStyle = {
   color: colors.palette.white,
   textTransform: 'uppercase'
 }
-
 
 const termsAndConditions: TextStyle = {
   fontSize: 14,
@@ -110,31 +118,34 @@ const termsAndConditions: TextStyle = {
 const bottomTextStyle: TextStyle = {
   fontSize: 14,
   marginLeft: 20,
-  marginTop: Layout.window.height / 8,
+  marginTop: 35,
   color: colors.white,
   fontFamily: fonts.latoRegular,
   textAlign: 'left',
   width: Layout.window.width / 1.5
 }
 
-
-class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
+class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
   
+  fullNameInput: NativeMethodsMixinStatic | any
   emailInput: NativeMethodsMixinStatic | any
+  passwordInput: NativeMethodsMixinStatic | any
+  confirmPasswordInput: NativeMethodsMixinStatic | any
   
   submit = values => {
-    const { notify, navigation, setAuthEmail } = this.props
-    Firebase
-      .auth()
-      .sendPasswordResetEmail(values.email)
-      .then((user) => {
-        notify(`Please check your email...`, 'success')
-        navigation.goBack()
-        setAuthEmail(values.email)
-      })
-      .catch(({ message }) => {
-        notify(`${message}`, 'danger')
-      })
+    const { notify, signUpWithEmailAuth } = this.props
+    try {
+      Firebase.auth()
+        .createUserWithEmailAndPassword(values.email, values.password)
+        .then((success) => {
+          signUpWithEmailAuth(values, success.user.uid)
+        })
+        .catch(error =>{
+          notify(`${error.message}`, 'danger')
+        })
+    } catch ({message}) {
+      notify(`${message}`, 'danger')
+    }
   }
   
   public render(): React.ReactNode {
@@ -143,7 +154,7 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
     } = this.props
     return (
       <ImageBackground
-        source={images.manBk}
+        source={images.bikeMan}
         style={backgroundImageStyle}
         resizeMethod={'scale'}
         resizeMode='cover'
@@ -169,22 +180,23 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
         
         <View
           style={{
-            height: '15%',
-            marginTop: Layout.window.height / 20,
+            height: '10%',
           }}
         >
           <Text
             
             style={signInTextStyle}
           >
-            {translate(`forgotPassword.resetAccount`)}
+            {translate(`signUp.join`)}
           </Text>
         </View>
         
         <Formik
           initialValues={{
+            fullName: authEmail,
             email: authEmail,
-            password: ""
+            password: "",
+            confirmPassword: "",
           }}
           validationSchema={schema}
           onSubmit={this.submit}
@@ -204,6 +216,23 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
                 style={FIELD}
               >
                 <TextField
+                  name="fullName"
+                  keyboardType="default"
+                  placeholderTx="common.fullNamePlaceHolder"
+                  value={values.fullName}
+                  onChangeText={handleChange("fullName")}
+                  onBlur={handleBlur("fullName")}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  isInvalid={!isValid}
+                  fieldError={errors.fullName}
+                  onSubmitEditing={() => this.emailInput.focus()}
+                  forwardedRef={i => {
+                    this.fullNameInput = i
+                  }}
+                />
+  
+                <TextField
                   name="email"
                   keyboardType="email-address"
                   placeholderTx="common.emailPlaceHolder"
@@ -214,9 +243,47 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
                   returnKeyType="next"
                   isInvalid={!isValid}
                   fieldError={errors.email}
+                  onSubmitEditing={() => this.passwordInput.focus()}
                   forwardedRef={i => {
                     this.emailInput = i
                   }}
+                />
+                
+                <TextField
+                  name="password"
+                  secureTextEntry
+                  placeholderTx="common.passwordPlaceHolder"
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  autoCapitalize="none"
+                  returnKeyType="done"
+                  isInvalid={!isValid}
+                  fieldError={errors.password}
+                  forwardedRef={i => {
+                    this.passwordInput = i
+                  }}
+                  blurOnSubmit={false}
+                  onSubmitEditing={() => this.confirmPasswordInput.focus()}
+                />
+  
+  
+                <TextField
+                  name="confirmPassword"
+                  secureTextEntry
+                  placeholderTx="common.passwordPlaceHolder"
+                  value={values.confirmPassword}
+                  onChangeText={handleChange("confirmPassword")}
+                  onBlur={handleBlur("confirmPassword")}
+                  autoCapitalize="none"
+                  returnKeyType="done"
+                  isInvalid={!isValid}
+                  fieldError={errors.confirmPassword}
+                  forwardedRef={i => {
+                    this.confirmPasswordInput = i
+                  }}
+                  blurOnSubmit={false}
+                  onSubmitEditing={()=> Keyboard.dismiss()}
                 />
                 
                 <Button
@@ -224,7 +291,7 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
                   textStyle={CONTINUE_BUTTON_TEXT}
                   disabled={!isValid || isLoading}
                   onPress={() => handleSubmit()}
-                  tx={`forgotPassword.reset`}
+                  tx={`signUp.signUp`}
                 />
               </View>
             </View>
@@ -235,18 +302,18 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
     
           style={bottomTextStyle}
         >
-          {translate("forgotPassword.remember")}
+          {translate("signUp.member")}
         </Text>
   
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('authSignIn')}
         >
     
           <Text
       
             style={termsAndConditions}
           >
-            {translate(`forgotPassword.wait`)}
+            {translate(`signUp.oops`)}
     
           </Text>
         </TouchableOpacity>
@@ -258,7 +325,7 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   notify: (message: string, type: string) => dispatch(notify(message, type)),
-  setAuthEmail: (email: string) => dispatch(setAuthEmail(email))
+  signUpWithEmailAuth: ({ email, fullName }, password: string) => dispatch(signUpWithEmailAuth({ email, fullName }, password))
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -267,7 +334,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   isLoading: state.auth.loading
 });
 
-export const ForgotPasswordScreen = connect<StateProps>(
+export const AuthSignUpScreen = connect<StateProps>(
   mapStateToProps,
   mapDispatchToProps
-)(ForgotPassword)
+)(AuthSignUp)

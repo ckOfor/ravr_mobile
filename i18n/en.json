@@ -3,9 +3,12 @@
     "appName": "Ravr",
     "slogan": "Everywhere you’ve always wanted to be, is here!",
     "emailPlaceHolder": "jane@doe.com",
+    "fullNamePlaceHolder": "Jane Doe",
     "passwordPlaceHolder": "********",
     "fieldRequired": "This field is required",
-    "fieldValidEmail": "Must be a valid email"
+    "fieldValidEmail": "Must be a valid email",
+    "fieldTooShort": "This field is too short!",
+    "passwordMatch": "Passwords must match"
   },
   "landingScreen": {
     "email": "Continue with Email",
@@ -21,10 +24,18 @@
     "forgotPassword": "Forgot password?",
     "signIn": "Sign In",
     "yes": "Do you want to explore with Ravr?",
-    "createAccount": "Yes, Create my account!"
+    "createAccount": "Yes, Create my account! >"
   },
   "forgotPassword": {
     "resetAccount": "Reset my account.",
-    "reset": "Reset"
+    "reset": "Reset",
+    "remember": "Do you remember your password?",
+    "wait": "< Yes, I remember now!"
+  },
+  "signUp": {
+    "join": "Join Ravr.",
+    "signUp": "Sign Up",
+    "oops": "< Ooops! Log me in.",
+    "member": "I am a member of this awesome community."
   }
 }
