@@ -60,6 +60,17 @@ const getDiscoverTours = async (limit: number): Promise<
 }
 
 
+const getPopularTours = async (limit: number): Promise<
+  Types.getResponse
+  > => {
+  const response = await api.post("/users/post/all", {
+    limit
+  })
+  console.log(response)
+  return processResponse(response)
+}
+
+
 const logInWithEmail = async ({
   email,
   password,
@@ -444,5 +455,6 @@ export {
   verifyReceiverEmail,
   transferToWallet,
   getWeekendTours,
-  getDiscoverTours
+  getDiscoverTours,
+  getPopularTours
 }

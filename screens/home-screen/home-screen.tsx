@@ -183,7 +183,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }}
           >
             <TouchableOpacity
-              // onPress={() => navigation.navigate('profile')}
+              onPress={() => navigation.navigate('viewTours')}
               style={{
                 flexDirection: "row",
                 justifyContent: 'space-between',
@@ -265,7 +265,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
               style={{
                 marginTop: 15,
               }}
-              onPress={() => navigation.navigate('profile')}
+              onPress={() => navigation.navigate('viewTours')}
             >
               <Text
     
@@ -342,7 +342,6 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             // onPress={() => handleSubmit()}
             tx={`home.quote`}
           />
-          
 
         </ScrollView>
       </View>

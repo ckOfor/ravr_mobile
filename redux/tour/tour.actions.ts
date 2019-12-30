@@ -2,6 +2,7 @@ import {
   ITours,
   getWeekendTours as apiGetWeekendTours,
   getDiscoverTours as apiGetDiscoverTours,
+  getPopularTours as apiGetPopularTours,
 } from "../../services/api"
 
 import {
@@ -91,6 +92,36 @@ export const getDiscoverToursAsync = (limit): ThunkAction<
   
   try {
     const result = await apiGetDiscoverTours(limit)
+    const { status, message, data } = result.data
+    console.tron.log(data)
+    
+    if (status) {
+      dispatch(getDiscoverToursSuccess())
+      dispatch(setDiscoverTours(data))
+      
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(getDiscoverToursFailure())
+    }
+    
+  } catch ({ message }){
+    console.tron.log(message, "messagemessagemessagemessage")
+    dispatch(getDiscoverToursFailure())
+  }
+}
+
+
+export const getPopularToursAsync = (limit): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  dispatch(getDiscoverTours())
+  
+  try {
+    const result = await apiGetPopularTours(limit)
     const { status, message, data } = result.data
     console.tron.log(data)
     
