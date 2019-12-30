@@ -3,17 +3,35 @@ import {
   View,
   Text,
   ViewStyle,
+  StatusBar,
+  TextStyle,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  ImageStyle, AppState
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
+import { Layout } from "../../constants";
+import { translate} from "../../i18n";
+import { colors, fonts, images } from "../../theme";
+import { WeekendScreen } from "../weekend-screen";
+import {getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours} from "../../redux/tour";
+import { ITours } from "../../services/api";
+import { DiscoverScreen } from "../discover-screen";
+import {Button} from "../../components/button";
 
 interface DispatchProps {
-
+  getWeekendToursAsync: (limit: number) => void
+  getDiscoverToursAsync: (limit: number) => void
+  setSelectedTours: (tour: ITours) => void
 }
 interface StateProps {
-
+  userPicture: string
+  weekendTours: [ITours]
+  discoverTours: [ITours]
 }
 
 interface WalletProps extends NavigationScreenProps {}
@@ -21,34 +39,329 @@ interface WalletProps extends NavigationScreenProps {}
 type Props = DispatchProps & StateProps & WalletProps
 
 const ROOT: ViewStyle = {
-  alignItems: 'center',
-  backgroundColor: 'blue'
+  height: Layout.window.height,
+}
+
+const appNameTextStyle: TextStyle = {
+  marginLeft: 20,
+  marginTop: Layout.window.height / 15,
+  color: colors.purple,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
+const weekendTextStyle: TextStyle = {
+  fontSize: 22,
+  // marginLeft: 20,
+  color: colors.black,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.9,
+}
+
+const moreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
+const discoverTextStyle: TextStyle = {
+  fontSize: 22,
+  marginLeft: 40,
+  color: colors.black,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.9,
+}
+
+
+const discoverMoreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+  marginLeft: 40,
+}
+
+
+const PROFILE_IMAGE: ImageStyle = {
+  alignSelf: "flex-end",
+  height: 30,
+  width: 30,
+  borderRadius: 15,
+}
+
+const findMyTourTextStyle: TextStyle = {
+  ...discoverMoreTextStyle,
+  marginTop: 15,
+  
+}
+
+const QUOTE_BUTTON: ViewStyle = {
+  borderRadius: 100,
+  width: Layout.window.width / 1.4,
+  marginLeft: 30,
+  marginTop: Layout.window.height / 20,
+  backgroundColor: colors.purple,
+  marginBottom: Layout.window.height / 7,
+}
+
+const QUOTE_BUTTON_TEXT: TextStyle = {
+  fontSize: 12,
+  fontFamily: fonts.gibsonRegular,
+  color: colors.palette.white,
+  textTransform: 'uppercase'
 }
 
 class Home extends React.Component<NavigationScreenProps & Props> {
   
+  state={
+    scrollTo: 100,
+    appState: AppState.currentState,
+  }
+  
+  componentDidMount(): void {
+    AppState.addEventListener("change", this.handleAppStateChange)
+    this.getFeeds()
+  }
+  
+  getFeeds = () => {
+    const { getWeekendToursAsync, getDiscoverToursAsync } = this.props
+    getWeekendToursAsync(8)
+    getDiscoverToursAsync(4)
+  }
+  
+  
+  handleAppStateChange = nextAppState => {
+    console.tron.log('CAlleds')
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      this.getFeeds()
+    }
+    
+    this.setState({ appState: nextAppState })
+  }
+  
   public render(): React.ReactNode {
     const {
-      navigation
+      navigation, userPicture, weekendTours, discoverTours
     } = this.props
+    const {
+      scrollTo
+    } = this.state
+    
+    // console.tron.log(userPicture === '')
     return (
       <View
         style={ROOT}
       >
-        <Text>Hello world...</Text>
+        <StatusBar barStyle={"dark-content"} />
+  
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+        >
+          <Text
+    
+            style={appNameTextStyle}
+          >
+            {translate(`home.appName`)}
+          </Text>
+  
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-evenly",
+              width: Layout.window.width
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+                width:  Layout.window.width / 1.7
+              }}
+            >
+              <Text
+      
+                style={weekendTextStyle}
+              >
+                {translate(`home.weekend`)}
+              </Text>
+  
+              <Text
+    
+                style={moreTextStyle}
+              >
+                {translate(`home.more`)}
+              </Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity
+              onPress={() => navigation.navigate('profile')}
+            >
+              {
+                userPicture === '' && (
+                  <Image
+                    style={PROFILE_IMAGE}
+                    source={images.appLogo}
+                    resizeMethod={'auto'}
+                    resizeMode='cover'
+                  />
+                )
+              }
+  
+              {
+                userPicture !== '' && (
+                  <Image
+                    style={PROFILE_IMAGE}
+                    source={{ uri: `${userPicture}` }}
+                    resizeMethod={'auto'}
+                    resizeMode='cover'
+                  />
+                )
+              }
+              
+            </TouchableOpacity>
+          </View>
+          
+          <WeekendScreen
+            weekendTours={weekendTours}
+            viewTours={() => navigation.navigate('viewTour')}
+            {...this.props}
+          />
+  
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+              marginTop: Layout.window.height / 25
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+        
+                style={discoverTextStyle}
+              >
+                {translate(`home.recommendedTours`)}
+              </Text>
+            </TouchableOpacity>
+    
+            <TouchableOpacity
+              style={{
+                marginTop: 15,
+              }}
+              onPress={() => navigation.navigate('profile')}
+            >
+              <Text
+    
+                style={discoverMoreTextStyle}
+              >
+                {translate(`home.more`)}
+              </Text>
+    
+            </TouchableOpacity>
+          </View>
+  
+          <Text
+    
+            style={discoverMoreTextStyle}
+          >
+            {translate(`home.recommendedMore`)}
+          </Text>
+  
+          <DiscoverScreen
+            discoverTours={discoverTours}
+            viewTours={() => navigation.navigate('viewTour')}
+            {...this.props}
+          />
+  
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+              marginTop: Layout.window.height / 25
+            }}
+          >
+            <View
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+        
+                style={discoverTextStyle}
+              >
+                {translate(`home.findTour`)}
+              </Text>
+            </View>
+    
+            <TouchableOpacity
+              style={{
+                marginTop: 15,
+              }}
+              // onPress={() => navigation.navigate('profile')}
+            >
+              <Text
+        
+                style={discoverMoreTextStyle}
+              >
+                {translate(`home.go`)}
+              </Text>
+    
+            </TouchableOpacity>
+          </View>
+  
+          <Text
+    
+            style={findMyTourTextStyle}
+          >
+            {translate(`home.findTourMore`)}
+          </Text>
+  
+          <Button
+            style={QUOTE_BUTTON}
+            textStyle={QUOTE_BUTTON_TEXT}
+            // disabled={!isValid || isLoading}
+            // onPress={() => handleSubmit()}
+            tx={`home.quote`}
+          />
+          
+
+        </ScrollView>
       </View>
     )
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-
+  getWeekendToursAsync: (limit: number) => dispatch(getWeekendToursAsync(limit)),
+  getDiscoverToursAsync: (limit: number) => dispatch(getDiscoverToursAsync(limit)),
+  setSelectedTours: (tour: ITours) => dispatch(setSelectedTours(tour)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
-
-});
+  userPicture: state.auth.picture,
+  weekendTours: state.tour.weekendTours,
+  discoverTours: state.tour.discoverTours,
+}) as StateProps;
 
 export const HomeScreen = connect<StateProps>(
   mapStateToProps,

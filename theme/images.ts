@@ -8,6 +8,7 @@ export const images = {
   bkImage: require("../assets/bk-image.png"),
   manBk: require("../assets/man-bk.png"),
   bikeMan: require("../assets/bike-bk.png"),
+  compass: require("../assets/compass-with-white-needles.png"),
 }
 
 export type ImageTypes = keyof typeof images

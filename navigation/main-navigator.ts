@@ -1,12 +1,19 @@
-import { createStackNavigator } from "react-navigation"
-import { HomeScreen } from "../screens/home-screen/home-screen";
+import { createBottomTabNavigator } from "react-navigation"
+import { TourNavigator } from "./home-page-navigator";
+import { DEFAULT_BOTTOM_NAVIIGATION } from "./navigation-config"
+import { ProfileScreen } from "../screens/profile-screen";
 
-export const MainNavigator = createStackNavigator({
+export const MainNavigator = createBottomTabNavigator({
   home: {
-    screen: HomeScreen,
+    screen: TourNavigator,
     navigationOptions: {
       header: null
     }
   },
-}, {
-})
+  profile: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+}, DEFAULT_BOTTOM_NAVIIGATION)

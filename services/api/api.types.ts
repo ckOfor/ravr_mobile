@@ -59,7 +59,7 @@ export type logInUserResponse = {
   status: boolean
 }
 
-export type getAllSchoolsResponse = {
+export type getResponse = {
   kind: "ok";
   data: {
     data: {
@@ -110,6 +110,42 @@ export type IUser = {
   user_pic_url: string
   user_pic_url_100: string
   user_pic_url_200: string
+}
+
+export type ITours = {
+  id: number
+  tripName: string
+  tripWallet: number
+  tripPaymentCount: number
+  tripLocation: string
+  tripDate: string
+  poster: string
+  locationPictureOne: string
+  locationPictureTwo: string
+  locationPictureThree: string
+  tripVideo: null
+  tripTime: string
+  tripPrice: number
+  tripDuration: number
+  tripDiscount: number
+  tripContent: string
+  tripStatus: string
+  requestStatus: string
+  userDiscount: number
+  userPays: string
+  payStackCharges: number
+  payTourCompany: number
+  paySympleInc: number
+  userCoins: number
+  tripLikesCount: number
+  noOfSlots: number
+  companyLogo: string
+  paymentStatus: string
+  tripDeadline: string
+  paymentId: string
+  userId: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type IUpcomingTrips = {

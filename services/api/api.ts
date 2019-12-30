@@ -38,6 +38,27 @@ const processResponse = async (response): Promise<any> => {
   return { kind: "ok", data: response.data }
 }
 
+const getWeekendTours = async (limit: number): Promise<
+  Types.getResponse
+  > => {
+  const response = await api.post("/users/post/weekend", {
+    limit
+  })
+  console.log(response)
+  return processResponse(response)
+}
+
+
+const getDiscoverTours = async (limit: number): Promise<
+  Types.getResponse
+  > => {
+  const response = await api.post("/users/post/discover", {
+    limit
+  })
+  console.log(response)
+  return processResponse(response)
+}
+
 
 const logInWithEmail = async ({
   email,
@@ -128,7 +149,7 @@ const logInWithSocialAuth = async ({
 }
 
 const getAllSchools = async (): Promise<
-  Types.getAllSchoolsResponse
+  Types.getResponse
   > => {
   const response = await api.get("/auth/select_college")
   console.log(response)
@@ -421,5 +442,7 @@ export {
   updateUserProfilePicture,
   verifyWalletRecharge,
   verifyReceiverEmail,
-  transferToWallet
+  transferToWallet,
+  getWeekendTours,
+  getDiscoverTours
 }

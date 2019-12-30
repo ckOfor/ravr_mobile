@@ -37,5 +37,24 @@
     "signUp": "Sign Up",
     "oops": "< Ooops! Log me in.",
     "member": "I am a member of this awesome community."
+  },
+  "home": {
+    "appName": "Ravr.",
+    "weekend": "Weekend Getaway",
+    "more": "More",
+    "go": ">",
+    "quote": "Get Quote",
+    "findTour": "Find my tour.",
+    "findTourMore": "We can help you find the perfect vacation to match your budget.",
+    "recommendedTours": "Discover",
+    "recommendedMore": "With us, you get the best local and international tourism deals and packages"
+  },
+  "viewTour": {
+    "join": "Join",
+    "save": "Save for this trip",
+    "saveMore": "You don’t want to lose sleep over calculating an exact budget — plan one with some wiggle room. It’s all about staying flexible.",
+    "tabOne": "Content",
+    "tabTwo": "itinerary",
+    "tabThree": "Savings"
   }
 }
