@@ -19,13 +19,13 @@ import { ITours } from "../../services/api";
 import { Layout } from "../../constants";
 import { colors, fonts, images } from "../../theme";
 import { translate} from "../../i18n";
-import { getPopularToursAsync, setSelectedTours } from "../../redux/tour";
+import { getWeekendToursAsync, setSelectedTours } from "../../redux/tour";
 import moment from "moment";
 
 
 interface DispatchProps {
   setSelectedTours: (tour: ITours) => void
-  getPopularToursAsync: (limit: number) => void
+  getWeekendToursAsync: (limit: number) => void
 }
 
 interface StateProps {
@@ -33,9 +33,9 @@ interface StateProps {
   tours: [ITours]
 }
 
-interface ViewTourScreenProps extends NavigationScreenProps {}
+interface WeekendToursScreenProps extends NavigationScreenProps {}
 
-type Props = DispatchProps & StateProps & ViewTourScreenProps
+type Props = DispatchProps & StateProps & WeekendToursScreenProps
 
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
@@ -80,7 +80,7 @@ const infoTextStyle: TextStyle = {
   marginTop: 10,
 }
 
-class ViewTours extends React.Component<NavigationScreenProps & Props> {
+class WeekendTours extends React.Component<NavigationScreenProps & Props> {
   
   state={
     limit: 3
@@ -93,7 +93,7 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
   
   fetchTours = (limit: number) => {
     console.tron.log("dsd")
-    this.props.getPopularToursAsync(limit)
+    this.props.getWeekendToursAsync(limit)
   }
   
   onReFresh = () => {
@@ -119,47 +119,47 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
         }}
       >
         <StatusBar barStyle={"dark-content"} />
-    
         
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+        
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        >
+          <Text
+            
+            style={appNameTextStyle}
           >
-            <Text
-    
-              style={appNameTextStyle}
-            >
-              {translate(`viewTour.welcomeText`)}
-            </Text>
-          </TouchableOpacity>
-      
-          <View
+            {translate(`viewTour.welcomeText`)}
+          </Text>
+        </TouchableOpacity>
+        
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity
+            // onPress={() => navigation.navigate('profile')}
             style={{
-              flexDirection: 'row',
-              justifyContent: "space-between",
+              flexDirection: "row",
+              justifyContent: 'space-between',
             }}
           >
-            <TouchableOpacity
-              // onPress={() => navigation.navigate('profile')}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
-              }}
+            <Text
+              
+              style={discoverTextStyle}
             >
-              <Text
-            
-                style={discoverTextStyle}
-              >
-                {translate(`viewTour.popular`)}
-              </Text>
-            </TouchableOpacity>
-          </View>
-      
-          <Text
+              {translate(`weekends.header`)}
+            </Text>
+          </TouchableOpacity>
+        </View>
         
-            style={discoverMoreTextStyle}
-          >
-            {translate(`viewTour.experience`)}
-          </Text>
+        <Text
+          
+          style={discoverMoreTextStyle}
+        >
+          {translate(`weekends.more`)}
+        </Text>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -210,7 +210,7 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
                     resizeMethod={'auto'}
                     resizeMode='cover'
                   />
-          
+                  
                   <View
                     style={{
                       flexDirection: "row",
@@ -218,20 +218,20 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
                     }}
                   >
                     <Text
-          
+                      
                       style={infoTextStyle}
                     >
                       {tripName}
                     </Text>
-          
+                    
                     <Text
-          
+                      
                       style={infoTextStyle}
                     >
                       ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </Text>
                   </View>
-  
+                  
                   <View
                     style={{
                       flexDirection: "row",
@@ -239,20 +239,20 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
                     }}
                   >
                     <Text
-      
+                      
                       style={infoTextStyle}
                     >
                       {tripLocation.substring(0, 20)}
                     </Text>
-  
+                    
                     <Text
-    
+                      
                       style={infoTextStyle}
                     >
                       { moment(tripDate).format("ddd, MMM D, YYYY")}
                     </Text>
-    
-                   
+                  
+                  
                   </View>
                 </TouchableOpacity>
               )
@@ -266,16 +266,16 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   setSelectedTours: (tour: ITours) => dispatch(setSelectedTours(tour)),
-  getPopularToursAsync: (limit: number) => dispatch(getPopularToursAsync(limit)),
+  getWeekendToursAsync: (limit: number) => dispatch(getWeekendToursAsync(limit)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
   isLoading: state.tour.loading,
-  tours: state.tour.discoverTours
+  tours: state.tour.weekendTours
 });
 
-export const ViewToursScreen = connect<StateProps>(
+export const WeekendToursScreen = connect<StateProps>(
   mapStateToProps,
   mapDispatchToProps
-)(ViewTours)
+)(WeekendTours)

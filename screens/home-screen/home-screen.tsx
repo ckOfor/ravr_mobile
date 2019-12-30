@@ -183,7 +183,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }}
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate('viewTours')}
+              onPress={() => navigation.navigate('weekendTours')}
               style={{
                 flexDirection: "row",
                 justifyContent: 'space-between',

@@ -40,7 +40,7 @@
   },
   "home": {
     "appName": "Ravr.",
-    "weekend": "Weekend Getaway",
+    "weekend": "Best prices",
     "more": "More",
     "go": ">",
     "quote": "Get Quote",
@@ -57,6 +57,11 @@
     "tabTwo": "itinerary",
     "tabThree": "Savings",
     "experience": "Check out offbeat things to do and get an authentic experience.",
-    "popular": "Popular.",
+    "welcomeText": "< Welcome to Ravr.",
+    "popular": "Popular."
+  },
+  "weekends": {
+    "header": "Weekends.",
+    "more": "Explore the best cities, towns, and neighborhoods on Ravr—one long weekend at a time.",
   }
 }

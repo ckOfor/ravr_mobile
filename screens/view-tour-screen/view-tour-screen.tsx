@@ -18,7 +18,7 @@ import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
 import {ITours} from "../../services/api";
 import {Layout} from "../../constants";
-import {colors, fonts} from "../../theme";
+import {colors, fonts, images} from "../../theme";
 import {Button} from "../../components/button";
 import {translate} from "../../i18n";
 import {DiscoverScreen} from "../discover-screen";
@@ -37,6 +37,25 @@ interface ViewTourScreenProps extends NavigationScreenProps {}
 
 type Props = DispatchProps & StateProps & ViewTourScreenProps
 
+
+const appNameTextStyle: TextStyle = {
+  marginLeft: 20,
+  marginTop: Layout.window.height / 15,
+  color: colors.purple,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
+const BACK_IMAGE: ImageStyle = {
+  marginLeft: 30,
+  marginTop: 50,
+  height: 30,
+  width: 30,
+  tintColor: colors.purple
+}
+
 const BACKGROUND_IMAGE: ImageStyle = {
   height: Layout.window.height / 2.2,
   width: Layout.window.width,
@@ -47,7 +66,6 @@ const BACKGROUND_IMAGE: ImageStyle = {
   left: 0,
   right: 0,
 }
-
 
 const JOIN_BUTTON: ViewStyle = {
   borderRadius: 100,
@@ -180,9 +198,18 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                 style={BACKGROUND_IMAGE}
                 resizeMethod={'auto'}
                 resizeMode='cover'
-              >
+              />
   
-              </Image>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+              >
+                <Image
+                  source={images.backIcon}
+                  style={BACK_IMAGE}
+                  resizeMethod={'auto'}
+                  resizeMode='cover'
+                />
+              </TouchableOpacity>
   
               <View
                 style={DETAILS}
