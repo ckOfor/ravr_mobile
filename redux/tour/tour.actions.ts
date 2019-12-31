@@ -8,6 +8,7 @@ import {
 } from "../../services/api"
 
 import {
+  CLEAR_SEARCH,
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
   GET_DISCOVER_TOURS_SUCCESS, GET_SEARCH_TOURS, GET_SEARCH_TOURS_FAILURE, GET_SEARCH_TOURS_SUCCESS,
@@ -55,7 +56,7 @@ export const getWeekendToursAsync = (limit): ThunkAction<
     
     if (status) {
       dispatch(getWeekendToursSuccess())
-      dispatch(setWeekendTours(data))
+      Object.keys(data).length > 0 && dispatch(setWeekendTours(data))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -100,7 +101,7 @@ export const getDiscoverToursAsync = (limit): ThunkAction<
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      dispatch(setDiscoverTours(data))
+      Object.keys(data).length > 0 && dispatch(setDiscoverTours(data))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -130,7 +131,7 @@ export const getPopularToursAsync = (limit): ThunkAction<
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      dispatch(setDiscoverTours(data))
+      Object.keys(data).length > 0 && dispatch(setDiscoverTours(data))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -161,8 +162,7 @@ export const searchToursSuccess = () => ({
 
 export const setSearchTours = (tours: [ITours]) => ({ type: SET_SEARCH_TOURS, payload: tours })
 
-
-export const searchTextToursAsync = (searchKey: string): ThunkAction<
+export const searchTextToursAsync = (searchKey: string, date?: string): ThunkAction<
   void,
   ApplicationState,
   null,
@@ -170,15 +170,16 @@ export const searchTextToursAsync = (searchKey: string): ThunkAction<
   > => async (dispatch, getState) => {
   
   dispatch(searchTours())
+  dispatch(clearSearchTourAsync())
   
   try {
-    const result = await apiSearchTextTours(searchKey)
+    const result = await apiSearchTextTours(searchKey, date)
     const { status, message, data } = result.data
     console.tron.log(data)
     
     if (status) {
       dispatch(searchToursSuccess())
-      dispatch(setSearchTours(data))
+      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
       dispatch(NavigationActions.navigate({ routeName: "search" }))
       dispatch(notify(`${message}`, 'success'))
     } else {
@@ -192,7 +193,7 @@ export const searchTextToursAsync = (searchKey: string): ThunkAction<
   }
 }
 
-export const searchAmountToursAsync = (amount: number): ThunkAction<
+export const searchAmountToursAsync = (amount: number, date?: string): ThunkAction<
   void,
   ApplicationState,
   null,
@@ -200,15 +201,16 @@ export const searchAmountToursAsync = (amount: number): ThunkAction<
   > => async (dispatch, getState) => {
   
   dispatch(searchTours())
+  dispatch(clearSearchTourAsync())
   
   try {
-    const result = await apiSearchAmountTours(amount)
+    const result = await apiSearchAmountTours(amount, date)
     const { status, message, data } = result.data
     console.tron.log(data)
     
     if (status) {
       dispatch(searchToursSuccess())
-      dispatch(setSearchTours(data))
+      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
       dispatch(notify(`${message}`, 'success'))
       if(Object.keys(data).length > 1) {
         dispatch(NavigationActions.navigate({ routeName: "search" }))
@@ -224,4 +226,4 @@ export const searchAmountToursAsync = (amount: number): ThunkAction<
   }
 }
 
-
+export const clearSearchTourAsync = () => ({ type: CLEAR_SEARCH })

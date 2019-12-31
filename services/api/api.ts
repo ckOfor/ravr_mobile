@@ -38,21 +38,23 @@ const processResponse = async (response): Promise<any> => {
   return { kind: "ok", data: response.data }
 }
 
-const searchTextTours = async (searchKey: string): Promise<
+const searchTextTours = async (searchKey: string, date?: string): Promise<
   Types.getResponse
   > => {
   const response = await api.post("/users/post/search", {
-    searchKey
+    searchKey,
+    date
   })
   console.log(response)
   return processResponse(response)
 }
 
-const searchAmountTours = async (searchKey: number): Promise<
+const searchAmountTours = async (searchKey: number, date?: string): Promise<
   Types.getResponse
   > => {
   const response = await api.post("/users/post/search/amount", {
-    searchKey
+    searchKey,
+    date
   })
   console.log(response)
   return processResponse(response)

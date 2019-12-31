@@ -3,11 +3,23 @@ import React from "react"
 
 // react-native
 import {
-  FlatList, Image, ImageStyle, RefreshControl, ScrollView, StatusBar, Text, TextStyle, TouchableOpacity, View
+  FlatList,
+  Image,
+  ImageStyle,
+  NativeMethodsMixinStatic,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle
 } from "react-native"
 
 // third-party libraries
-import { NavigationScreenProps } from "react-navigation"
+import {NavigationEvents, NavigationScreenProps} from "react-navigation"
+import * as Yup from "yup";
 
 // redux
 import { connect } from "react-redux"
@@ -17,23 +29,63 @@ import { ITours } from "../../services/api";
 import { Layout } from "../../constants";
 import { colors, fonts, images } from "../../theme";
 import { translate} from "../../i18n";
-import { getPopularToursAsync, setSelectedTours } from "../../redux/tour";
+import {
+  clearSearchTourAsync,
+  getPopularToursAsync,
+  searchAmountToursAsync,
+  searchTextToursAsync,
+  setSelectedTours
+} from "../../redux/tour";
 import moment from "moment";
+import { Formik, FormikProps } from "formik";
+import { TextField } from "../../components/text-field";
+import { Button } from "../../components/button";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 
 interface DispatchProps {
   setSelectedTours: (tour: ITours) => void
   getPopularToursAsync: (limit: number) => void
+  searchTextToursAsync: (searchKey: string, date?: string) => void
+  searchAmountToursAsync: (amount: number, date?: string) => void
+  clearSearchTourAsync: () => void
 }
 
 interface StateProps {
   isLoading: boolean
+  authSearchKey: string
   tours: [ITours]
 }
 
 interface SearchScreenProps extends NavigationScreenProps {}
 
 type Props = DispatchProps & StateProps & SearchScreenProps
+
+const schema = Yup.object().shape({
+  searchKey: Yup.string()
+    .min(3, "common.fieldTooShort")
+    .required("common.fieldRequired"),
+})
+
+interface MyFormValues {
+  searchKey: string
+}
+
+
+const SEARCH_BUTTON: ViewStyle = {
+  borderRadius: 100,
+  width: Layout.window.width / 1.4,
+  marginTop: 10,
+  backgroundColor: colors.purple,
+}
+
+const SEARCH_BUTTON_TEXT: TextStyle = {
+  fontSize: 12,
+  fontFamily: fonts.gibsonRegular,
+  color: colors.palette.white,
+  textTransform: 'uppercase'
+}
+
 
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
@@ -78,35 +130,54 @@ const infoTextStyle: TextStyle = {
   marginTop: 10,
 }
 
+const CALENDAR: ImageStyle = {
+  height: 20,
+  width: 20,
+  marginTop: 10,
+}
+
 class Search extends React.Component<NavigationScreenProps & Props> {
   
   state={
-    limit: 3
+    limit: 3,
+    isDateTimePickerVisible: false,
+    chosenDate: '',
+    authSearchKey: '',
   }
   
-  componentDidMount(): void {
-    const { limit } = this.state
-    this.fetchTours(limit)
+  searchKeyInput: NativeMethodsMixinStatic | any
+  
+  submit = (value) => {
+    const { chosenDate } = this.state
+    console.tron.log(chosenDate)
+    return /^-{0,1}\d+$/.test(value.searchKey)
+      ? this.props.searchAmountToursAsync(value.searchKey, chosenDate)
+      : this.props.searchTextToursAsync(value.searchKey, chosenDate)
   }
   
-  fetchTours = (limit: number) => {
-    console.tron.log("dsd")
-    this.props.getPopularToursAsync(limit)
-  }
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
   
-  onReFresh = () => {
-    this.setState((state, props) => ({
-      limit: state.limit + 2
-    }), () => this.fetchTours(this.state.limit + 10))
-  }
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+  
+  handleDatePicked = (date: any) => {
+    console.tron.log("A date has been picked: ",moment(`${date}`).format('YYYY-MM-DD'));
+    
+    this.setState({ chosenDate: moment(`${date}`).format('YYYY-MM-DD') })
+    
+    this.hideDateTimePicker();
+  };
   
   public render(): React.ReactNode {
     const {
-      navigation, tours, setSelectedTours, isLoading
+      navigation, tours, setSelectedTours, isLoading, clearSearchTourAsync
     } = this.props
     
     const {
-      limit
+      authSearchKey
     } = this.state
     
     console.tron.log(tours)
@@ -118,65 +189,114 @@ class Search extends React.Component<NavigationScreenProps & Props> {
       >
         <StatusBar barStyle={"dark-content"} />
         
-        
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-        >
-          <Text
-            
-            style={appNameTextStyle}
-          >
-            {translate(`viewTour.welcomeText`)}
-          </Text>
-        </TouchableOpacity>
-        
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            // onPress={() => navigation.navigate('profile')}
-            style={{
-              flexDirection: "row",
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              
-              style={discoverTextStyle}
-            >
-              {translate(`viewTour.popular`)}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        
-        <Text
-          
-          style={discoverMoreTextStyle}
-        >
-          {translate(`viewTour.experience`)}
-        </Text>
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={isLoading}
-              onRefresh={() => this.fetchTours(limit)}
-            />
-          }
-          onScrollEndDrag={() => {
-            this.fetchTours(limit)
-            this.setState({
-              limit: limit + 10
-            })
-          }}
           showsHorizontalScrollIndicator={false}
         >
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+          >
+            <Text
+      
+              style={appNameTextStyle}
+            >
+              {translate(`viewTour.welcomeText`)}
+            </Text>
+          </TouchableOpacity>
+  
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+              width: Layout.window.width / 1.1
+            }}
+          >
+            
+            <Text
+      
+              style={discoverTextStyle}
+            >
+              {translate(`search.search`)}
+            </Text>
+            <TouchableOpacity
+              onPress={this.showDateTimePicker}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Image
+                style={CALENDAR}
+                source={images.calendar}
+                resizeMethod={'auto'}
+                resizeMode='cover'
+              />
+            </TouchableOpacity>
+          </View>
+  
+          <Formik
+            initialValues={{
+              searchKey: authSearchKey
+            }}
+            validationSchema={schema}
+            onSubmit={this.submit}
+            enableReinitialize
+            validateOnBlur={false}
+          >
+            {({
+                values,
+                handleChange,
+                handleBlur,
+                errors,
+                isValid,
+                handleSubmit,
+                handleReset
+              }: FormikProps<MyFormValues>) => (
+              <View>
+        
+                <View
+                  style={{
+                    alignItems: 'center',
+                    marginTop: 20
+                  }}
+                >
+                  <TextField
+                    name="searchKey"
+                    keyboardType="default"
+                    placeholderTx="home.search"
+                    value={values.searchKey}
+                    onChangeText={handleChange("searchKey")}
+                    onBlur={handleBlur("searchKey")}
+                    autoCapitalize="none"
+                    returnKeyType="search"
+                    isInvalid={!isValid}
+                    fieldError={errors.searchKey}
+                    forwardedRef={i => {
+                      this.searchKeyInput = i
+                    }}
+                    onSubmitEditing={() => handleSubmit()}
+                  />
+  
+                  <NavigationEvents onDidBlur={() => {
+                    clearSearchTourAsync()
+                    handleReset()
+                  }} />
+          
+                  <Button
+                    style={SEARCH_BUTTON}
+                    textStyle={SEARCH_BUTTON_TEXT}
+                    disabled={!isValid || isLoading}
+                    onPress={() => handleSubmit()}
+                    tx={`search.search`}
+                  />
+                </View>
+              </View>
+            )}
+          </Formik>
+          
           {
-            tours.length > 0 && (
+            tours[0].id !== null && (
               <FlatList
-                onEndReached={() => this.fetchTours(limit)}
+                // onEndReached={() => this.fetchTours(limit)}
                 data={tours}
                 numColumns={1}
                 style={{
@@ -261,6 +381,14 @@ class Search extends React.Component<NavigationScreenProps & Props> {
             )
           }
         </ScrollView>
+  
+        <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this.handleDatePicked}
+          onCancel={this.hideDateTimePicker}
+        />
+  
+        
       </View>
     )
   }
@@ -269,13 +397,16 @@ class Search extends React.Component<NavigationScreenProps & Props> {
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   setSelectedTours: (tour: ITours) => dispatch(setSelectedTours(tour)),
   getPopularToursAsync: (limit: number) => dispatch(getPopularToursAsync(limit)),
+  searchTextToursAsync: (searchKey: string, date?: string) => dispatch(searchTextToursAsync(searchKey, date)),
+  searchAmountToursAsync: (amount: number, date?: string) => dispatch(searchAmountToursAsync(amount, date)),
+  clearSearchTourAsync: () => dispatch(clearSearchTourAsync()),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
   isLoading: state.tour.loading,
   tours: state.tour.searchedTours
-});
+}) as StateProps;
 
 export const SearchScreen = connect<StateProps>(
   mapStateToProps,

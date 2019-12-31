@@ -2,7 +2,6 @@ import * as React from "react"
 import { Image } from "react-native"
 import {
   StackNavigatorConfig,
-  NavigationScreenConfigProps,
   TabNavigatorConfig,
   DrawerNavigatorConfig,
   BottomTabNavigatorConfig
@@ -33,9 +32,11 @@ export const DEFAULT_BOTTOM_NAVIIGATION: BottomTabNavigatorConfig = {
       const { routeName } = navigation.state;
       let image: any
       if (routeName === 'home') {
-        image = images.compass;
+        image = images.globe;
+      } if (routeName === 'search') {
+        image = images.search;
       } if (routeName === 'profile') {
-        image = images.compass;
+        image = images.profile;
       }
       
       return <Image

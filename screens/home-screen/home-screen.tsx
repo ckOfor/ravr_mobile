@@ -55,6 +55,7 @@ const schema = Yup.object().shape({
     .min(3, "common.fieldTooShort")
     .required("common.fieldRequired"),
 })
+
 interface WalletProps extends NavigationScreenProps {}
 
 type Props = DispatchProps & StateProps & WalletProps
@@ -353,7 +354,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
                 style={{
                   marginTop: 15,
                 }}
-                // onPress={() => navigation.navigate('profile')}
+                onPress={() => navigation.navigate('search')}
               >
                 <Text
               

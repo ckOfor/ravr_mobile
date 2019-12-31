@@ -1,4 +1,5 @@
 import {
+  CLEAR_SEARCH,
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
   GET_DISCOVER_TOURS_SUCCESS,
@@ -109,6 +110,12 @@ export function tourReducer(
       return {
         ...state,
         loading: false
+      }
+  
+    case CLEAR_SEARCH:
+      return {
+        ...state,
+        searchedTours: [ITours]
       }
       
     

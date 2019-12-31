@@ -60,80 +60,85 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
       forwardedRef, weekendTours, viewTours, setSelectedTours
     } = this.props
     
+    console.tron.log(weekendTours, "weekendToursweekendToursweekendToursweekendToursweekendTours")
+    
     return (
-      <ScrollView
-        // onScroll={this.handleScroll}
-        scrollEnabled
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          marginTop: '5%',
-        }}
-        onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
-        pinchGestureEnabled
-        contentContainerStyle={{
-          justifyContent: "space-between"
-        }}
-        // ref={forwardedRef}
-        onContentSizeChange={(contentWidth, contentHeight)=>{
-          // this.setState((state) => ({
-          //   scrollTo: state.scrollTo + 100
-          // }), () => {
-          //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-          // } )
-        }}
-      >
-        {
-          weekendTours && weekendTours.map((tour, index) => {
-            const { locationPictureOne, tripName, userPays } = tour
-            return (
-              <TouchableOpacity
-                key={index}
-                style={{
-                  flexDirection: "column",
-                  marginLeft: 20,
-                }}
-                onPress={() => {
-                  setSelectedTours(tour)
-                  viewTours()
-                }}
-              >
-                <Image
-                  style={TRIP_IMAGE}
-                  source={{ uri: `${locationPictureOne}` }}
-                  resizeMethod={'auto'}
-                  resizeMode='cover'
-                />
-                
-                <View
+      <View>
+        <ScrollView
+          // onScroll={this.handleScroll}
+          scrollEnabled
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{
+            marginTop: '5%',
+          }}
+          onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
+          pinchGestureEnabled
+          contentContainerStyle={{
+            justifyContent: "space-between"
+          }}
+          // ref={forwardedRef}
+          onContentSizeChange={(contentWidth, contentHeight)=>{
+            // this.setState((state) => ({
+            //   scrollTo: state.scrollTo + 100
+            // }), () => {
+            //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
+            // } )
+          }}
+        >
+          {
+            weekendTours && weekendTours.map((tour, index) => {
+              const { locationPictureOne, tripName, userPays } = tour
+              return (
+                <TouchableOpacity
+                  key={index}
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between"
+                    flexDirection: "column",
+                    marginLeft: 20,
+                  }}
+                  onPress={() => {
+                    setSelectedTours(tour)
+                    viewTours()
                   }}
                 >
-                  <Text
-    
-                    style={discoverMoreTextStyle}
+                  <Image
+                    style={TRIP_IMAGE}
+                    source={{ uri: `${locationPictureOne}` }}
+                    resizeMethod={'auto'}
+                    resizeMode='cover'
+                  />
+            
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
                   >
-                    {tripName.substring(0, 9)}
-                  </Text>
-  
-                  <Text
+                    <Text
+                
+                      style={discoverMoreTextStyle}
+                    >
+                      {tripName.substring(0, 9)}
+                    </Text>
+              
+                    <Text
+                
+                      style={discoverMoreTextStyle}
+                    >
+                      ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            })
+          }
     
-                    style={discoverMoreTextStyle}
-                  >
-                    ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )
-          })
-        }
+          <TouchableOpacity style={TRIP_IMAGE}>
     
-        <TouchableOpacity style={TRIP_IMAGE}>
-    
-        </TouchableOpacity>
-      </ScrollView>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+      
     )
   }
 }

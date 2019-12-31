@@ -72,6 +72,11 @@ type getSearchToursFailure = {
   type: typeof GET_SEARCH_TOURS_FAILURE
 }
 
+export const CLEAR_SEARCH = "CLEAR_SEARCH"
+type clearSearch = {
+  type: typeof CLEAR_SEARCH
+}
+
 export type TourState = {
   weekendTours: [ITours],
   discoverTours: [ITours],
@@ -94,3 +99,4 @@ export type TourAction =
   | getSearchTours
   | getSearchToursFailure
   | getSearchToursSuccess
+  | clearSearch

@@ -111,6 +111,7 @@ export class TextField extends React.Component<TextFieldProps, State> {
         )}
         <View style={containerStyle}>
           <TextInput
+            clearButtonMode={"while-editing"}
             placeholder={placeholderText}
             placeholderTextColor={colors.blue1}
             underlineColorAndroid={colors.transparent}

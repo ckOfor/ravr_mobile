@@ -32,12 +32,6 @@ export const TourNavigator = createStackNavigator(
         header: null
       }
     },
-    search: {
-      screen: SearchScreen,
-      navigationOptions: {
-        header: null
-      }
-    },
   },
   DEFAULT_STACK_NAVIGATOR_CONFIG
 )

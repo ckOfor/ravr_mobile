@@ -60,62 +60,67 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
     
     return (
       <View>
-        <FlatList
-          data={discoverTours}
-          numColumns={2}
-          style={{
-            marginBottom: 0
-          }}
-          contentContainerStyle={{
-            paddingBottom: 0
-          }}
-          renderItem={(tours) => {
-            const { index } = tours
-            const { tripName, locationPictureOne, userPays } = tours.item
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  setSelectedTours(tours.item)
-                  viewTours()
-                }}
-                style={{
-                  flexDirection: "column",
-                  marginLeft: 20,
-                  marginTop: 20,
-                }}
-              >
-                <Image
-                  style={TRIP_IMAGE}
-                  source={{ uri: `${locationPictureOne}` }}
-                  resizeMethod={'auto'}
-                  resizeMode='cover'
-                />
-  
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between"
-                  }}
-                >
-                  <Text
-      
-                    style={discoverMoreTextStyle}
+        {
+          discoverTours[0].id !== null && (
+            <FlatList
+              data={discoverTours}
+              numColumns={2}
+              style={{
+                marginBottom: 0
+              }}
+              contentContainerStyle={{
+                paddingBottom: 0
+              }}
+              renderItem={(tours) => {
+                const { index } = tours
+                const { tripName, locationPictureOne, userPays } = tours.item
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setSelectedTours(tours.item)
+                      viewTours()
+                    }}
+                    style={{
+                      flexDirection: "column",
+                      marginLeft: 20,
+                      marginTop: 20,
+                    }}
                   >
-                    {tripName.substring(0, 9)}
-                  </Text>
-    
-                  <Text
-      
-                    style={discoverMoreTextStyle}
-                  >
-                    ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )
-          }}
-        />
+                    <Image
+                      style={TRIP_IMAGE}
+                      source={{ uri: `${locationPictureOne}` }}
+                      resizeMethod={'auto'}
+                      resizeMode='cover'
+                    />
+          
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between"
+                      }}
+                    >
+                      <Text
+              
+                        style={discoverMoreTextStyle}
+                      >
+                        {tripName.substring(0, 9)}
+                      </Text>
+            
+                      <Text
+              
+                        style={discoverMoreTextStyle}
+                      >
+                        ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          )
+        }
+        
       </View>
     )
   }

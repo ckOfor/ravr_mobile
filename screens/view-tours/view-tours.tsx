@@ -175,89 +175,93 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
           }}
           showsHorizontalScrollIndicator={false}
         >
-          <FlatList
-            onEndReached={() => this.fetchTours(limit)}
-            data={tours}
-            numColumns={1}
-            style={{
-              marginRight: 15,
-            }}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: 120
-            }}
-            renderItem={(tours) => {
-              const { index } = tours
-              const {
-                tripName, locationPictureOne, userPays, tripDate, tripLocation
-              } = tours.item
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setSelectedTours(tours.item)
-                    navigation.navigate('viewTour')
-                  }}
-                  style={{
-                    flexDirection: "column",
-                    marginLeft:  20,
-                    marginTop: 20,
-                  }}
-                >
-                  <Image
-                    style={TRIP_IMAGE}
-                    source={{ uri: `${locationPictureOne}` }}
-                    resizeMethod={'auto'}
-                    resizeMode='cover'
-                  />
-          
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text
-          
-                      style={infoTextStyle}
+          {
+            tours[0].id !== null && (
+              <FlatList
+                onEndReached={() => this.fetchTours(limit)}
+                data={tours}
+                numColumns={1}
+                style={{
+                  marginRight: 15,
+                }}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingBottom: 120
+                }}
+                renderItem={(tours) => {
+                  const { index } = tours
+                  const {
+                    tripName, locationPictureOne, userPays, tripDate, tripLocation
+                  } = tours.item
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setSelectedTours(tours.item)
+                        navigation.navigate('viewTour')
+                      }}
+                      style={{
+                        flexDirection: "column",
+                        marginLeft:  20,
+                        marginTop: 20,
+                      }}
                     >
-                      {tripName}
-                    </Text>
+                      <Image
+                        style={TRIP_IMAGE}
+                        source={{ uri: `${locationPictureOne}` }}
+                        resizeMethod={'auto'}
+                        resizeMode='cover'
+                      />
           
-                    <Text
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between"
+                        }}
+                      >
+                        <Text
+              
+                          style={infoTextStyle}
+                        >
+                          {tripName}
+                        </Text>
+            
+                        <Text
+              
+                          style={infoTextStyle}
+                        >
+                          ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Text>
+                      </View>
           
-                      style={infoTextStyle}
-                    >
-                      ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </Text>
-                  </View>
-  
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text
-      
-                      style={infoTextStyle}
-                    >
-                      {tripLocation.substring(0, 20)}
-                    </Text>
-  
-                    <Text
-    
-                      style={infoTextStyle}
-                    >
-                      { moment(tripDate).format("ddd, MMM D, YYYY")}
-                    </Text>
-    
-                   
-                  </View>
-                </TouchableOpacity>
-              )
-            }}
-          />
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between"
+                        }}
+                      >
+                        <Text
+              
+                          style={infoTextStyle}
+                        >
+                          {tripLocation.substring(0, 20)}
+                        </Text>
+            
+                        <Text
+              
+                          style={infoTextStyle}
+                        >
+                          { moment(tripDate).format("ddd, MMM D, YYYY")}
+                        </Text>
+          
+          
+                      </View>
+                    </TouchableOpacity>
+                  )
+                }}
+              />
+            )
+          }
         </ScrollView>
       </View>
     )
