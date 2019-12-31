@@ -38,6 +38,27 @@ const processResponse = async (response): Promise<any> => {
   return { kind: "ok", data: response.data }
 }
 
+const searchTextTours = async (searchKey: string): Promise<
+  Types.getResponse
+  > => {
+  const response = await api.post("/users/post/search", {
+    searchKey
+  })
+  console.log(response)
+  return processResponse(response)
+}
+
+const searchAmountTours = async (searchKey: number): Promise<
+  Types.getResponse
+  > => {
+  const response = await api.post("/users/post/search/amount", {
+    searchKey
+  })
+  console.log(response)
+  return processResponse(response)
+}
+
+
 const getWeekendTours = async (limit: number): Promise<
   Types.getResponse
   > => {
@@ -456,5 +477,7 @@ export {
   transferToWallet,
   getWeekendTours,
   getDiscoverTours,
-  getPopularTours
+  getPopularTours,
+  searchTextTours,
+  searchAmountTours
 }

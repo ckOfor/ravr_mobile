@@ -2,11 +2,15 @@ import {
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
   GET_DISCOVER_TOURS_SUCCESS,
+  GET_SEARCH_TOURS,
+  GET_SEARCH_TOURS_FAILURE,
+  GET_SEARCH_TOURS_SUCCESS,
   GET_WEEKEND_TOURS,
   GET_WEEKEND_TOURS_FAILURE,
   GET_WEEKEND_TOURS_SUCCESS,
   SAVE_SELECTED_TOUR,
   SET_DISCOVER_TOURS,
+  SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS,
   TourAction,
   TourState
@@ -54,7 +58,8 @@ const initialState: TourState = {
   selectedTour: {
     ...ITours
   },
-  loading: false
+  loading: false,
+  searchedTours: [ITours],
 }
 
 export function tourReducer(
@@ -67,6 +72,12 @@ export function tourReducer(
       return {
         ...state,
         weekendTours: action.payload
+      }
+  
+    case SET_SEARCH_TOURS:
+      return {
+        ...state,
+        searchedTours: action.payload
       }
   
     case SAVE_SELECTED_TOUR:
@@ -83,6 +94,7 @@ export function tourReducer(
   
     case GET_WEEKEND_TOURS:
     case GET_DISCOVER_TOURS:
+    case GET_SEARCH_TOURS:
       return {
         ...state,
         loading: true
@@ -92,6 +104,8 @@ export function tourReducer(
     case GET_WEEKEND_TOURS_SUCCESS:
     case GET_DISCOVER_TOURS_FAILURE:
     case GET_DISCOVER_TOURS_SUCCESS:
+    case GET_SEARCH_TOURS_FAILURE:
+    case GET_SEARCH_TOURS_SUCCESS:
       return {
         ...state,
         loading: false

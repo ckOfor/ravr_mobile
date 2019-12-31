@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, Keyboard
+  TouchableOpacity, NativeMethodsMixinStatic, Keyboard, KeyboardAvoidingView
 } from "react-native"
 
 // third-party libraries
@@ -153,172 +153,178 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
       navigation, authEmail, isLoading
     } = this.props
     return (
-      <ImageBackground
-        source={images.bikeMan}
-        style={backgroundImageStyle}
-        resizeMethod={'scale'}
-        resizeMode='cover'
+      <KeyboardAvoidingView
+        enabled={true}
+        behavior={"padding"}
+        style={{ flex: 1 }}
       >
-        
-        <View
-          style={{
-            height: '10%',
-            marginTop: Layout.window.height / 20,
-          }}
+        <ImageBackground
+          source={images.bikeMan}
+          style={backgroundImageStyle}
+          resizeMethod={'scale'}
+          resizeMode='cover'
         >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+          
+          <View
+            style={{
+              height: '10%',
+              marginTop: Layout.window.height / 20,
+            }}
           >
-            <Image
-              style={APP_LOGO}
-              source={images.appLogo}
-              resizeMethod={'auto'}
-              resizeMode='cover'
-            />
-          </TouchableOpacity>
-        </View>
-        
-        <View
-          style={{
-            height: '10%',
-          }}
-        >
-          <Text
-            
-            style={signInTextStyle}
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+            >
+              <Image
+                style={APP_LOGO}
+                source={images.appLogo}
+                resizeMethod={'auto'}
+                resizeMode='cover'
+              />
+            </TouchableOpacity>
+          </View>
+          
+          <View
+            style={{
+              height: '10%',
+            }}
           >
-            {translate(`signUp.join`)}
-          </Text>
-        </View>
-        
-        <Formik
-          initialValues={{
-            fullName: authEmail,
-            email: authEmail,
-            password: "",
-            confirmPassword: "",
-          }}
-          validationSchema={schema}
-          onSubmit={this.submit}
-          enableReinitialize
-        >
-          {({
-              values,
-              handleChange,
-              handleBlur,
-              errors,
-              isValid,
-              handleSubmit
-            }: FormikProps<MyFormValues>) => (
-            <View>
+            <Text
               
-              <View
-                style={FIELD}
-              >
-                <TextField
-                  name="fullName"
-                  keyboardType="default"
-                  placeholderTx="common.fullNamePlaceHolder"
-                  value={values.fullName}
-                  onChangeText={handleChange("fullName")}
-                  onBlur={handleBlur("fullName")}
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  isInvalid={!isValid}
-                  fieldError={errors.fullName}
-                  onSubmitEditing={() => this.emailInput.focus()}
-                  forwardedRef={i => {
-                    this.fullNameInput = i
-                  }}
-                />
-  
-                <TextField
-                  name="email"
-                  keyboardType="email-address"
-                  placeholderTx="common.emailPlaceHolder"
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  isInvalid={!isValid}
-                  fieldError={errors.email}
-                  onSubmitEditing={() => this.passwordInput.focus()}
-                  forwardedRef={i => {
-                    this.emailInput = i
-                  }}
-                />
+              style={signInTextStyle}
+            >
+              {translate(`signUp.join`)}
+            </Text>
+          </View>
+          
+          <Formik
+            initialValues={{
+              fullName: authEmail,
+              email: authEmail,
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={schema}
+            onSubmit={this.submit}
+            enableReinitialize
+          >
+            {({
+                values,
+                handleChange,
+                handleBlur,
+                errors,
+                isValid,
+                handleSubmit
+              }: FormikProps<MyFormValues>) => (
+              <View>
                 
-                <TextField
-                  name="password"
-                  secureTextEntry
-                  placeholderTx="common.passwordPlaceHolder"
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  autoCapitalize="none"
-                  returnKeyType="done"
-                  isInvalid={!isValid}
-                  fieldError={errors.password}
-                  forwardedRef={i => {
-                    this.passwordInput = i
-                  }}
-                  blurOnSubmit={false}
-                  onSubmitEditing={() => this.confirmPasswordInput.focus()}
-                />
-  
-  
-                <TextField
-                  name="confirmPassword"
-                  secureTextEntry
-                  placeholderTx="common.passwordPlaceHolder"
-                  value={values.confirmPassword}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                  autoCapitalize="none"
-                  returnKeyType="done"
-                  isInvalid={!isValid}
-                  fieldError={errors.confirmPassword}
-                  forwardedRef={i => {
-                    this.confirmPasswordInput = i
-                  }}
-                  blurOnSubmit={false}
-                  onSubmitEditing={()=> Keyboard.dismiss()}
-                />
-                
-                <Button
-                  style={CONTINUE_BUTTON}
-                  textStyle={CONTINUE_BUTTON_TEXT}
-                  disabled={!isValid || isLoading}
-                  onPress={() => handleSubmit()}
-                  tx={`signUp.signUp`}
-                />
-              </View>
-            </View>
-          )}
-        </Formik>
-  
-        <Text
+                <View
+                  style={FIELD}
+                >
+                  <TextField
+                    name="fullName"
+                    keyboardType="default"
+                    placeholderTx="common.fullNamePlaceHolder"
+                    value={values.fullName}
+                    onChangeText={handleChange("fullName")}
+                    onBlur={handleBlur("fullName")}
+                    autoCapitalize="none"
+                    returnKeyType="next"
+                    isInvalid={!isValid}
+                    fieldError={errors.fullName}
+                    onSubmitEditing={() => this.emailInput.focus()}
+                    forwardedRef={i => {
+                      this.fullNameInput = i
+                    }}
+                  />
     
-          style={bottomTextStyle}
-        >
-          {translate("signUp.member")}
-        </Text>
-  
-        <TouchableOpacity
-          onPress={() => navigation.navigate('authSignIn')}
-        >
+                  <TextField
+                    name="email"
+                    keyboardType="email-address"
+                    placeholderTx="common.emailPlaceHolder"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    autoCapitalize="none"
+                    returnKeyType="next"
+                    isInvalid={!isValid}
+                    fieldError={errors.email}
+                    onSubmitEditing={() => this.passwordInput.focus()}
+                    forwardedRef={i => {
+                      this.emailInput = i
+                    }}
+                  />
+                  
+                  <TextField
+                    name="password"
+                    secureTextEntry
+                    placeholderTx="common.passwordPlaceHolder"
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    autoCapitalize="none"
+                    returnKeyType="done"
+                    isInvalid={!isValid}
+                    fieldError={errors.password}
+                    forwardedRef={i => {
+                      this.passwordInput = i
+                    }}
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => this.confirmPasswordInput.focus()}
+                  />
+    
+    
+                  <TextField
+                    name="confirmPassword"
+                    secureTextEntry
+                    placeholderTx="common.passwordPlaceHolder"
+                    value={values.confirmPassword}
+                    onChangeText={handleChange("confirmPassword")}
+                    onBlur={handleBlur("confirmPassword")}
+                    autoCapitalize="none"
+                    returnKeyType="done"
+                    isInvalid={!isValid}
+                    fieldError={errors.confirmPassword}
+                    forwardedRef={i => {
+                      this.confirmPasswordInput = i
+                    }}
+                    blurOnSubmit={false}
+                    onSubmitEditing={()=> Keyboard.dismiss()}
+                  />
+                  
+                  <Button
+                    style={CONTINUE_BUTTON}
+                    textStyle={CONTINUE_BUTTON_TEXT}
+                    disabled={!isValid || isLoading}
+                    onPress={() => handleSubmit()}
+                    tx={`signUp.signUp`}
+                  />
+                </View>
+              </View>
+            )}
+          </Formik>
     
           <Text
       
-            style={termsAndConditions}
+            style={bottomTextStyle}
           >
-            {translate(`signUp.oops`)}
-    
+            {translate("signUp.member")}
           </Text>
-        </TouchableOpacity>
+    
+          <TouchableOpacity
+            onPress={() => navigation.navigate('authSignIn')}
+          >
       
-      </ImageBackground>
+            <Text
+        
+              style={termsAndConditions}
+            >
+              {translate(`signUp.oops`)}
+      
+            </Text>
+          </TouchableOpacity>
+        
+        </ImageBackground>
+      </KeyboardAvoidingView>
     )
   }
 }

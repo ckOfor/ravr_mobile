@@ -3,7 +3,8 @@ import { DEFAULT_STACK_NAVIGATOR_CONFIG } from "./navigation-config"
 import { HomeScreen } from "../screens/home-screen";
 import { ViewTourScreen } from "../screens/view-tour-screen";
 import { ViewToursScreen } from "../screens/view-tours";
-import {WeekendToursScreen} from "../screens/weekend-tours-screen";
+import { WeekendToursScreen } from "../screens/weekend-tours-screen";
+import { SearchScreen } from "../screens/search-screen";
 
 export const TourNavigator = createStackNavigator(
   {
@@ -27,6 +28,12 @@ export const TourNavigator = createStackNavigator(
     },
     weekendTours: {
       screen: WeekendToursScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    search: {
+      screen: SearchScreen,
       navigationOptions: {
         header: null
       }

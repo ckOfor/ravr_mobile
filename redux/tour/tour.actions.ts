@@ -3,23 +3,26 @@ import {
   getWeekendTours as apiGetWeekendTours,
   getDiscoverTours as apiGetDiscoverTours,
   getPopularTours as apiGetPopularTours,
+  searchTextTours as apiSearchTextTours,
+  searchAmountTours as apiSearchAmountTours,
 } from "../../services/api"
 
 import {
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
-  GET_DISCOVER_TOURS_SUCCESS,
+  GET_DISCOVER_TOURS_SUCCESS, GET_SEARCH_TOURS, GET_SEARCH_TOURS_FAILURE, GET_SEARCH_TOURS_SUCCESS,
   GET_WEEKEND_TOURS,
   GET_WEEKEND_TOURS_FAILURE,
   GET_WEEKEND_TOURS_SUCCESS,
   SAVE_SELECTED_TOUR,
-  SET_DISCOVER_TOURS,
+  SET_DISCOVER_TOURS, SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS
 } from "./";
 import { notify } from "../auth";
 import {ThunkAction} from "redux-thunk";
 import {ApplicationState} from "../index";
 import {Action} from "redux";
+import {NavigationActions} from "react-navigation";
 
 export const getWeekendTours = () => ({
   type: GET_WEEKEND_TOURS,
@@ -56,8 +59,8 @@ export const getWeekendToursAsync = (limit): ThunkAction<
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
+      dispatch(getWeekendToursFailure())
     }
-    dispatch(getWeekendToursFailure())
     
   } catch ({ message }){
     console.tron.log(message)
@@ -141,3 +144,84 @@ export const getPopularToursAsync = (limit): ThunkAction<
 }
 
 export const setSelectedTours = (tour: ITours) => ({ type: SAVE_SELECTED_TOUR, payload: tour })
+
+
+
+export const searchTours = () => ({
+  type: GET_SEARCH_TOURS,
+})
+
+export const searchToursFailure = () => ({
+  type: GET_SEARCH_TOURS_FAILURE,
+})
+
+export const searchToursSuccess = () => ({
+  type: GET_SEARCH_TOURS_SUCCESS,
+})
+
+export const setSearchTours = (tours: [ITours]) => ({ type: SET_SEARCH_TOURS, payload: tours })
+
+
+export const searchTextToursAsync = (searchKey: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  dispatch(searchTours())
+  
+  try {
+    const result = await apiSearchTextTours(searchKey)
+    const { status, message, data } = result.data
+    console.tron.log(data)
+    
+    if (status) {
+      dispatch(searchToursSuccess())
+      dispatch(setSearchTours(data))
+      dispatch(NavigationActions.navigate({ routeName: "search" }))
+      dispatch(notify(`${message}`, 'success'))
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(searchToursFailure())
+    }
+    
+  } catch ({ message }){
+    console.tron.log(message)
+    dispatch(searchToursFailure())
+  }
+}
+
+export const searchAmountToursAsync = (amount: number): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  dispatch(searchTours())
+  
+  try {
+    const result = await apiSearchAmountTours(amount)
+    const { status, message, data } = result.data
+    console.tron.log(data)
+    
+    if (status) {
+      dispatch(searchToursSuccess())
+      dispatch(setSearchTours(data))
+      dispatch(notify(`${message}`, 'success'))
+      if(Object.keys(data).length > 1) {
+        dispatch(NavigationActions.navigate({ routeName: "search" }))
+      }
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(searchToursFailure())
+    }
+    
+  } catch ({ message }){
+    console.tron.log(message)
+    dispatch(searchToursFailure())
+  }
+}
+
+

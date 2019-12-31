@@ -8,7 +8,10 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  ImageStyle, AppState
+  ImageStyle,
+  AppState,
+  NativeMethodsMixinStatic,
+  KeyboardAvoidingView
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
@@ -18,22 +21,40 @@ import { Layout } from "../../constants";
 import { translate} from "../../i18n";
 import { colors, fonts, images } from "../../theme";
 import { WeekendScreen } from "../weekend-screen";
-import {getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours} from "../../redux/tour";
+import {
+  getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours, searchTextToursAsync, searchAmountToursAsync
+} from "../../redux/tour";
 import { ITours } from "../../services/api";
 import { DiscoverScreen } from "../discover-screen";
-import {Button} from "../../components/button";
+import { Button } from "../../components/button";
+import { Formik, FormikProps } from "formik";
+import { TextField } from "../../components/text-field";
+import * as Yup from "yup";
 
 interface DispatchProps {
   getWeekendToursAsync: (limit: number) => void
   getDiscoverToursAsync: (limit: number) => void
   setSelectedTours: (tour: ITours) => void
+  searchTextToursAsync: (searchKey: string) => void
+  searchAmountToursAsync: (amount: number) => void
 }
 interface StateProps {
   userPicture: string
   weekendTours: [ITours]
   discoverTours: [ITours]
+  authSearchKey: string
+  isLoading: boolean
 }
 
+interface MyFormValues {
+  searchKey: string
+}
+
+const schema = Yup.object().shape({
+  searchKey: Yup.string()
+    .min(3, "common.fieldTooShort")
+    .required("common.fieldRequired"),
+})
 interface WalletProps extends NavigationScreenProps {}
 
 type Props = DispatchProps & StateProps & WalletProps
@@ -106,8 +127,7 @@ const findMyTourTextStyle: TextStyle = {
 const QUOTE_BUTTON: ViewStyle = {
   borderRadius: 100,
   width: Layout.window.width / 1.4,
-  marginLeft: 30,
-  marginTop: Layout.window.height / 20,
+  marginTop: 10,
   backgroundColor: colors.purple,
   marginBottom: Layout.window.height / 7,
 }
@@ -125,6 +145,8 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     scrollTo: 100,
     appState: AppState.currentState,
   }
+  
+  searchKeyInput: NativeMethodsMixinStatic | any
   
   componentDidMount(): void {
     AppState.addEventListener("change", this.handleAppStateChange)
@@ -150,9 +172,16 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     this.setState({ appState: nextAppState })
   }
   
+  submit = (value) => {
+    console.tron.log(value)
+    return /^-{0,1}\d+$/.test(value.searchKey)
+      ? this.props.searchAmountToursAsync(value.searchKey)
+      : this.props.searchTextToursAsync(value.searchKey)
+  }
+  
   public render(): React.ReactNode {
     const {
-      navigation, userPicture, weekendTours, discoverTours
+      navigation, userPicture, weekendTours, discoverTours, authSearchKey, isLoading
     } = this.props
     const {
       scrollTo
@@ -160,191 +189,245 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     
     // console.tron.log(userPicture === '')
     return (
-      <View
-        style={ROOT}
+	    <KeyboardAvoidingView
+        enabled={true}
+        behavior={"position"}
+        style={{ flex: 1 }}
       >
-        <StatusBar barStyle={"dark-content"} />
-  
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
+        <View
+          style={ROOT}
         >
-          <Text
-    
-            style={appNameTextStyle}
-          >
-            {translate(`home.appName`)}
-          </Text>
-  
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: "space-evenly",
-              width: Layout.window.width
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.navigate('weekendTours')}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
-                width:  Layout.window.width / 1.7
-              }}
-            >
-              <Text
+          <StatusBar barStyle={"dark-content"} />
       
-                style={weekendTextStyle}
-              >
-                {translate(`home.weekend`)}
-              </Text>
-  
-              <Text
-    
-                style={moreTextStyle}
-              >
-                {translate(`home.more`)}
-              </Text>
-            </TouchableOpacity>
-  
-            <TouchableOpacity
-              onPress={() => navigation.navigate('profile')}
-            >
-              {
-                userPicture === '' && (
-                  <Image
-                    style={PROFILE_IMAGE}
-                    source={images.appLogo}
-                    resizeMethod={'auto'}
-                    resizeMode='cover'
-                  />
-                )
-              }
-  
-              {
-                userPicture !== '' && (
-                  <Image
-                    style={PROFILE_IMAGE}
-                    source={{ uri: `${userPicture}` }}
-                    resizeMethod={'auto'}
-                    resizeMode='cover'
-                  />
-                )
-              }
-              
-            </TouchableOpacity>
-          </View>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+          >
+            <Text
           
-          <WeekendScreen
-            weekendTours={weekendTours}
-            viewTours={() => navigation.navigate('viewTour')}
-            {...this.props}
-          />
-  
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: "space-between",
-              marginTop: Layout.window.height / 25
-            }}
-          >
-            <TouchableOpacity
-              // onPress={() => navigation.navigate('profile')}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
-              }}
+              style={appNameTextStyle}
             >
-              <Text
+              {translate(`home.appName`)}
+            </Text>
         
-                style={discoverTextStyle}
-              >
-                {translate(`home.recommendedTours`)}
-              </Text>
-            </TouchableOpacity>
-    
-            <TouchableOpacity
-              style={{
-                marginTop: 15,
-              }}
-              onPress={() => navigation.navigate('viewTours')}
-            >
-              <Text
-    
-                style={discoverMoreTextStyle}
-              >
-                {translate(`home.more`)}
-              </Text>
-    
-            </TouchableOpacity>
-          </View>
-  
-          <Text
-    
-            style={discoverMoreTextStyle}
-          >
-            {translate(`home.recommendedMore`)}
-          </Text>
-  
-          <DiscoverScreen
-            discoverTours={discoverTours}
-            viewTours={() => navigation.navigate('viewTour')}
-            {...this.props}
-          />
-  
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: "space-between",
-              marginTop: Layout.window.height / 25
-            }}
-          >
             <View
-              // onPress={() => navigation.navigate('profile')}
               style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
+                flexDirection: 'row',
+                justifyContent: "space-evenly",
+                width: Layout.window.width
               }}
             >
-              <Text
-        
-                style={discoverTextStyle}
+              <TouchableOpacity
+                disabled={isLoading}
+                onPress={() => navigation.navigate('weekendTours')}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: 'space-between',
+                  width:  Layout.window.width / 1.7
+                }}
               >
-                {translate(`home.findTour`)}
-              </Text>
+                <Text
+              
+                  style={weekendTextStyle}
+                >
+                  {translate(`home.weekend`)}
+                </Text>
+            
+                <Text
+              
+                  style={moreTextStyle}
+                >
+                  {translate(`home.more`)}
+                </Text>
+              </TouchableOpacity>
+          
+              <TouchableOpacity
+                onPress={() => navigation.navigate('profile')}
+                disabled={isLoading}
+              >
+                {
+                  userPicture === '' && (
+                    <Image
+                      style={PROFILE_IMAGE}
+                      source={images.appLogo}
+                      resizeMethod={'auto'}
+                      resizeMode='cover'
+                    />
+                  )
+                }
+            
+                {
+                  userPicture !== '' && (
+                    <Image
+                      style={PROFILE_IMAGE}
+                      source={{ uri: `${userPicture}` }}
+                      resizeMethod={'auto'}
+                      resizeMode='cover'
+                    />
+                  )
+                }
+          
+              </TouchableOpacity>
             </View>
-    
-            <TouchableOpacity
-              style={{
-                marginTop: 15,
-              }}
-              // onPress={() => navigation.navigate('profile')}
-            >
-              <Text
         
-                style={discoverMoreTextStyle}
+            <WeekendScreen
+              weekendTours={weekendTours}
+              viewTours={() => navigation.navigate('viewTour')}
+              {...this.props}
+            />
+        
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: "space-between",
+                marginTop: Layout.window.height / 25
+              }}
+            >
+              <TouchableOpacity
+                // onPress={() => navigation.navigate('profile')}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: 'space-between',
+                }}
               >
-                {translate(`home.go`)}
-              </Text>
-    
-            </TouchableOpacity>
-          </View>
-  
-          <Text
-    
-            style={findMyTourTextStyle}
-          >
-            {translate(`home.findTourMore`)}
-          </Text>
-  
-          <Button
-            style={QUOTE_BUTTON}
-            textStyle={QUOTE_BUTTON_TEXT}
-            // disabled={!isValid || isLoading}
-            // onPress={() => handleSubmit()}
-            tx={`home.quote`}
-          />
-
-        </ScrollView>
-      </View>
+                <Text
+              
+                  style={discoverTextStyle}
+                >
+                  {translate(`home.recommendedTours`)}
+                </Text>
+              </TouchableOpacity>
+          
+              <TouchableOpacity
+                style={{
+                  marginTop: 15,
+                }}
+                disabled={isLoading}
+                onPress={() => navigation.navigate('viewTours')}
+              >
+                <Text
+              
+                  style={discoverMoreTextStyle}
+                >
+                  {translate(`home.more`)}
+                </Text>
+          
+              </TouchableOpacity>
+            </View>
+        
+            <Text
+          
+              style={discoverMoreTextStyle}
+            >
+              {translate(`home.recommendedMore`)}
+            </Text>
+        
+            <DiscoverScreen
+              discoverTours={discoverTours}
+              viewTours={() => navigation.navigate('viewTour')}
+              {...this.props}
+            />
+        
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: "space-between",
+                marginTop: Layout.window.height / 25
+              }}
+            >
+              <View
+                // onPress={() => navigation.navigate('profile')}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text
+              
+                  style={discoverTextStyle}
+                >
+                  {translate(`home.findTour`)}
+                </Text>
+              </View>
+          
+              <TouchableOpacity
+                style={{
+                  marginTop: 15,
+                }}
+                // onPress={() => navigation.navigate('profile')}
+              >
+                <Text
+              
+                  style={discoverMoreTextStyle}
+                >
+                  {translate(`home.go`)}
+                </Text>
+          
+              </TouchableOpacity>
+            </View>
+        
+            <Text
+          
+              style={findMyTourTextStyle}
+            >
+              {translate(`home.findTourMore`)}
+            </Text>
+        
+            <Formik
+              initialValues={{
+                searchKey: authSearchKey
+              }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
+            >
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
+              
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}
+                  >
+                    <TextField
+                      name="searchKey"
+                      keyboardType="default"
+                      placeholderTx="home.search"
+                      value={values.searchKey}
+                      onChangeText={handleChange("searchKey")}
+                      onBlur={handleBlur("searchKey")}
+                      autoCapitalize="none"
+                      returnKeyType="search"
+                      isInvalid={!isValid}
+                      fieldError={errors.searchKey}
+                      forwardedRef={i => {
+                        this.searchKeyInput = i
+                      }}
+                      onSubmitEditing={() => handleSubmit()}
+                    />
+                
+                    <Button
+                      style={QUOTE_BUTTON}
+                      textStyle={QUOTE_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`home.quote`}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
+      
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -353,6 +436,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   getWeekendToursAsync: (limit: number) => dispatch(getWeekendToursAsync(limit)),
   getDiscoverToursAsync: (limit: number) => dispatch(getDiscoverToursAsync(limit)),
   setSelectedTours: (tour: ITours) => dispatch(setSelectedTours(tour)),
+  searchTextToursAsync: (searchKey: string) => dispatch(searchTextToursAsync(searchKey)),
+  searchAmountToursAsync: (amount: number) => dispatch(searchAmountToursAsync(amount)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -360,6 +445,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   userPicture: state.auth.picture,
   weekendTours: state.tour.weekendTours,
   discoverTours: state.tour.discoverTours,
+  isLoading: state.tour.loading,
 }) as StateProps;
 
 export const HomeScreen = connect<StateProps>(

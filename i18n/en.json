@@ -42,12 +42,13 @@
     "appName": "Ravr.",
     "weekend": "Best prices",
     "more": "More",
-    "go": ">",
+    "go": "Go >",
     "quote": "Get Quote",
     "findTour": "Find my tour.",
     "findTourMore": "We can help you find the perfect vacation to match your budget.",
     "recommendedTours": "Discover",
-    "recommendedMore": "With us, you get the best local and international tourism deals and packages"
+    "recommendedMore": "With us, you get the best local and international tourism deals and packages",
+    "search": "Search by name, location and amount"
   },
   "viewTour": {
     "join": "Join",
@@ -62,6 +63,6 @@
   },
   "weekends": {
     "header": "Weekends.",
-    "more": "Explore the best cities, towns, and neighborhoods on Ravr—one long weekend at a time.",
+    "more": "Explore the best cities, towns, and neighborhoods on Ravr—one long weekend at a time."
   }
 }
