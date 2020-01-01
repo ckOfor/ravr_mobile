@@ -13,6 +13,7 @@ export const images = {
   globe: require("../assets/globe.png"),
   search: require("../assets/search.png"),
   profile: require("../assets/profile.png"),
+  contactUs: require("../assets/contact-us.png"),
 }
 
 export type ImageTypes = keyof typeof images

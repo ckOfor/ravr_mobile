@@ -85,6 +85,7 @@ export class TextField extends React.Component<TextFieldProps, State> {
       padFieldForError = true,
       extraComponent,
       multiline,
+      numberOfLines,
       ...rest
     } = this.props
 
@@ -121,6 +122,7 @@ export class TextField extends React.Component<TextFieldProps, State> {
             style={inputStyle}
             ref={forwardedRef}
             {...rest}
+            numberOfLines={numberOfLines}
             autoCorrect={false}
             textContentType={textContentType}
           />

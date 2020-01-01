@@ -19,6 +19,48 @@ type createTransactionSuccess = {
   type: typeof CREATE_TRANSACTION_SUCCESS
 }
 
+export const UPDATE_USER = "UPDATE_USER"
+type updateUser = {
+  type: typeof UPDATE_USER
+}
+
+export const UPDATE_USER_FAILURE = "UPDATE_USER_FAILURE"
+type updateUserFailure = {
+  type: typeof UPDATE_USER_FAILURE
+}
+
+export const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS"
+type updateUserSuccess = {
+  type: typeof UPDATE_USER_SUCCESS
+}
+
+export const SAVE_SUBJECT = "SAVE_SUBJECT"
+type saveSubject = {
+  type: typeof SAVE_SUBJECT,
+  payload: string
+}
+
+export const SAVE_MESSAGE = "SAVE_MESSAGE"
+type saveMessage = {
+  type: typeof SAVE_MESSAGE,
+  payload: string
+}
+
+export const CONTACT_US = "CONTACT_US"
+type contactUs = {
+  type: typeof CONTACT_US
+}
+
+export const CONTACT_US_FAILURE = "CONTACT_US_FAILURE"
+type contactUsFailure = {
+  type: typeof CONTACT_US_FAILURE
+}
+
+export const CONTACT_US_SUCCESS = "CONTACT_US_SUCCESS"
+type contactUsSuccess = {
+  type: typeof CONTACT_US_SUCCESS
+}
+
 
 export type IUser = {
   id: number
@@ -41,6 +83,8 @@ export type IUser = {
 export type UserState = {
   data: IUser,
   loading: boolean,
+  subject: string,
+  message: string,
 }
 
 export type UserAction =
@@ -48,3 +92,11 @@ export type UserAction =
   | createTransaction
   | createTransactionFailure
   | createTransactionSuccess
+  | updateUser
+  | updateUserFailure
+  | updateUserSuccess
+  | saveSubject
+  | saveMessage
+  | contactUs
+  | contactUsFailure
+  | contactUsSuccess

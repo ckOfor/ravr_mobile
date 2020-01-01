@@ -38,6 +38,17 @@ const processResponse = async (response): Promise<any> => {
   return { kind: "ok", data: response.data }
 }
 
+
+const contactUs = async (id: number, subject: string, body: string, email: string): Promise<any> => {
+  const response = await api.post("/users/contact/us", {
+    id,
+    subject,
+    body,
+    email
+  })
+  return processResponse(response)
+}
+
 const createTransaction = async ({
   id,
   guideId,
@@ -501,5 +512,6 @@ export {
   getPopularTours,
   searchTextTours,
   searchAmountTours,
-  createTransaction
+  createTransaction,
+  contactUs,
 }

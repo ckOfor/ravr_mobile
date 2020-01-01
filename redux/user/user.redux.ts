@@ -1,7 +1,12 @@
 import {
+  CONTACT_US,
+  CONTACT_US_FAILURE,
+  CONTACT_US_SUCCESS,
   CREATE_TRANSACTION,
   CREATE_TRANSACTION_FAILURE,
   CREATE_TRANSACTION_SUCCESS,
+  SAVE_MESSAGE,
+  SAVE_SUBJECT,
   SET_USER_DETAILS,
   UserAction,
   UserState,
@@ -28,6 +33,8 @@ export const IUser = {
 const initialState: UserState = {
   data: IUser,
   loading: false,
+  subject: '',
+  message: '',
 }
 
 export function userReducer(
@@ -35,6 +42,18 @@ export function userReducer(
   action: UserAction
 ): UserState {
   switch (action.type) {
+    case SAVE_SUBJECT:
+      return {
+        ...state,
+        subject: action.payload
+      }
+  
+    case SAVE_MESSAGE:
+      return {
+        ...state,
+        message: action.payload
+      }
+
     case SET_USER_DETAILS:
       return {
         ...state,
@@ -42,6 +61,7 @@ export function userReducer(
       }
   
     case CREATE_TRANSACTION:
+    case CONTACT_US:
       return {
         ...state,
         loading: true
@@ -50,6 +70,8 @@ export function userReducer(
   
     case CREATE_TRANSACTION_FAILURE:
     case CREATE_TRANSACTION_SUCCESS:
+    case CONTACT_US_FAILURE:
+    case CONTACT_US_SUCCESS:
       return {
         ...state,
         loading: false

@@ -260,7 +260,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                 resizeMethod={'auto'}
                 resizeMode='cover'
               />
-  
+
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
               >

@@ -65,6 +65,12 @@ export interface TextFieldProps extends TextInputProps {
    * Should the text-field be pre-padded for errors?
    */
   padFieldForError?: boolean
+  
+  
+  /**
+   * Number of lines
+   */
+  numberOfLines?: number
 
   /**
    * Optional component to be displayed on the right side of the text-input

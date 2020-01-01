@@ -8,21 +8,21 @@ import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
 import { Layout } from "../../constants";
 import {translate} from "../../i18n";
-import {colors, fonts, images} from "../../theme";
-import moment from "moment";
-import {Button} from "../../components/button";
+import { colors, fonts, images } from "../../theme";
 import { IUser } from "../../redux/user";
+import { updateUserAsync } from "../../redux/user";
 
 interface DispatchProps {
-
+  updateUserAsync: () => void
 }
+
 interface StateProps {
   User: IUser
 }
 
-interface WalletProps extends NavigationScreenProps {}
+interface ProfileScreenProps extends NavigationScreenProps {}
 
-type Props = DispatchProps & StateProps & WalletProps
+type Props = DispatchProps & StateProps & ProfileScreenProps
 
 const ROOT: ViewStyle = {
   height: Layout.window.height,
@@ -132,7 +132,6 @@ const JOIN_BUTTON_TEXT: TextStyle = {
 
 const discoverTextStyle: TextStyle = {
   fontSize: 22,
-  marginLeft: 30,
   color: colors.black,
   fontFamily: fonts.latoRegular,
   lineHeight: 40,
@@ -145,7 +144,7 @@ const discoverMoreTextStyle: TextStyle = {
   fontFamily: fonts.latoRegular,
   alignSelf: 'flex-start',
   width: Layout.window.width / 1.5,
-  marginLeft: 30,
+  marginLeft: 20,
 }
 
 const TRIP_IMAGE: ImageStyle = {
@@ -155,32 +154,17 @@ const TRIP_IMAGE: ImageStyle = {
   borderRadius: 12,
 }
 
-const TRIP_DETAILS: TextStyle = {
-  marginTop: 30
-}
-
-const FIELD: ViewStyle = {
-  // alignItems: 'center',
-  marginTop: 30
-}
-
-const SAVE_BUTTON: ViewStyle = {
-  alignSelf: "center",
-  justifyContent: "center",
-  borderRadius: 100,
-  width: Layout.window.width / 1.4,
-  marginTop: 20,
-  backgroundColor: colors.purple
-}
-
-const SAVE_BUTTON_TEXT: TextStyle = {
-  fontSize: 12,
-  fontFamily: fonts.gibsonRegular,
-  color: colors.white,
-  textTransform: 'uppercase'
+const infoTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  marginTop: 10,
 }
 
 class Profile extends React.Component<NavigationScreenProps & Props> {
+  
+  componentDidMount(): void {
+    this.props.updateUserAsync()
+  }
   
   public render(): React.ReactNode {
     const {
@@ -188,7 +172,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     } = this.props
     const { fullName, Tourists, pictureURL, Transactions } = User
     
-    console.tron.log(Tourists[0])
+    console.tron.log(Tourists[0].tripName)
     console.tron.log(Transactions)
     return (
       <View
@@ -334,19 +318,11 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     flexDirection: 'row',
                     justifyContent: "space-between",
                     marginTop: Layout.window.height / 25,
-                    width: Layout.window.width,
+                    width: Layout.window.width / 1.1,
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => {
-                      Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-                        if (supported) {
-                          Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-                        } else {
-                          console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-                        }
-                      });
-                    }}
+                    onPress={() => navigation.navigate('savings')}
                     style={{
                       flexDirection: "row",
                       justifyContent: 'space-between',
@@ -364,21 +340,13 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     style={{
                       marginTop: 15,
                     }}
-                    onPress={() => {
-                      Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-                        if (supported) {
-                          Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-                        } else {
-                          console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-                        }
-                      });
-                    }}
+                    onPress={() => navigation.navigate('savings')}
                   >
                     <Text
             
                       style={discoverMoreTextStyle}
                     >
-                      {translate(`home.more`)}
+                      {Tourists[0] !== undefined && Tourists[0].userCoins} coins
                     </Text>
         
                   </TouchableOpacity>
@@ -400,26 +368,27 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
           {
             Transactions[0] !== undefined && (
               <TouchableOpacity
-                onPress={() => {
-                  Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-                    if (supported) {
-                      Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-                    } else {
-                      console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-                    }
-                  });
-                }}
                 style={{
                   flexDirection: "row",
                   justifyContent: 'space-between',
+                  marginLeft: 20,
                   marginTop: 20,
+                  width: Layout.window.width / 1.15
                 }}
+                onPress={() => navigation.navigate('trips')}
               >
                 <Text
       
                   style={discoverTextStyle}
                 >
                   {translate(`profile.myTrips`)}
+                </Text>
+  
+                <Text
+    
+                  style={infoTextStyle}
+                >
+                  {translate(`home.more`)}
                 </Text>
               </TouchableOpacity>
             )
@@ -460,11 +429,9 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                         style={{
                           flexDirection: "column",
                           marginLeft: 20,
+                          marginBottom: 100,
                         }}
-                        // onPress={() => {
-                        //   setSelectedTours(tour)
-                        //   viewTours()
-                        // }}
+                        // onPress={() => navigation.navigate('trips')}
                       >
                         <Image
                           style={TRIP_IMAGE}
@@ -472,6 +439,27 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                           resizeMethod={'auto'}
                           resizeMode='cover'
                         />
+  
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                          }}
+                        >
+                          <Text
+      
+                            style={infoTextStyle}
+                          >
+                            {Transactions[0].tripName}
+                          </Text>
+    
+                          <Text
+      
+                            style={infoTextStyle}
+                          >
+                            {translate(`home.more`)}
+                          </Text>
+                        </View>
   
                       </TouchableOpacity>
                     )
@@ -489,7 +477,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-
+  updateUserAsync: () => dispatch(updateUserAsync())
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;

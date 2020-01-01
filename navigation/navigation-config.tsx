@@ -35,6 +35,8 @@ export const DEFAULT_BOTTOM_NAVIIGATION: BottomTabNavigatorConfig = {
         image = images.globe;
       } if (routeName === 'search') {
         image = images.search;
+      } if (routeName === 'contactUs') {
+        image = images.contactUs;
       } if (routeName === 'profile') {
         image = images.profile;
       }

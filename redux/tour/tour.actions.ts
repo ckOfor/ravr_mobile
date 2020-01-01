@@ -4,7 +4,7 @@ import {
   getDiscoverTours as apiGetDiscoverTours,
   getPopularTours as apiGetPopularTours,
   searchTextTours as apiSearchTextTours,
-  searchAmountTours as apiSearchAmountTours,
+  searchAmountTours as apiSearchAmountTours, logInUserPayload, logInWithEmail as apiLogInWithEmail,
 } from "../../services/api"
 
 import {
@@ -19,7 +19,7 @@ import {
   SET_DISCOVER_TOURS, SET_SEARCH_KEY, SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS
 } from "./";
-import { notify } from "../auth";
+import {logInUserAsync, notify, setUser, socialAuthenticationFailure} from "../auth";
 import {ThunkAction} from "redux-thunk";
 import {ApplicationState} from "../index";
 import {Action} from "redux";

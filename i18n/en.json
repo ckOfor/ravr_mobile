@@ -8,7 +8,8 @@
     "fieldRequired": "This field is required",
     "fieldValidEmail": "Must be a valid email",
     "fieldTooShort": "This field is too short!",
-    "passwordMatch": "Passwords must match"
+    "passwordMatch": "Passwords must match",
+    "fieldError": "{{fieldName}} is too short"
   },
   "landingScreen": {
     "email": "Continue with Email",
@@ -88,5 +89,11 @@
     "save": "Save with  Ravr.",
     "saveMore": "Just remember, whatever your around-the-world travel budget is, it's best to have a plan in place! Create a savings plan.",
     "myTrips": "My Trips"
+  },
+  "contactUs": {
+    "header": "Hello Ravr.",
+    "subject": "Subject: How can I save with Ravr...",
+    "buttonText": "Send",
+    "savings": "Message: Click on save with Ravr text on your profile"
   }
 }
