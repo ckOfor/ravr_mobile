@@ -80,5 +80,13 @@
   "save": {
     "save": "Save",
     "month": "Enter number of months"
+  },
+  "profile": {
+    "trips": "Trips",
+    "sent": "Sent",
+    "received": "Received",
+    "save": "Save with  Ravr.",
+    "saveMore": "Just remember, whatever your around-the-world travel budget is, it's best to have a plan in place! Create a savings plan.",
+    "myTrips": "My Trips"
   }
 }
