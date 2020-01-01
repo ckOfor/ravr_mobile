@@ -43,6 +43,7 @@ target 'ravr' do
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+  pod 'react-native-paystack', :path => '../node_modules/react-native-paystack'
 
   # Automatically detect installed unimodules
   use_unimodules!

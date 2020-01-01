@@ -2,8 +2,9 @@ import { combineReducers, Reducer } from "redux"
 import { deviceReducer as device, DeviceState } from "./device"
 import { startupReducer as startup, StartupState } from "./startup"
 import { authReducer as auth, AuthState } from "./auth"
-import { navReducer } from "../navigation/redux-navigation"
 import { tourReducer as tour, TourState} from "./tour";
+import { userReducer as user, UserState} from "./user";
+import { navReducer } from "../navigation/redux-navigation"
 
 export interface ApplicationState {
   nav: any
@@ -11,6 +12,7 @@ export interface ApplicationState {
   device: DeviceState
   auth: AuthState
   tour: TourState
+  user: UserState
 }
 
 export const appReducer: Reducer<ApplicationState> = combineReducers({
@@ -18,5 +20,6 @@ export const appReducer: Reducer<ApplicationState> = combineReducers({
   startup,
   device,
   auth,
-  tour
+  tour,
+  user
 })

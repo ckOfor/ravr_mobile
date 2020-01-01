@@ -1,3 +1,11 @@
+export type createTransactionPayload = {
+  id: number
+  guideId: string
+  tourId: number
+  reference: string
+  slots: number
+}
+
 export type logInUserPayload = {
   email: string
   password: string

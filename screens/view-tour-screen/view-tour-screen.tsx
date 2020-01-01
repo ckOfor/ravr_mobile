@@ -251,7 +251,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                     style={JOIN_BUTTON}
                     textStyle={JOIN_BUTTON_TEXT}
                     // disabled={!isValid || isLoading}
-                    // onPress={() => handleSubmit()}
+                    onPress={() => navigation.navigate('payment')}
                     tx={`viewTour.join`}
                   />
     
@@ -435,39 +435,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
             }}
             heading={translate("viewTour.tabTwo")}
           >
-            {/*tripWallet:50400*/}
-            {/*tripPaymentCount:4*/}
-            {/*tripLocation:Calabar, Nigeria*/}
-            {/*tripDate:2019-12-21*/}
-            {/*poster:https://res.cloudinary.com/symple-innovations-company/image/upload/v1576625078/zc8l8jw5cvebdvaezmaa.jpg*/}
-            {/*locationPictureOne:https://res.cloudinary.com/symple-innovations-company/image/upload/v1576625057/yano4czdfxhwkrvuldcs.jpg*/}
-            {/*locationPictureTwo:https://res.cloudinary.com/symple-innovations-company/image/upload/v1576625083/uijrrbctcuf406agt0sr.png*/}
-            {/*locationPictureThree:https://res.cloudinary.com/symple-innovations-company/image/upload/v1576625083/pnkmhuzivnlqcce4njtv.jpg*/}
-            {/*tripVideo:null*/}
-            {/*tripTime:12:20 AM*/}
-            {/*tripPrice:14000*/}
-            {/*tripDuration:7*/}
-            {/*tripDiscount:0.1*/}
-            {/*tripContent:Social Prefect Tours and Novarosta presents "Christmas in Calabar + Calabar Carvinal 2019" Date - December 24th - 29th 2019 N130,000 each (Without flights) Includes - Accommodation (Double sharing), Full board (daily breakfast, lunch & dinner), visits to Kwa waterfall, Tinapa, Marina resort & Drill ranch, Christmas party, Participation in the carvinal, t-shirt, goodie bag and more. Please note that fare with flights is no longer available. Payment details – GTB - 0265867267 Diamond bank - 0080530881 Account name – Chiamaka Social Prefect Intl Blog. For further details, contact - amaka.socialprefect@gmail.com Or call: 08163976208*/}
-            {/*tripStatus:open*/}
-            {/*requestStatus:N/A*/}
-            {/*userDiscount:0.05*/}
-            {/*userPays:13300*/}
-            {/*payStackCharges:13600*/}
-            {/*payTourCompany:12600*/}
-            {/*paySympleInc:700*/}
-            {/*userCoins:70*/}
-            {/*tripLikesCount:0*/}
-            {/*noOfSlots:-2*/}
-            {/*companyLogo:https://res.cloudinary.com/symple-innovations-company/image/upload/v1576619650/oqqphzgeh1tgrrsgjoue.jpg*/}
-            {/*paymentStatus:open*/}
-            {/*tripDeadline:28-12-2019*/}
-            {/*paymentId:""*/}
-            {/*userId:4*/}
-            {/*createdAt:2019-12-17T23:24:45.086Z*/}
-            {/*updatedAt:2019-12-24T13:46:30.170Z*/}
-            {/*<Tab2 />*/}
-  
             <Text
               numberOfLines={100}
               style={TRIP_DETAILS}

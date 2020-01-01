@@ -38,6 +38,25 @@ const processResponse = async (response): Promise<any> => {
   return { kind: "ok", data: response.data }
 }
 
+const createTransaction = async ({
+  id,
+  guideId,
+  tourId,
+  reference,
+  slots
+}: Types.createTransactionPayload): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/post/pay", {
+    id,
+    guideId,
+    tourId,
+    reference,
+    slots
+  })
+  return processResponse(response)
+}
+
 const searchTextTours = async (searchKey: string, date?: string): Promise<
   Types.getResponse
   > => {
@@ -481,5 +500,6 @@ export {
   getDiscoverTours,
   getPopularTours,
   searchTextTours,
-  searchAmountTours
+  searchAmountTours,
+  createTransaction
 }

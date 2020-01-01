@@ -69,5 +69,12 @@
   },
   "search": {
     "search": "Search."
+  },
+  "payment": {
+    "back": "< Ravr.",
+    "pay": "pay",
+    "slots": "Enter number of slots",
+    "slotError": "Maximum slot is 9",
+    "slotShot": "Minimum slot is 1"
   }
 }

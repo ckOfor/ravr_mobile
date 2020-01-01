@@ -5,6 +5,7 @@ import { ViewTourScreen } from "../screens/view-tour-screen";
 import { ViewToursScreen } from "../screens/view-tours";
 import { WeekendToursScreen } from "../screens/weekend-tours-screen";
 import { SearchScreen } from "../screens/search-screen";
+import {PaymentScreen} from "../screens/payment-screen";
 
 export const TourNavigator = createStackNavigator(
   {
@@ -28,6 +29,12 @@ export const TourNavigator = createStackNavigator(
     },
     weekendTours: {
       screen: WeekendToursScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    payment: {
+      screen: PaymentScreen,
       navigationOptions: {
         header: null
       }
