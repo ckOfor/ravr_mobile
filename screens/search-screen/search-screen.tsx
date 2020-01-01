@@ -33,7 +33,7 @@ import {
   clearSearchTourAsync,
   getPopularToursAsync,
   searchAmountToursAsync,
-  searchTextToursAsync,
+  searchTextToursAsync, setSearchKeyAsync,
   setSelectedTours
 } from "../../redux/tour";
 import moment from "moment";
@@ -49,6 +49,7 @@ interface DispatchProps {
   searchTextToursAsync: (searchKey: string, date?: string) => void
   searchAmountToursAsync: (amount: number, date?: string) => void
   clearSearchTourAsync: () => void
+  setSearchKeyAsync: (searchKey: string) => void
 }
 
 interface StateProps {
@@ -142,7 +143,6 @@ class Search extends React.Component<NavigationScreenProps & Props> {
     limit: 3,
     isDateTimePickerVisible: false,
     chosenDate: '',
-    authSearchKey: '',
   }
   
   searchKeyInput: NativeMethodsMixinStatic | any
@@ -173,14 +173,10 @@ class Search extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, tours, setSelectedTours, isLoading, clearSearchTourAsync
+      navigation, tours, setSelectedTours, isLoading, clearSearchTourAsync, authSearchKey, setSearchKeyAsync
     } = this.props
     
-    const {
-      authSearchKey
-    } = this.state
-    
-    console.tron.log(tours)
+    console.tron.log(authSearchKey, "authSearchKey")
     return (
       <View
         style={{
@@ -388,7 +384,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
           onCancel={this.hideDateTimePicker}
         />
   
-        
+        <NavigationEvents onDidBlur={() => setSearchKeyAsync('')} />
       </View>
     )
   }
@@ -400,12 +396,14 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   searchTextToursAsync: (searchKey: string, date?: string) => dispatch(searchTextToursAsync(searchKey, date)),
   searchAmountToursAsync: (amount: number, date?: string) => dispatch(searchAmountToursAsync(amount, date)),
   clearSearchTourAsync: () => dispatch(clearSearchTourAsync()),
+  setSearchKeyAsync: (searchKey: string) => dispatch(setSearchKeyAsync(searchKey)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
   isLoading: state.tour.loading,
-  tours: state.tour.searchedTours
+  tours: state.tour.searchedTours,
+  authSearchKey: state.tour.searchKey,
 }) as StateProps;
 
 export const SearchScreen = connect<StateProps>(

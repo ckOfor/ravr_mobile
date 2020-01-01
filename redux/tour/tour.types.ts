@@ -48,7 +48,7 @@ type getDiscoverToursFailure = {
 export const SAVE_SELECTED_TOUR = "SAVE_SELECTED_TOUR"
 type saveSelectedTour = {
   type: typeof SAVE_SELECTED_TOUR
-  payload: [ITours]
+  payload: ITours
 }
 
 export const SET_SEARCH_TOURS = "SET_SEARCH_TOURS"
@@ -77,12 +77,19 @@ type clearSearch = {
   type: typeof CLEAR_SEARCH
 }
 
+export const SET_SEARCH_KEY = "SET_SEARCH_KEY"
+type setSearchKey = {
+  type: typeof SET_SEARCH_KEY
+  payload: string
+}
+
 export type TourState = {
   weekendTours: [ITours],
   discoverTours: [ITours],
   selectedTour: ITours,
   loading: boolean,
   searchedTours: [ITours],
+  searchKey: string,
 }
 
 export type TourAction =
@@ -100,3 +107,4 @@ export type TourAction =
   | getSearchToursFailure
   | getSearchToursSuccess
   | clearSearch
+  | setSearchKey

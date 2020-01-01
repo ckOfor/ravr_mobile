@@ -10,7 +10,7 @@ import {
   GET_WEEKEND_TOURS_FAILURE,
   GET_WEEKEND_TOURS_SUCCESS,
   SAVE_SELECTED_TOUR,
-  SET_DISCOVER_TOURS,
+  SET_DISCOVER_TOURS, SET_SEARCH_KEY,
   SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS,
   TourAction,
@@ -61,6 +61,7 @@ const initialState: TourState = {
   },
   loading: false,
   searchedTours: [ITours],
+  searchKey: '',
 }
 
 export function tourReducer(
@@ -73,6 +74,12 @@ export function tourReducer(
       return {
         ...state,
         weekendTours: action.payload
+      }
+      
+    case SET_SEARCH_KEY:
+      return {
+        ...state,
+        searchKey: action.payload
       }
   
     case SET_SEARCH_TOURS:

@@ -16,7 +16,7 @@ import {
   GET_WEEKEND_TOURS_FAILURE,
   GET_WEEKEND_TOURS_SUCCESS,
   SAVE_SELECTED_TOUR,
-  SET_DISCOVER_TOURS, SET_SEARCH_TOURS,
+  SET_DISCOVER_TOURS, SET_SEARCH_KEY, SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS
 } from "./";
 import { notify } from "../auth";
@@ -171,6 +171,7 @@ export const searchTextToursAsync = (searchKey: string, date?: string): ThunkAct
   
   dispatch(searchTours())
   dispatch(clearSearchTourAsync())
+  dispatch(setSearchKeyAsync(searchKey))
   
   try {
     const result = await apiSearchTextTours(searchKey, date)
@@ -199,9 +200,9 @@ export const searchAmountToursAsync = (amount: number, date?: string): ThunkActi
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  
   dispatch(searchTours())
   dispatch(clearSearchTourAsync())
+  dispatch(setSearchKeyAsync(amount.toString()))
   
   try {
     const result = await apiSearchAmountTours(amount, date)
@@ -227,3 +228,5 @@ export const searchAmountToursAsync = (amount: number, date?: string): ThunkActi
 }
 
 export const clearSearchTourAsync = () => ({ type: CLEAR_SEARCH })
+
+export const setSearchKeyAsync = (searchKey: string) => ({ type: SET_SEARCH_KEY, payload: searchKey })

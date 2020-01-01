@@ -384,6 +384,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           style={{
             marginTop: '5%',
             marginBottom: '5%',
+            marginRight: '5%',
           }}
           // ref={forwardedRef}
           onContentSizeChange={(contentWidth, contentHeight)=>{
