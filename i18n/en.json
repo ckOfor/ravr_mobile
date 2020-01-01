@@ -76,5 +76,9 @@
     "slots": "Enter number of slots",
     "slotError": "Maximum slot is 9",
     "slotShot": "Minimum slot is 1"
+  },
+  "save": {
+    "save": "Save",
+    "month": "Enter number of months"
   }
 }

@@ -3,25 +3,32 @@ import React from "react"
 
 // react-native
 import {
-  Image, ImageStyle,
+  Image, ImageStyle, Linking, NativeMethodsMixinStatic,
   ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle
 } from "react-native"
 
 // third-party libraries
 import { NavigationScreenProps } from "react-navigation"
 import moment from 'moment'
-import { Container, Header, Content, Tab, Tabs } from 'native-base';
+import { Tab, Tabs } from 'native-base';
+import { translate } from "../../i18n";
+import { Formik, FormikProps } from "formik";
+import * as Yup from "yup";
 
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
+
+// API
 import {ITours} from "../../services/api";
-import {Layout} from "../../constants";
-import {colors, fonts, images} from "../../theme";
-import {Button} from "../../components/button";
-import {translate} from "../../i18n";
-import {DiscoverScreen} from "../discover-screen";
+
+// styles
+import { Layout } from "../../constants";
+import { colors, fonts, images } from "../../theme";
+import { Button } from "../../components/button";
+import { TextField } from "../../components/text-field";
+import {formatSLots} from "../../utils/formatters";
 
 
 interface DispatchProps {
@@ -31,6 +38,19 @@ interface DispatchProps {
 interface StateProps {
   isLoading: boolean
   selectedTour: ITours
+}
+
+
+const schema = Yup.object().shape({
+  months: Yup.string()
+    .required("payment.slotShot"),
+  slots: Yup.string()
+    .required("payment.slotShot")
+})
+
+interface MyFormValues {
+  months: number
+  slots: number
 }
 
 interface ViewTourScreenProps extends NavigationScreenProps {}
@@ -163,14 +183,55 @@ const TRIP_DETAILS: TextStyle = {
   marginTop: 30
 }
 
+const FIELD: ViewStyle = {
+  // alignItems: 'center',
+  marginTop: 30
+}
+
+const SAVE_BUTTON: ViewStyle = {
+  alignSelf: "center",
+  justifyContent: "center",
+  borderRadius: 100,
+  width: Layout.window.width / 1.4,
+  marginTop: 20,
+  backgroundColor: colors.purple
+}
+
+const SAVE_BUTTON_TEXT: TextStyle = {
+  fontSize: 12,
+  fontFamily: fonts.gibsonRegular,
+  color: colors.white,
+  textTransform: 'uppercase'
+}
+
 class ViewTour extends React.Component<NavigationScreenProps & Props> {
+  
+  monthsInput: NativeMethodsMixinStatic | any
+  slotsInput: NativeMethodsMixinStatic | any
+  
+  submit = () => {
+    Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
+      if (supported) {
+        Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
+      } else {
+        console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
+      }
+    });
+  }
   
   public render(): React.ReactNode {
     const {
-      navigation, selectedTour
+      navigation, selectedTour, isLoading
     } = this.props
+  
+    const today= moment()
+    let myTripDate = selectedTour && selectedTour.tripDate
+    const selectedTripDate = moment(myTripDate);
+    const monthDifference = selectedTripDate.diff(today, 'months')
+    // console.log(monthlyPay)
     
-    console.tron.log(selectedTour)
+    // console.tron.log(selectedTour)
+    
     return (
       <ScrollView
         // onScroll={this.handleScroll}
@@ -500,7 +561,118 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
             }}
             heading={translate("viewTour.tabThree")}
           >
-            {/*<Tab3 />*/}
+  
+            <Formik
+              initialValues={{
+                months: 1,
+                slots: 1,
+              }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
+            >
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
+  
+                  <Text
+                    numberOfLines={100}
+                    style={TRIP_DETAILS}
+                  >
+                    Amount:
+                    {
+                      values.slots > 0 && values.months > 0 && (
+                        <Text
+                          numberOfLines={100}
+                          style={TRIP_DETAILS}
+                        >
+                          { } ₦ {selectedTour && Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Text>
+                      )
+                    }
+                  </Text>
+        
+                  <View
+                    style={FIELD}
+                  >
+  
+                    <TextField
+                      name="slots"
+                      keyboardType="number-pad"
+                      placeholderTx="payment.slots"
+                      value={formatSLots(values.slots.toString())}
+                      onChangeText={handleChange("slots")}
+                      onBlur={handleBlur("slots")}
+                      autoCapitalize="none"
+                      returnKeyType="next"
+                      isInvalid={!isValid}
+                      fieldError={errors.slots}
+                      onSubmitEditing={() => handleSubmit()}
+                      forwardedRef={i => {
+                        this.slotsInput = i
+                      }}
+                    />
+                    
+                    <TextField
+                      name="months"
+                      keyboardType="number-pad"
+                      placeholderTx="save.month"
+                      value={values.months.toString()}
+                      onChangeText={handleChange("months")}
+                      onBlur={handleBlur("months")}
+                      autoCapitalize="none"
+                      returnKeyType="next"
+                      isInvalid={!isValid}
+                      fieldError={errors.months}
+                      onSubmitEditing={() => handleSubmit()}
+                      forwardedRef={i => {
+                        this.monthsInput = i
+                      }}
+                    />
+                    
+                    <Text
+                      numberOfLines={100}
+                      style={{
+                        marginBottom: 10
+                      }}
+                    >
+                      Amount to charge:
+                      
+                      {
+                        values.slots > 0 && values.months > 0 && (
+                          <Text
+                            numberOfLines={100}
+                            style={{
+                              marginBottom: 10,
+                              fontWeight: "bold"
+                            }}
+                          >
+                            { } ₦ {selectedTour && 0.015 * Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months + Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months + 100}
+                            {/*{ } ₦ {selectedTour && (0.015 * Math.round(Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months) + (Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months) + 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}*/}
+                          </Text>
+                        )
+                      }
+                    </Text>
+          
+                    <Button
+                      style={SAVE_BUTTON}
+                      textStyle={SAVE_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`save.save`}
+                    />
+        
+                  </View>
+                </View>
+              )}
+            </Formik>
+            
           </Tab>
         </Tabs>
       
