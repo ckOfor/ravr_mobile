@@ -3,7 +3,17 @@ import React from "react"
 
 // react-native
 import {
-  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking
+  View,
+  Text,
+  ViewStyle,
+  StatusBar,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ImageStyle,
+  Linking,
+  NativeMethodsMixinStatic, KeyboardAvoidingView
 } from "react-native"
 
 // third-party
@@ -13,6 +23,7 @@ import { Dispatch } from "redux";
 import moment from "moment";
 import Modal from "react-native-modal";
 import call from 'react-native-phone-call'
+import * as Yup from "yup";
 
 // redux
 import { ApplicationState } from "../../redux";
@@ -24,6 +35,8 @@ import { Layout } from "../../constants";
 import { translate } from "../../i18n";
 import { colors, fonts, images } from "../../theme";
 import { Button } from "../../components/button";
+import {Formik, FormikProps} from "formik";
+import {TextField} from "../../components/text-field";
 
 interface DispatchProps {
   updateUserAsync: () => void
@@ -31,7 +44,20 @@ interface DispatchProps {
 
 interface StateProps {
   User: IUser
+  authRedeemKey: string
+  isLoading: boolean
 }
+
+interface MyFormValues {
+  redeemKey: string
+}
+
+const schema = Yup.object().shape({
+  redeemKey: Yup.string()
+    .min(3, "common.fieldTooShort")
+    .required("common.fieldRequired"),
+})
+
 
 interface ProfileScreenProps extends NavigationScreenProps {}
 
@@ -39,6 +65,22 @@ type Props = DispatchProps & StateProps & ProfileScreenProps
 
 const ROOT: ViewStyle = {
   height: Layout.window.height,
+}
+
+
+const REDEEM_BUTTON: ViewStyle = {
+  borderRadius: 100,
+  width: Layout.window.width / 1.4,
+  marginTop: 10,
+  backgroundColor: colors.purple,
+  marginBottom: Layout.window.height / 7,
+}
+
+const REDEEM_BUTTON_TEXT: TextStyle = {
+  fontSize: 12,
+  fontFamily: fonts.gibsonRegular,
+  color: colors.palette.white,
+  textTransform: 'uppercase'
 }
 
 const BACKGROUND_IMAGE: ImageStyle = {
@@ -94,7 +136,6 @@ const SHADOW: ViewStyle = {
 
 const HEADER_TEXT: TextStyle = {
   fontSize: 22,
-  marginBottom: 25,
   color: colors.black,
   fontFamily: fonts.latoRegular,
   lineHeight: 40,
@@ -121,7 +162,7 @@ const LOCATION: TextStyle = {
 const JOIN_BUTTON: ViewStyle = {
   borderRadius: 100,
   width: Layout.window.width / 2,
-  marginTop: 25,
+  marginTop: 10,
   marginBottom: Layout.window.height / 10,
   backgroundColor: colors.purple,
 }
@@ -175,6 +216,8 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     call: '',
   }
   
+  redeemKeyInput: NativeMethodsMixinStatic | any
+  
   componentDidMount(): void {
     this.props.updateUserAsync()
   }
@@ -188,11 +231,18 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     call(args).catch(console.error)
   }
   
+  
+  submit = (value) => {
+    console.tron.log(value)
+  }
+  
   public render(): React.ReactNode {
     const {
-      navigation, User
+      navigation, User, authRedeemKey, isLoading
     } = this.props
-    const { fullName, Tourists, pictureURL, Transactions } = User
+    const {
+      fullName, Tourists, pictureURL, Transactions, email
+    } = User
   
     const {
       isVisible,
@@ -206,507 +256,598 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     
     console.tron.log(Transactions)
     return (
-      <View
-        style={ROOT}
+      <KeyboardAvoidingView
+        enabled={true}
+        behavior={"position"}
+        style={{ flex: 1 }}
       >
-        <StatusBar barStyle={"dark-content"} />
-  
-        <ScrollView
-          // onScroll={this.handleScroll}
-          scrollEnabled
-          showsVerticalScrollIndicator={false}
-          pinchGestureEnabled
-          contentContainerStyle={{
-            justifyContent: "space-between"
-          }}
-          onContentSizeChange={(contentWidth, contentHeight)=>{
-            // this.setState((state) => ({
-            //   scrollTo: state.scrollTo + 100
-            // }), () => {
-            //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-            // } )
-          }}
+        <View
+          style={ROOT}
         >
-  
-          {
-	          <View>
-		          <Image
-			          source={images.background}
-			          style={BACKGROUND_IMAGE}
-			          resizeMethod={'auto'}
-			          resizeMode='cover'
-		          />
+          <StatusBar barStyle={"dark-content"} />
     
-              <View
-                style={DETAILS}
-              >
+          <ScrollView
+            scrollEnabled
+            showsVerticalScrollIndicator={false}
+            pinchGestureEnabled
+            contentContainerStyle={{
+              justifyContent: "space-between"
+            }}
+            onContentSizeChange={(contentWidth, contentHeight)=>{
+              // this.setState((state) => ({
+              //   scrollTo: state.scrollTo + 100
+              // }), () => {
+              //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
+              // } )
+            }}
+          >
+    
+            {
+              <View>
+                <Image
+                  source={images.background}
+                  style={BACKGROUND_IMAGE}
+                  resizeMethod={'auto'}
+                  resizeMode='cover'
+                />
+                
+                {/*<TouchableOpacity*/}
+                {/*  style={{*/}
+                {/*    width: Layout.window.width/ 1.1,*/}
+                {/*    alignItems: "flex-end",*/}
+                {/*    marginTop: Layout.window.width / 7*/}
+                {/*  }}*/}
+                {/*  onPress={() => authType === "email"*/}
+                {/*    ? navigation.navigate('edit')*/}
+                {/*    : console.tron.log('dskjsdz')*/}
+                {/*  }*/}
+                {/*>*/}
+                {/*  <Image*/}
+                {/*    source={images.editIcon}*/}
+                {/*    style={{*/}
+                {/*      height: 20,*/}
+                {/*      width: 20,*/}
+                {/*      tintColor: 'transparent'*/}
+                {/*    }}*/}
+                {/*    resizeMethod={'auto'}*/}
+                {/*    resizeMode='cover'*/}
+                {/*  />*/}
+                {/*</TouchableOpacity>*/}
       
                 <View
-                  style={SHADOW}
+                  style={DETAILS}
                 >
-  
-                  {
-                    User.pictureURL !== ""
-                      ? (
-                        <Image
-                          source={{ uri: `${pictureURL}` }}
-                          style={PROFILE_IMAGE}
-                          resizeMethod={'auto'}
-                          resizeMode='cover'
-                        />
-                      )
-                      
-                      : (
-                        <Image
-                          source={images.appLogo}
-                          style={PROFILE_IMAGE}
-                          resizeMethod={'auto'}
-                          resizeMode='cover'
-                        />
-                      )
-                    
-                  }
         
-                  <Text
-                    style={HEADER_TEXT}
+                  <View
+                    style={SHADOW}
                   >
-                    {fullName}
+    
+                    {
+                      User.pictureURL !== ""
+                        ? (
+                          <TouchableOpacity>
+                            <Image
+                              source={{ uri: `${pictureURL}` }}
+                              style={PROFILE_IMAGE}
+                              resizeMethod={'auto'}
+                              resizeMode='cover'
+                            />
+                          </TouchableOpacity>
+                        )
+                        
+                        : (
+                          <TouchableOpacity>
+                            <Image
+                              source={images.appLogo}
+                              style={PROFILE_IMAGE}
+                              resizeMethod={'auto'}
+                              resizeMode='cover'
+                            />
+                          </TouchableOpacity>
+                        )
+                      
+                    }
+          
+                    <Text
+                      style={HEADER_TEXT}
+                    >
+                      {fullName}
+          
+                    </Text>
+  
+                    <Text
+                      style={[LOCATION, {
+                        marginBottom: 20
+                      }]}
+                    >
+                      {email}
+  
+                    </Text>
+                    
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-evenly",
+                        width: Layout.window.width / 2.5
+                      }}
+                    >
+                      
+                      <View
+                        style={{
+                          flexDirection: "column"
+                        }}
+                      >
+                        <Text
+                          style={LOCATION}
+                        >
+                          {translate('profile.trips')}
+                        </Text>
+    
+                        <Text
+                          style={LABEL_TEXT}
+                        >
+                          {Tourists[0] !== undefined ? Tourists[0].numberOfTrips : 0}
+                        </Text>
+                      </View>
+    
+                      <View
+                        style={{
+                          flexDirection: "column"
+                        }}
+                      >
+                        <Text
+                          style={LOCATION}
+                        >
+                          {translate('profile.sent')}
+                        </Text>
+      
+                        <Text
+                          style={LABEL_TEXT}
+                        >
+                          {Tourists[0] !== undefined ? Tourists[0].sentGift : 0}
+                        </Text>
+                      </View>
+    
+    
+                      <View
+                        style={{
+                          flexDirection: "column"
+                        }}
+                      >
+                        <Text
+                          style={LOCATION}
+                        >
+                          {translate('profile.received')}
+                        </Text>
+      
+                        <Text
+                          style={LABEL_TEXT}
+                        >
+                          {Tourists[0] !== undefined ? Tourists[0].receivedGift : 0}
+                        </Text>
+                      </View>
+                      
+                    </View>
+    
+                    <Button
+                      style={JOIN_BUTTON}
+                      textStyle={JOIN_BUTTON_TEXT}
+                      // disabled={!isValid || isLoading}
+                      onPress={() => navigation.navigate('savings')}
+                      tx={`profile.mySavings`}
+                    />
         
-                  </Text>
-                  
+                  </View>
+        
                   <View
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-evenly",
-                      width: Layout.window.width / 2.5
+                      flexDirection: 'row',
+                      justifyContent: "space-between",
+                      marginTop: Layout.window.height / 25,
+                      marginLeft: 10,
+                      width: Layout.window.width / 1.1,
                     }}
                   >
-                    
-                    <View
-                      style={{
-                        flexDirection: "column"
+                    <TouchableOpacity
+                      onPress={() => {
+                        Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
+                          if (supported) {
+                            Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
+                          } else {
+                            console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
+                          }
+                        });
                       }}
+                      
                     >
                       <Text
-                        style={LOCATION}
+              
+                        style={discoverTextStyle}
                       >
-                        {translate('profile.trips')}
-                      </Text>
-  
-                      <Text
-                        style={LABEL_TEXT}
-                      >
-                        {Tourists[0] !== undefined ? Tourists[0].numberOfTrips : 0}
-                      </Text>
-                    </View>
-  
-                    <View
-                      style={{
-                        flexDirection: "column"
-                      }}
-                    >
-                      <Text
-                        style={LOCATION}
-                      >
-                        {translate('profile.sent')}
+                        {translate(`profile.save`)}
                       </Text>
     
                       <Text
-                        style={LABEL_TEXT}
+      
+                        style={discoverMoreTextStyle}
                       >
-                        {Tourists[0] !== undefined ? Tourists[0].sentGift : 0}
+                        {translate(`profile.saveMore`)}
                       </Text>
-                    </View>
-  
-  
-                    <View
-                      style={{
-                        flexDirection: "column"
-                      }}
-                    >
-                      <Text
-                        style={LOCATION}
-                      >
-                        {translate('profile.received')}
-                      </Text>
-    
-                      <Text
-                        style={LABEL_TEXT}
-                      >
-                        {Tourists[0] !== undefined ? Tourists[0].receivedGift : 0}
-                      </Text>
-                    </View>
+                    </TouchableOpacity>
                     
                   </View>
-  
-                  <Button
-                    style={JOIN_BUTTON}
-                    textStyle={JOIN_BUTTON_TEXT}
-                    // disabled={!isValid || isLoading}
-                    onPress={() => navigation.navigate('savings')}
-                    tx={`profile.mySavings`}
-                  />
+      
+      
       
                 </View>
-      
-                <View
+              </View>
+            }
+            
+            {
+              Transactions[0] !== undefined && (
+                <TouchableOpacity
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: "space-between",
-                    marginTop: Layout.window.height / 25,
-                    marginLeft: 10,
-                    width: Layout.window.width / 1.1,
+                    flexDirection: "row",
+                    justifyContent: 'space-between',
+                    marginLeft: 20,
+                    marginTop: 20,
+                    width: Layout.window.width / 1.15
+                  }}
+                  onPress={() => navigation.navigate('trips')}
+                >
+                  <Text
+        
+                    style={discoverTextStyle}
+                  >
+                    {translate(`profile.myTrips`)}
+                  </Text>
+    
+                  <Text
+      
+                    style={infoTextStyle}
+                  >
+                    {translate(`home.more`)}
+                  </Text>
+                </TouchableOpacity>
+              )
+            }
+            
+            {
+              Transactions[0] !== undefined && (
+                <ScrollView
+                  // onScroll={this.handleScroll}
+                  scrollEnabled
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pinchGestureEnabled
+                  contentContainerStyle={{
+                    justifyContent: "space-between"
+                  }}
+                  style={{
+                    marginTop: '5%',
+                    // marginBottom: '10%',
+                    marginRight: '5%',
+                  }}
+                  // ref={forwardedRef}
+                  onContentSizeChange={(contentWidth, contentHeight)=>{
+                    // this.setState((state) => ({
+                    //   scrollTo: state.scrollTo + 100
+                    // }), () => {
+                    //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
+                    // } )
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-                        if (supported) {
-                          Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-                        } else {
-                          console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-                        }
-                      });
-                    }}
-                    
-                  >
-                    <Text
-            
-                      style={discoverTextStyle}
-                    >
-                      {translate(`profile.save`)}
-                    </Text>
-  
-                    <Text
-    
-                      style={discoverMoreTextStyle}
-                    >
-                      {translate(`profile.saveMore`)}
-                    </Text>
-                  </TouchableOpacity>
                   
-                </View>
+                  
+                  {
+                    Transactions.reverse().map((transaction) => {
+                      const { tripName, slots, userPays, createdAt, reference, contactNumber, tripImage } = transaction
+                      return (
+                        <TouchableOpacity
+                          style={{
+                            flexDirection: "column",
+                            marginLeft: 20,
+                          }}
+                          onPress={() => this.setState({
+                            isVisible: !isVisible,
+                            name: tripName,
+                            paid: slots *  userPays,
+                            payDay: createdAt,
+                            rsvp: slots,
+                            ref: reference,
+                            call: contactNumber,
+                          })}
+                        >
+                          <Image
+                            style={TRIP_IMAGE}
+                            source={{ uri: `${tripImage}` }}
+                            resizeMethod={'auto'}
+                            resizeMode='cover'
+                          />
     
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between"
+                            }}
+                          >
+                            <Text
+        
+                              style={infoTextStyle}
+                            >
+                              {tripName}
+                            </Text>
+                            
+                          </View>
     
-    
-              </View>
-            </View>
-          }
+                          <Modal
+                            isVisible={isVisible}
+                            onBackdropPress={() => this.setState({ isVisible: !isVisible })}
+                          >
+                            <View
+                              style={{
+                                backgroundColor: colors.white,
+                                height: Layout.window.height / 2,
+                                justifyContent: "space-evenly",
+                              }}
+                            >
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  TripName:
+                                </Text>
           
-          {
-            Transactions[0] !== undefined && (
-              <TouchableOpacity
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  {name}
+                                </Text>
+        
+                              </View>
+        
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  Paid:
+                                </Text>
+          
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  {paid}
+                                </Text>
+        
+                              </View>
+        
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  Reference:
+                                </Text>
+          
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  {ref}
+                                </Text>
+        
+                              </View>
+        
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  Payment Date:
+                                </Text>
+          
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  { moment(payDay).format("ddd, MMM D, YYYY")}
+                                </Text>
+        
+                              </View>
+        
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  Slot(s):
+                                </Text>
+          
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  {rsvp}
+                                </Text>
+                              </View>
+        
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+            
+                                  style={infoTextStyle}
+                                >
+                                  Contact:
+                                </Text>
+          
+                                <TouchableOpacity
+                                  onPress={() => this.handlePhoneCall(`${call}`)}
+                                >
+                                  <Image
+                                    style={{
+                                      marginTop: 10
+                                    }}
+                                    source={images.callIcon}
+                                    resizeMethod={'auto'}
+                                    resizeMode='cover'
+                                  />
+                                </TouchableOpacity>
+                              </View>
+      
+                            </View>
+                          </Modal>
+    
+                        </TouchableOpacity>
+                      )
+                    })
+                  }
+                  
+                  
+                  
+                </ScrollView>
+              )
+            }
+    
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: "space-between",
+                marginLeft: 20,
+                marginTop: Layout.window.height / 25,
+                width: Layout.window.width / 1.1,
+              }}
+            >
+              <View
                 style={{
                   flexDirection: "row",
                   justifyContent: 'space-between',
-                  marginLeft: 20,
-                  marginTop: 20,
-                  width: Layout.window.width / 1.15
                 }}
-                onPress={() => navigation.navigate('trips')}
               >
                 <Text
-      
+          
                   style={discoverTextStyle}
                 >
-                  {translate(`profile.myTrips`)}
+                  {translate(`profile.redeemHeader`)}
                 </Text>
-  
+              </View>
+      
+              <View
+                style={{
+                  marginTop: 15,
+                }}
+              >
                 <Text
-    
-                  style={infoTextStyle}
+          
+                  style={discoverMoreTextStyle}
                 >
-                  {translate(`home.more`)}
+                  {Tourists[0] !== undefined && Tourists[0].userCoins} coins
                 </Text>
-              </TouchableOpacity>
-            )
-          }
-          
-          {
-            Transactions[0] !== undefined && (
-	            <ScrollView
-                // onScroll={this.handleScroll}
-		            scrollEnabled
-		            horizontal
-		            showsHorizontalScrollIndicator={false}
-		            pinchGestureEnabled
-		            contentContainerStyle={{
-                  justifyContent: "space-between"
-                }}
-		            style={{
-                  marginTop: '5%',
-                  // marginBottom: '10%',
-                  marginRight: '5%',
-                }}
-                // ref={forwardedRef}
-		            onContentSizeChange={(contentWidth, contentHeight)=>{
-                  // this.setState((state) => ({
-                  //   scrollTo: state.scrollTo + 100
-                  // }), () => {
-                  //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-                  // } )
-                }}
-	            >
-                
-                
-                {
-                  Transactions.map((transaction) => {
-                    const { tripName, slots, userPays, createdAt, reference, contactNumber, tripImage } = transaction
-                    return (
-                      <TouchableOpacity
-                        style={{
-                          flexDirection: "column",
-                          marginLeft: 20,
-                        }}
-                        onPress={() => this.setState({
-                          isVisible: !isVisible,
-                          name: tripName,
-                          paid: slots *  userPays,
-                          payDay: createdAt,
-                          rsvp: slots,
-                          ref: reference,
-                          call: contactNumber,
-                        })}
-                      >
-                        <Image
-                          style={TRIP_IMAGE}
-                          source={{ uri: `${tripImage}` }}
-                          resizeMethod={'auto'}
-                          resizeMode='cover'
-                        />
-  
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between"
-                          }}
-                        >
-                          <Text
       
-                            style={infoTextStyle}
-                          >
-                            {tripName}
-                          </Text>
-                          
-                        </View>
-  
-                        <Modal
-                          isVisible={isVisible}
-                          onBackdropPress={() => this.setState({ isVisible: !isVisible })}
-                        >
-                          <View
-                            style={{
-                              backgroundColor: colors.white,
-                              height: Layout.window.height / 2,
-                              justifyContent: "space-evenly",
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                TripName:
-                              </Text>
-        
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                {name}
-                              </Text>
-      
-                            </View>
-      
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                Paid:
-                              </Text>
-        
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                {paid}
-                              </Text>
-      
-                            </View>
-      
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                Reference:
-                              </Text>
-        
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                {ref}
-                              </Text>
-      
-                            </View>
-      
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                Payment Date:
-                              </Text>
-        
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                { moment(payDay).format("ddd, MMM D, YYYY")}
-                              </Text>
-      
-                            </View>
-      
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                Slot(s):
-                              </Text>
-        
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                {rsvp}
-                              </Text>
-                            </View>
-      
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignSelf: "center",
-                                justifyContent: "space-between",
-                                width: Layout.window.width / 1.2
-                              }}
-                            >
-                              <Text
-          
-                                style={infoTextStyle}
-                              >
-                                Contact:
-                              </Text>
-        
-                              <TouchableOpacity
-                                onPress={() => this.handlePhoneCall(`${call}`)}
-                              >
-                                <Image
-                                  style={{
-                                    marginTop: 10
-                                  }}
-                                  source={images.callIcon}
-                                  resizeMethod={'auto'}
-                                  resizeMode='cover'
-                                />
-                              </TouchableOpacity>
-                            </View>
+              </View>
+            </View>
     
-                          </View>
-                        </Modal>
-  
-                      </TouchableOpacity>
-                    )
-                  })
-                }
-                
-                
-                
-              </ScrollView>
-            )
-          }
-  
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: "space-between",
-              marginLeft: 20,
-              marginTop: Layout.window.height / 25,
-              marginBottom: 100,
-              width: Layout.window.width / 1.1,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.navigate('edit')}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
+            <Formik
+              initialValues={{
+                redeemKey: authRedeemKey
               }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
             >
-              <Text
-        
-                style={discoverTextStyle}
-              >
-                {translate(`profile.myProfileHeader`)}
-              </Text>
-            </TouchableOpacity>
-    
-            <TouchableOpacity
-              style={{
-                marginTop: 15,
-              }}
-              onPress={() => navigation.navigate('edit')}
-            >
-              <Text
-        
-                style={discoverMoreTextStyle}
-              >
-                {Tourists[0] !== undefined && Tourists[0].userCoins} coins
-              </Text>
-    
-            </TouchableOpacity>
-          </View>
-        
-        </ScrollView>
-      </View>
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
+          
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}
+                  >
+                    <TextField
+                      name="redeemKey"
+                      keyboardType="default"
+                      placeholderTx="profile.code"
+                      value={values.redeemKey}
+                      onChangeText={handleChange("redeemKey")}
+                      onBlur={handleBlur("redeemKey")}
+                      autoCapitalize="none"
+                      returnKeyType="search"
+                      isInvalid={!isValid}
+                      fieldError={errors.redeemKey}
+                      forwardedRef={i => {
+                        this.redeemKeyInput = i
+                      }}
+                      onSubmitEditing={() => handleSubmit()}
+                    />
+            
+                    <Button
+                      style={REDEEM_BUTTON}
+                      textStyle={REDEEM_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`profile.redeem`}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
+          
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -718,6 +859,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
   User: state.user.data,
+  authRedeemKey: state.user.authRedeemKey,
+  isLoading: state.user.loading,
 });
 
 export const ProfileScreen = connect<StateProps>(

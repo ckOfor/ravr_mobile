@@ -85,6 +85,7 @@ export type UserState = {
   loading: boolean,
   subject: string,
   message: string,
+  authRedeemKey: string,
 }
 
 export type UserAction =

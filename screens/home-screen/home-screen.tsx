@@ -1,4 +1,7 @@
+// react// react
 import React from "react"
+
+// react-native
 import {
   View,
   Text,
@@ -13,23 +16,33 @@ import {
   NativeMethodsMixinStatic,
   KeyboardAvoidingView
 } from "react-native"
+
+// third-party
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
+import { Formik, FormikProps } from "formik";
+import * as Yup from "yup";
+
+// redux
 import { ApplicationState } from "../../redux";
-import { Layout } from "../../constants";
-import { translate} from "../../i18n";
-import { colors, fonts, images } from "../../theme";
-import { WeekendScreen } from "../weekend-screen";
 import {
   getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours, searchTextToursAsync, searchAmountToursAsync
 } from "../../redux/tour";
-import { ITours } from "../../services/api";
+
+// styles
+import { Layout } from "../../constants";
+import { translate} from "../../i18n";
+import { colors, fonts, images } from "../../theme";
+
+// components
+import { WeekendScreen } from "../weekend-screen";
 import { DiscoverScreen } from "../discover-screen";
 import { Button } from "../../components/button";
-import { Formik, FormikProps } from "formik";
 import { TextField } from "../../components/text-field";
-import * as Yup from "yup";
+
+// APIs
+import { ITours } from "../../services/api";
 
 interface DispatchProps {
   getWeekendToursAsync: (limit: number) => void

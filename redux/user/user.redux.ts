@@ -35,6 +35,7 @@ const initialState: UserState = {
   loading: false,
   subject: '',
   message: '',
+  authRedeemKey: '',
 }
 
 export function userReducer(

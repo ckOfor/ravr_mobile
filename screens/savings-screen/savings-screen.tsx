@@ -48,12 +48,25 @@ const discoverTextStyle: TextStyle = {
   width: Layout.window.width / 1.9,
 }
 
+const savingsMoreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
 class Savings extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
       navigation, User
     } = this.props
+  
+  
+    const {
+      Tourists
+    } = User
     
     return (
       <View
@@ -107,6 +120,14 @@ class Savings extends React.Component<NavigationScreenProps & Props> {
                 style={discoverTextStyle}
               >
                 {translate(`profile.mySavingsHeader`)}
+              </Text>
+  
+  
+              <Text
+    
+                style={savingsMoreTextStyle}
+              >
+                Avail: {Tourists[0] !== undefined ? Tourists[0].userCoins : 0} coins
               </Text>
             </TouchableOpacity>
           </View>

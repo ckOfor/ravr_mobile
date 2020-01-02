@@ -95,12 +95,15 @@
     "myTripsHeader": "My Trips",
     "myProfileHeader": "Personal Info",
     "editHeader": "Edit",
-    "tripHeader": "Have a nice trip from us at Ravr."
+    "tripHeader": "Have a nice trip from us at Ravr.",
+    "redeemHeader": "Redeem coins.",
+    "code": "Enter code",
+    "redeem": "Redeem"
   },
   "contactUs": {
     "header": "Hello Ravr.",
     "subject": "Subject: How can I save with Ravr...",
     "buttonText": "Send",
-    "savings": "Message: Click on save with Ravr text on your profile"
+    "savings": "Message: Click on save with Ravr text on your profile",
   }
 }

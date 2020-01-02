@@ -148,10 +148,6 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
     
     console.tron.log(tours, "skd IWIQIWIQWUQ")
     console.tron.log(tours)
-  
-    const sortedTours = tours.reverse()
-  
-    console.tron.log(sortedTours)
     
     return (
       <View
@@ -220,9 +216,9 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
             showsHorizontalScrollIndicator={false}
           >
             {
-              sortedTours[0].id !== null && (
+              tours[0].id !== null && (
                 <FlatList
-                  data={sortedTours}
+                  data={tours}
                   numColumns={1}
                   style={{
                     marginRight: 15,
