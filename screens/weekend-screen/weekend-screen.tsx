@@ -72,7 +72,6 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
           style={{
             marginTop: '5%',
           }}
-          onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
           pinchGestureEnabled
           contentContainerStyle={{
             justifyContent: "space-between"

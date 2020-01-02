@@ -83,12 +83,19 @@
     "month": "Enter number of months"
   },
   "profile": {
+    "headerText": "< Profile",
     "trips": "Trips",
     "sent": "Sent",
     "received": "Received",
     "save": "Save with  Ravr.",
     "saveMore": "Just remember, whatever your around-the-world travel budget is, it's best to have a plan in place! Create a savings plan.",
-    "myTrips": "My Trips"
+    "myTrips": "My Trips",
+    "mySavings": "My savings",
+    "mySavingsHeader": "My Savings",
+    "myTripsHeader": "My Trips",
+    "myProfileHeader": "Personal Info",
+    "editHeader": "Edit",
+    "tripHeader": "Have a nice trip from us at Ravr."
   },
   "contactUs": {
     "header": "Hello Ravr.",

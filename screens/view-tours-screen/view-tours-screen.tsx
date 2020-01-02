@@ -121,45 +121,46 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
         <StatusBar barStyle={"dark-content"} />
     
         
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        >
+          <Text
+  
+            style={appNameTextStyle}
           >
-            <Text
-    
-              style={appNameTextStyle}
-            >
-              {translate(`viewTour.welcomeText`)}
-            </Text>
-          </TouchableOpacity>
+            {translate(`viewTour.welcomeText`)}
+          </Text>
+        </TouchableOpacity>
       
-          <View
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity
+            // onPress={() => navigation.navigate('profile')}
             style={{
-              flexDirection: 'row',
-              justifyContent: "space-between",
+              flexDirection: "row",
+              justifyContent: 'space-between',
             }}
           >
-            <TouchableOpacity
-              // onPress={() => navigation.navigate('profile')}
-              style={{
-                flexDirection: "row",
-                justifyContent: 'space-between',
-              }}
+            <Text
+          
+              style={discoverTextStyle}
             >
-              <Text
-            
-                style={discoverTextStyle}
-              >
-                {translate(`viewTour.popular`)}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {translate(`viewTour.popular`)}
+            </Text>
+          </TouchableOpacity>
+        </View>
       
-          <Text
+        <Text
+      
+          style={discoverMoreTextStyle}
+        >
+          {translate(`viewTour.experience`)}
+        </Text>
         
-            style={discoverMoreTextStyle}
-          >
-            {translate(`viewTour.experience`)}
-          </Text>
         <ScrollView
           refreshControl={
             <RefreshControl

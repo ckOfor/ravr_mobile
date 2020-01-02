@@ -14,6 +14,7 @@ export const images = {
   search: require("../assets/search.png"),
   profile: require("../assets/profile.png"),
   contactUs: require("../assets/contact-us.png"),
+  callIcon: require("../assets/call-icon.png"),
 }
 
 export type ImageTypes = keyof typeof images

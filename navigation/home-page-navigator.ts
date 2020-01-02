@@ -2,10 +2,9 @@ import { createStackNavigator } from "react-navigation"
 import { DEFAULT_STACK_NAVIGATOR_CONFIG } from "./navigation-config"
 import { HomeScreen } from "../screens/home-screen";
 import { ViewTourScreen } from "../screens/view-tour-screen";
-import { ViewToursScreen } from "../screens/view-tours";
+import { ViewToursScreen } from "../screens/view-tours-screen";
 import { WeekendToursScreen } from "../screens/weekend-tours-screen";
-import { SearchScreen } from "../screens/search-screen";
-import {PaymentScreen} from "../screens/payment-screen";
+import { PaymentScreen } from "../screens/payment-screen";
 
 export const TourNavigator = createStackNavigator(
   {

@@ -20,9 +20,9 @@ interface StateProps {
   User: IUser
 }
 
-interface SavingsScreenProps extends NavigationScreenProps {}
+interface EditProfileProps extends NavigationScreenProps {}
 
-type Props = DispatchProps & StateProps & SavingsScreenProps
+type Props = DispatchProps & StateProps & EditProfileProps
 
 const ROOT: ViewStyle = {
   height: Layout.window.height,
@@ -48,7 +48,7 @@ const discoverTextStyle: TextStyle = {
   width: Layout.window.width / 1.9,
 }
 
-class Savings extends React.Component<NavigationScreenProps & Props> {
+class EditProfile extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
@@ -77,18 +77,18 @@ class Savings extends React.Component<NavigationScreenProps & Props> {
             // } )
           }}
         >
-  
+          
           <TouchableOpacity
             onPress={() => navigation.goBack()}
           >
             <Text
-      
+              
               style={HEADER_TEXT}
             >
               {translate(`profile.headerText`)}
             </Text>
           </TouchableOpacity>
-  
+          
           <View
             style={{
               flexDirection: 'row',
@@ -103,13 +103,14 @@ class Savings extends React.Component<NavigationScreenProps & Props> {
               }}
             >
               <Text
-        
+                
                 style={discoverTextStyle}
               >
-                {translate(`profile.mySavingsHeader`)}
+                {translate(`profile.editHeader`)}
               </Text>
             </TouchableOpacity>
           </View>
+          
         
         </ScrollView>
       </View>
@@ -126,7 +127,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   User: state.user.data,
 });
 
-export const SavingsScreen = connect<StateProps>(
+export const EditProfileScreen = connect<StateProps>(
   mapStateToProps,
   mapDispatchToProps
-)(Savings)
+)(EditProfile)

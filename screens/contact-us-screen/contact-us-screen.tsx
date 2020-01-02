@@ -135,7 +135,6 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
           // onScroll={this.handleScroll}
           scrollEnabled
           showsVerticalScrollIndicator={false}
-          onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
           pinchGestureEnabled
           contentContainerStyle={{
             justifyContent: "space-between"
@@ -155,7 +154,7 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
               justifyContent: 'center',
               alignItems: 'center',
               width: Layout.window.width / 1.2,
-              marginLeft: Layout.window.width / 20,
+              marginLeft: Layout.window.width / 15,
               marginTop: 30,
             }}
           >

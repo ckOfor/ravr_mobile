@@ -237,7 +237,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
         // onScroll={this.handleScroll}
         scrollEnabled
         showsVerticalScrollIndicator={false}
-        onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
         pinchGestureEnabled
         contentContainerStyle={{
           justifyContent: "space-between"
@@ -376,7 +375,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           scrollEnabled
           horizontal
           showsHorizontalScrollIndicator={false}
-          onScrollBeginDrag={() => this.setState({ scrollTo: 0 })}
           pinchGestureEnabled
           contentContainerStyle={{
             justifyContent: "space-between"
