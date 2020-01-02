@@ -112,7 +112,7 @@ const BACK_IMAGE: ImageStyle = {
 const DETAILS: ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
-  marginTop: Layout.window.height / 4
+  marginTop: Layout.window.height / 7
 }
 
 
@@ -291,28 +291,24 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                   resizeMode='cover'
                 />
                 
-                {/*<TouchableOpacity*/}
-                {/*  style={{*/}
-                {/*    width: Layout.window.width/ 1.1,*/}
-                {/*    alignItems: "flex-end",*/}
-                {/*    marginTop: Layout.window.width / 7*/}
-                {/*  }}*/}
-                {/*  onPress={() => authType === "email"*/}
-                {/*    ? navigation.navigate('edit')*/}
-                {/*    : console.tron.log('dskjsdz')*/}
-                {/*  }*/}
-                {/*>*/}
-                {/*  <Image*/}
-                {/*    source={images.editIcon}*/}
-                {/*    style={{*/}
-                {/*      height: 20,*/}
-                {/*      width: 20,*/}
-                {/*      tintColor: 'transparent'*/}
-                {/*    }}*/}
-                {/*    resizeMethod={'auto'}*/}
-                {/*    resizeMode='cover'*/}
-                {/*  />*/}
-                {/*</TouchableOpacity>*/}
+                <TouchableOpacity
+                  style={{
+                    width: Layout.window.width/ 1.1,
+                    alignItems: "flex-end",
+                    marginTop: Layout.window.width / 7
+                  }}
+                  onPress={() => navigation.navigate('edit')}
+                >
+                  <Image
+                    source={images.editIcon}
+                    style={{
+                      height: 20,
+                      width: 20,
+                    }}
+                    resizeMethod={'auto'}
+                    resizeMode='cover'
+                  />
+                </TouchableOpacity>
       
                 <View
                   style={DETAILS}

@@ -198,8 +198,8 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
           
           <Formik
             initialValues={{
-              fullName: authEmail,
-              email: authEmail,
+              fullName: "",
+              email: "",
               password: "",
               confirmPassword: "",
             }}

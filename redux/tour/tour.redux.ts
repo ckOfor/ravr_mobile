@@ -1,5 +1,5 @@
 import {
-  CLEAR_SEARCH,
+  CLEAR_SEARCH, CLEAR_TOURS,
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
   GET_DISCOVER_TOURS_SUCCESS,
@@ -124,7 +124,9 @@ export function tourReducer(
         ...state,
         searchedTours: [ITours]
       }
-      
+  
+    case CLEAR_TOURS:
+      return initialState
     
     default:
       return state

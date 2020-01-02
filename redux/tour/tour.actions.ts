@@ -8,7 +8,7 @@ import {
 } from "../../services/api"
 
 import {
-  CLEAR_SEARCH,
+  CLEAR_SEARCH, CLEAR_TOURS,
   GET_DISCOVER_TOURS,
   GET_DISCOVER_TOURS_FAILURE,
   GET_DISCOVER_TOURS_SUCCESS, GET_SEARCH_TOURS, GET_SEARCH_TOURS_FAILURE, GET_SEARCH_TOURS_SUCCESS,
@@ -230,3 +230,5 @@ export const searchAmountToursAsync = (amount: number, date?: string): ThunkActi
 export const clearSearchTourAsync = () => ({ type: CLEAR_SEARCH })
 
 export const setSearchKeyAsync = (searchKey: string) => ({ type: SET_SEARCH_KEY, payload: searchKey })
+
+export const clearTours = () => ({ type: CLEAR_TOURS })

@@ -1,24 +1,45 @@
 import {
-  CONTACT_US, CONTACT_US_FAILURE, CONTACT_US_SUCCESS,
+  CLEAR_USER,
+  CONTACT_US,
+  CONTACT_US_FAILURE,
+  CONTACT_US_SUCCESS,
   CREATE_TRANSACTION,
   CREATE_TRANSACTION_FAILURE,
   CREATE_TRANSACTION_SUCCESS,
-  IUser, SAVE_MESSAGE, SAVE_SUBJECT,
-  SET_USER_DETAILS, UPDATE_USER, UPDATE_USER_FAILURE, UPDATE_USER_SUCCESS
+  IUser,
+  SAVE_MESSAGE,
+  SAVE_SUBJECT,
+  SET_USER_DETAILS,
+  UPDATE_PHONE_NUMBER,
+  UPDATE_PHONE_NUMBER_SUCCESS,
+  UPDATE_USER,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_SUCCESS
 } from "../user";
 import {
   createTransaction as apiCreateTransaction,
   logInUserPayload,
   logInWithEmail as apiLogInWithEmail,
   contactUs as apiContactUs,
+  updatePhone as apiUpdatePhone
 } from "../../services/api";
 import { ThunkAction } from "redux-thunk";
 import { ApplicationState } from "../index";
 import { Action } from "redux";
-import {notify, setUser, socialAuthenticationFailure} from "../auth";
+import {
+  notify,
+  setAuthEmail,
+  setUser,
+  SOCIAL_AUTHENTICATION,
+  SOCIAL_AUTHENTICATION_FAILURE, SOCIAL_AUTHENTICATION_SUCCESS,
+  socialAuthenticationFailure
+} from "../auth";
 import {NavigationActions} from "react-navigation";
 import {searchToursFailure } from "../tour";
 import Firebase from '../../config/FirebaseClient'
+import {Toast} from "native-base";
+import {Layout} from "../../constants";
+import * as GoogleSignIn from 'expo-google-sign-in';
 
 export const setUserDetails = (user: IUser) => ({ type: SET_USER_DETAILS, payload: user })
 
@@ -94,39 +115,15 @@ export const updateUserAsync = (): ThunkAction<
   > => async (dispatch, getState) => {
   dispatch(updateUser())
   
+  const email = getState().auth.email;
+  const password = getState().auth.uid;
   const notificationId = getState().auth.FCMToken;
   
-  try {
-    Firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        const email = user.email
-        const password = user.uid
-        const data = {
-          email,
-          password,
-          notificationId
-        }
-        dispatch(retrieveUserAsync(data))
-        // User is signed in.
-        // dispatch(logInUserAsync(data))
-      } else {
-        // No user is signed in.
-      }
-    });
-    
-  } catch ({ message }){
-    console.tron.log(message)
-    dispatch(updateUserFailure())
+  const params = {
+    email,
+    password,
+    notificationId
   }
-}
-
-export const retrieveUserAsync = (params: logInUserPayload): ThunkAction<
-  void,
-  ApplicationState,
-  null,
-  Action<any>
-  > => async (dispatch, getState) => {
-  
   
   try {
     const result = await apiLogInWithEmail({
@@ -157,7 +154,6 @@ export const retrieveUserAsync = (params: logInUserPayload): ThunkAction<
 export const saveSubject = (subject: string) => ({ type: SAVE_SUBJECT, payload: subject })
 
 export const saveMessage = (message: string) => ({ type: SAVE_MESSAGE, payload: message })
-
 
 export const contactUs = () => ({
   type: CONTACT_US
@@ -200,4 +196,83 @@ export const contactUsAsync = (subject: string, body: string): ThunkAction<void,
     dispatch(updateUserFailure())
     dispatch(notify(message, 'danger'))
   }
+}
+
+export const clearUserAsync = () => ({ type: CLEAR_USER })
+
+
+export const updatePhoneNumber = () => ({
+  type: UPDATE_PHONE_NUMBER,
+})
+
+export const updatePhoneNumberFailure = () => ({
+  type: UPDATE_USER_FAILURE,
+})
+
+export const updatePhoneNumberSuccess = () => ({
+  type: UPDATE_PHONE_NUMBER_SUCCESS,
+})
+
+
+// export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+//   dispatch,
+// ) => {
+//   console.tron.log(phoneNumber)
+//   // console.log(email)
+//   dispatch(updatePhoneNumber())
+//
+//   const state = getState();
+//
+//   console.log(authType)
+//
+//   //
+//   // try {
+//   //   Firebase.auth().onAuthStateChanged(function(user) {
+//   //     if (user) {
+//   //       const password = user.uid
+//   //       const email = user.email
+//   //       console.tron.log(phoneNumber, email, password)
+//   //       dispatch(updatePhoneAsync(phoneNumber, email, password))
+//   //     } else {
+//   //       console.tron.log("Failed")
+//   //       dispatch(updatePhoneNumberFailure())
+//   //     }
+//   //   });
+//   // } catch ({ message }) {
+//   //   dispatch(notify(`${message}`, 'danger'))
+//   //   dispatch(updatePhoneNumberFailure())
+//   // }
+// }
+
+
+export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  dispatch(updatePhoneNumber())
+  
+  const email = getState().auth.email;
+  const password = getState().auth.uid;
+  
+  try {
+    const result = await apiUpdatePhone(phoneNumber, email, password)
+    const { status, message, data } = result.data
+    
+    if (status) {
+      console.tron.log(data)
+      dispatch(updatePhoneNumberSuccess())
+      dispatch(updateUserAsync())
+      dispatch(NavigationActions.navigate({ routeName: "home" }))
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(updatePhoneNumberFailure())
+    }
+  } catch ({ message }) {
+    console.log(message )
+    dispatch(updatePhoneNumberFailure())
+    dispatch(notify(`${message}`, 'danger'))
+  }
+  
 }

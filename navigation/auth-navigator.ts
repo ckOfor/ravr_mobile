@@ -5,6 +5,7 @@ import { LandingScreen } from "../screens/landing-screen";
 import { AuthSignInScreen } from "../screens/auth-sign-in-screen";
 import { ForgotPasswordScreen } from "../screens/forgot-password-screen";
 import { AuthSignUpScreen } from "../screens/auth-sign-up-screen";
+import { PhoneVerificationScreen } from "../screens/phone-verification-screen";
 
 export const AuthNavigator = createStackNavigator(
   {
@@ -28,6 +29,12 @@ export const AuthNavigator = createStackNavigator(
     },
     authSignUp: {
       screen: AuthSignUpScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    phoneVerification: {
+      screen: PhoneVerificationScreen,
       navigationOptions: {
         header: null
       }

@@ -16,7 +16,7 @@ import Firebase from '../../config/FirebaseClient'
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
-import { logInUserAsync, notify} from "../../redux/auth"
+import {logInUserAsync, notify, setAuthUserID} from "../../redux/auth"
 import { ApplicationState } from "../../redux";
 
 // styles
@@ -31,6 +31,7 @@ import {logInUserPayload} from "../../services/api";
 
 interface DispatchProps {
   loginUser: (values: MyFormValues) => void
+  setAuthUserID: (id: string) => void
   notify: (message: string, type: string) => void
 }
 
@@ -159,6 +160,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
             return
           } else {
             this.props.loginUser({email: values.email, password: success.user.uid})
+            this.props.setAuthUserID(success.user.uid)
           }
           
         })
@@ -316,6 +318,19 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
             </Text>
           </TouchableOpacity>
   
+          <TouchableOpacity
+            onPress={() => navigation.navigate('landing')}
+          >
+    
+            <Text
+      
+              style={termsAndConditions}
+            >
+              {translate(`signUp.social`)}
+    
+            </Text>
+          </TouchableOpacity>
+  
         </ImageBackground>
       </KeyboardAvoidingView>
     )
@@ -324,6 +339,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   loginUser: values => dispatch(logInUserAsync(values as logInUserPayload)),
+  setAuthUserID: (id: string) => dispatch(setAuthUserID(id)),
   notify: (message: string, type: string) => dispatch(notify(message, type))
 })
 

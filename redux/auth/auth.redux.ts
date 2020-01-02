@@ -21,8 +21,9 @@ import {
   SOCIAL_AUTHENTICATION,
   SOCIAL_AUTHENTICATION_FAILURE,
   SOCIAL_AUTHENTICATION_SUCCESS,
-  SET_AUTH_FULL_NAME
+  SET_AUTH_FULL_NAME, CLEAR_AUTH
 } from "./auth.types"
+import {CLEAR_USER} from "../user";
 
 export const ISelected = {
   name: '',
@@ -139,6 +140,9 @@ export function authReducer(
         ...state,
         loading: false
       }
+      
+    case CLEAR_AUTH:
+      return initialState
       
     default:
       return state

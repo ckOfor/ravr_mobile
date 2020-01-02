@@ -45,10 +45,10 @@ import {
   SOCIAL_AUTHENTICATION_FAILURE,
   SOCIAL_AUTHENTICATION_SUCCESS,
   SET_AUTH_FULL_NAME,
-  SET_USER,
+  SET_USER, CLEAR_AUTH,
 } from "./auth.types";
 import {Layout} from "../../constants";
-import {setUserDetails} from "../user";
+import {CLEAR_USER, setUserDetails, updateUserAsync} from "../user";
 
 
 
@@ -293,10 +293,12 @@ export const logInWithSocialAuth = (): ThunkAction<void, ApplicationState, null,
       
       if(data.userType === 'tourist') {
         dispatch(setUser(data))
-        dispatch(notify( `${message}`, 'success'))
         dispatch(logInUserWithFacebookSuccess(email))
         dispatch(logInUserWithGmailSuccess(email))
-        dispatch(NavigationActions.navigate({ routeName: "home" }))
+        dispatch(updateUserAsync())
+        return data.phoneNumber === ""
+          ? dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
+          : dispatch(NavigationActions.navigate({ routeName: "home" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
@@ -328,6 +330,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
   const notificationId = getState().auth.FCMToken;
   const authType = getState().auth.authType;
   const userType = 'tourist';
+  const pictureURL = getState().auth.picture;
   
   dispatch(socialAuthentication())
 
@@ -337,7 +340,8 @@ export const signUpWithSocialAuth = (): ThunkAction<
     password,
     notificationId,
     authType,
-    userType
+    userType,
+    pictureURL
   }
 
   console.tron.log(payload)
@@ -349,12 +353,12 @@ export const signUpWithSocialAuth = (): ThunkAction<
 
     if (status) {
       dispatch(socialAuthenticationSuccess())
-
       dispatch(setUser(data))
       dispatch(notify( `${message}`, 'success'))
       dispatch(logInUserWithFacebookSuccess(email))
       dispatch(logInUserWithGmailSuccess(email))
-      dispatch(NavigationActions.navigate({ routeName: "home" }))
+      dispatch(updateUserAsync())
+      dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
 
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -366,7 +370,6 @@ export const signUpWithSocialAuth = (): ThunkAction<
     dispatch(socialAuthenticationFailure())
   }
 }
-
 
 export const signUpWithEmailAuth = ({ email, fullName }, password: string): ThunkAction<
   void,
@@ -400,7 +403,7 @@ export const signUpWithEmailAuth = ({ email, fullName }, password: string): Thun
     
     if (status) {
       dispatch(socialAuthenticationSuccess())
-      
+      dispatch(setAuthUserID(password))
       dispatch(setUser(data))
       dispatch(setAuthEmail(email))
       dispatch(notify( `${message}`, 'success'))
@@ -458,12 +461,14 @@ export const logInUserAsync = ({
     if (status) {
   
       if(data.userType === 'tourist') {
-        dispatch(notify(`${message}`, 'success'))
         dispatch(setUser(data))
         dispatch(setUserDetails(data))
         console.tron.log(data)
         dispatch(logInUserWithEmailSuccess({ email }))
-        dispatch(NavigationActions.navigate({ routeName: "home" }))
+        dispatch(updateUserAsync())
+        return data.phoneNumber === ""
+          ? dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
+          : dispatch(NavigationActions.navigate({ routeName: "home" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
@@ -504,5 +509,8 @@ export const forgotPasswordAsync = ({email}): ThunkAction<void, ApplicationState
     dispatch(notify(`${message}`, 'danger'))
   }
 }
+
+export const clearAuthAsync = () => ({ type: CLEAR_AUTH })
+
 
 

@@ -25,6 +25,7 @@ export type signUpPayload = {
   notificationId: string
   authType: string,
   userType: string
+  pictureURL: string
 }
 
 export type signUpWithEmailAndPasswordPayload = {

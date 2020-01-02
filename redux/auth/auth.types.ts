@@ -182,10 +182,18 @@ export interface CreateUserPayload {
   phone: string
   password: string
 }
+
 type CreateUserSuccessAction = {
   type: typeof CREATE_USER_SUCCESS
   payload: CreateUserPayload
 }
+
+
+export const CLEAR_AUTH = "CLEAR_AUTH"
+type clearAuth = {
+  type: typeof CLEAR_AUTH
+}
+
 
 export type ISelected = {
   name: string
@@ -233,3 +241,4 @@ export type AuthAction =
   | SocialAuthenticationActionFailure
   | SocialAuthenticationActionSuccess
   | SetAuthFullNameAction
+  | clearAuth

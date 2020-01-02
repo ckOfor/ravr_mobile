@@ -37,7 +37,16 @@
     "join": "Join Ravr.",
     "signUp": "Sign Up",
     "oops": "< Ooops! Log me in.",
-    "member": "I am a member of this awesome community."
+    "member": "I am a member of this awesome community.",
+    "social": "< Continue with Facebook or Gmail.",
+  },
+  "phoneVerify": {
+    "headerText": "Update my number.",
+    "question": "Is this your account?",
+    "answer": "< Ooops! not me.",
+    "placeholder": "Enter your phone number",
+    "verify": "Update",
+    "enterAValidPhoneNumber": "Enter a valid phone number"
   },
   "home": {
     "appName": "Ravr.",
@@ -98,7 +107,8 @@
     "tripHeader": "Have a nice trip from us at Ravr.",
     "redeemHeader": "Redeem coins.",
     "code": "Enter code",
-    "redeem": "Redeem"
+    "redeem": "Redeem",
+    "logout": "Logout"
   },
   "contactUs": {
     "header": "Hello Ravr.",

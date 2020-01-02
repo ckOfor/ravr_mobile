@@ -1,6 +1,6 @@
 import React from "react"
 import {
-  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking
+  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking, Alert
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
@@ -9,11 +9,16 @@ import { ApplicationState } from "../../redux";
 import { Layout } from "../../constants";
 import {translate} from "../../i18n";
 import { colors, fonts, images } from "../../theme";
-import { IUser } from "../../redux/user";
+import {clearUserAsync, IUser} from "../../redux/user";
 import { updateUserAsync } from "../../redux/user";
+import {clearAuthAsync} from "../../redux/auth";
+import {clearTours} from "../../redux/tour";
 
 interface DispatchProps {
   updateUserAsync: () => void
+  clearUserAsync: () => void
+  clearAuthAsync: () => void
+  clearTours: () => void
 }
 
 interface StateProps {
@@ -48,11 +53,19 @@ const discoverTextStyle: TextStyle = {
   width: Layout.window.width / 1.9,
 }
 
+const moreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
 class EditProfile extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, User
+      navigation, clearUserAsync, clearAuthAsync, clearTours
     } = this.props
     
     return (
@@ -95,18 +108,47 @@ class EditProfile extends React.Component<NavigationScreenProps & Props> {
               justifyContent: "space-between",
             }}
           >
+            <Text
+    
+              style={discoverTextStyle}
+            >
+              {translate(`profile.editHeader`)}
+            </Text>
+            
+            
             <TouchableOpacity
-              // onPress={() => navigation.navigate('profile')}
+              onPress={() =>
+                Alert.alert(
+                  'Log me out!',
+                  'Are you sure?',
+                  [
+                    {
+                      text: 'Cancel',
+                      // onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {text: 'Proceed',
+                      onPress: () => {
+                        navigation.navigate('landing')
+                        clearUserAsync()
+                        clearAuthAsync()
+                        clearTours()
+                      }},
+                  ],
+                  {cancelable: false},
+                )
+              }
               style={{
                 flexDirection: "row",
                 justifyContent: 'space-between',
               }}
             >
+  
               <Text
-                
-                style={discoverTextStyle}
+    
+                style={moreTextStyle}
               >
-                {translate(`profile.editHeader`)}
+                {translate(`profile.logout`)}
               </Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +161,10 @@ class EditProfile extends React.Component<NavigationScreenProps & Props> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  updateUserAsync: () => dispatch(updateUserAsync())
+  updateUserAsync: () => dispatch(updateUserAsync()),
+  clearUserAsync: () => dispatch(clearUserAsync()),
+  clearAuthAsync: () => dispatch(clearAuthAsync()),
+  clearTours: () => dispatch(clearTours()),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;

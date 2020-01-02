@@ -83,6 +83,11 @@ type setSearchKey = {
   payload: string
 }
 
+export const CLEAR_TOURS = "CLEAR_TOURS"
+type clearTours = {
+  type: typeof CLEAR_TOURS
+}
+
 export type TourState = {
   weekendTours: [ITours],
   discoverTours: [ITours],
@@ -108,3 +113,4 @@ export type TourAction =
   | getSearchToursSuccess
   | clearSearch
   | setSearchKey
+  | clearTours

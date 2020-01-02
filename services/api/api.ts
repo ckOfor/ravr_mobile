@@ -39,6 +39,17 @@ const processResponse = async (response): Promise<any> => {
 }
 
 
+const updatePhone = async (phoneNumber: string, email: string, password: string): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.put("/users/profile/edit", {
+    phoneNumber,
+    email,
+    password
+  })
+  return processResponse(response)
+}
+
 const contactUs = async (id: number, subject: string, body: string, email: string): Promise<any> => {
   const response = await api.post("/users/contact/us", {
     id,
@@ -146,7 +157,8 @@ const signUpWithSocialAuth = async ({
   password,
   notificationId,
   authType,
-  userType
+  userType,
+  pictureURL
 }: Types.signUpPayload): Promise<
   Types.logInUserResponse
   > => {
@@ -156,7 +168,8 @@ const signUpWithSocialAuth = async ({
     password,
     notificationId,
     authType,
-    userType
+    userType,
+    pictureURL
   })
   return processResponse(response)
 }
@@ -514,4 +527,5 @@ export {
   searchAmountTours,
   createTransaction,
   contactUs,
+  updatePhone
 }

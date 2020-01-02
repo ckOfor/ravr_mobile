@@ -61,6 +61,26 @@ type contactUsSuccess = {
   type: typeof CONTACT_US_SUCCESS
 }
 
+export const CLEAR_USER = "CLEAR_USER"
+type clearUser = {
+  type: typeof CLEAR_USER
+}
+
+export const UPDATE_PHONE_NUMBER = "UPDATE_PHONE_NUMBER"
+type updatePhoneNumber = {
+  type: typeof UPDATE_PHONE_NUMBER
+}
+
+export const UPDATE_PHONE_NUMBER_FAILURE = "UPDATE_PHONE_NUMBER_FAILURE"
+type updatePhoneNumberFailure = {
+  type: typeof UPDATE_PHONE_NUMBER_FAILURE
+}
+
+export const UPDATE_PHONE_NUMBER_SUCCESS = "UPDATE_PHONE_NUMBER_SUCCESS"
+type updatePhoneNumberSuccess = {
+  type: typeof UPDATE_PHONE_NUMBER_SUCCESS
+}
+
 
 export type IUser = {
   id: number
@@ -101,3 +121,7 @@ export type UserAction =
   | contactUs
   | contactUsFailure
   | contactUsSuccess
+  | clearUser
+  | updatePhoneNumber
+  | updatePhoneNumberFailure
+  | updatePhoneNumberSuccess
