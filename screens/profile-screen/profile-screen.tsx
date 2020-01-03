@@ -13,7 +13,7 @@ import {
   Image,
   ImageStyle,
   Linking,
-  NativeMethodsMixinStatic, KeyboardAvoidingView
+  NativeMethodsMixinStatic, KeyboardAvoidingView, AppState, ActivityIndicator
 } from "react-native"
 
 // third-party
@@ -24,11 +24,24 @@ import moment from "moment";
 import Modal from "react-native-modal";
 import call from 'react-native-phone-call'
 import * as Yup from "yup";
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+import CryptoJS from 'crypto-js';
+import {
+  CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_UPLOAD_URL
+} from "react-native-dotenv"
 
 // redux
 import { ApplicationState } from "../../redux";
-import { IUser } from "../../redux/user";
+import {
+  IUser,
+  updateUserProfilePicture,
+  updateUserProfilePictureAsync,
+  updateUserProfilePictureFailure
+} from "../../redux/user";
 import { updateUserAsync } from "../../redux/user";
+import { notify } from "../../redux/auth";
 
 // style
 import { Layout } from "../../constants";
@@ -37,15 +50,22 @@ import { colors, fonts, images } from "../../theme";
 import { Button } from "../../components/button";
 import {Formik, FormikProps} from "formik";
 import {TextField} from "../../components/text-field";
+import {openSettingsAsync} from "../../redux/startup";
 
 interface DispatchProps {
   updateUserAsync: () => void
+  notify: (message: string, type: string) => void
+  updateUserProfilePicture: () => void
+  updateUserProfilePictureFailure: () => void
+  updateUserProfilePictureAsync: (imageURL: string) => void
+  openSettings: () => void
 }
 
 interface StateProps {
   User: IUser
   authRedeemKey: string
   isLoading: boolean
+  isUploading: boolean
 }
 
 interface MyFormValues {
@@ -214,12 +234,33 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     rsvp: '',
     ref: '',
     call: '',
+    imagePermissions: false,
+    appState: AppState.currentState,
   }
   
   redeemKeyInput: NativeMethodsMixinStatic | any
   
   componentDidMount(): void {
     this.props.updateUserAsync()
+    this.getPermissionAsync();
+    AppState.addEventListener("change", this.handleAppStateChange)
+  }
+  
+  getPermissionAsync = async () => {
+    const { notify } = this.props
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        notify('Sorry, we need camera roll permissions to make this work!', 'danger')
+        this.setState({
+          imagePermissions: false
+        })
+      } else {
+        this.setState({
+          imagePermissions: true
+        })
+      }
+    }
   }
   
   handlePhoneCall = (phoneNumber) => {
@@ -236,9 +277,68 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     console.tron.log(value)
   }
   
+  uploadImage(uri: any) {
+    const { notify, updateUserProfilePicture, updateUserProfilePictureFailure, updateUserProfilePictureAsync } = this.props
+    updateUserProfilePicture()
+    
+    // console.tron.log(uri)
+    let timestamp = (Date.now() / 1000 | 0).toString();
+    let api_key = CLOUDINARY_API_KEY
+    let api_secret = CLOUDINARY_API_SECRET
+    let hash_string = 'timestamp=' + timestamp + api_secret
+    let signature = CryptoJS.SHA1(hash_string).toString();
+    let upload_url = CLOUDINARY_UPLOAD_URL
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', upload_url);
+    xhr.onload = () => {
+      console.tron.log("xhr");
+      console.tron.log(xhr);
+      if(xhr.status === 200) {
+        console.tron.log(JSON.parse(xhr.response).secure_url)
+        updateUserProfilePictureAsync(JSON.parse(xhr.response).secure_url)
+        return
+      }
+      
+      notify('Sorry, upload failed!', 'danger')
+      
+      updateUserProfilePictureFailure()
+    };
+    let formdata = new FormData();
+    formdata.append('file', { uri: uri, type: 'image/png', name: 'upload.png'});
+    formdata.append('timestamp', timestamp);
+    formdata.append('api_key', api_key);
+    formdata.append('signature', signature);
+    xhr.send(formdata);
+  }
+  
+  getImage = async () => {
+    // console.tron.log('called getImage')
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // allowsEditing: true,
+      // aspect: [4, 3],
+    });
+    
+    if (!result.cancelled) {
+      this.uploadImage(result.uri)
+    }
+  };
+  
+  handleAppStateChange = nextAppState => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      this.getPermissionAsync()
+    }
+    
+    this.setState({ appState: nextAppState })
+  }
+  
   public render(): React.ReactNode {
     const {
-      navigation, User, authRedeemKey, isLoading
+      navigation, User, authRedeemKey, isLoading, openSettings, isUploading
     } = this.props
     const {
       fullName, Tourists, pictureURL, Transactions, email
@@ -252,9 +352,9 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       rsvp,
       ref,
       call,
+      imagePermissions
     } = this.state
     
-    console.tron.log(Transactions)
     return (
       <KeyboardAvoidingView
         enabled={true}
@@ -292,6 +392,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                 />
                 
                 <TouchableOpacity
+                  disabled={isUploading || isLoading}
                   style={{
                     width: Layout.window.width/ 1.1,
                     alignItems: "flex-end",
@@ -321,7 +422,10 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     {
                       User.pictureURL !== ""
                         ? (
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => imagePermissions ? this.getImage() : openSettings()}
+                            disabled={isUploading || isLoading}
+                          >
                             <Image
                               source={{ uri: `${pictureURL}` }}
                               style={PROFILE_IMAGE}
@@ -332,7 +436,10 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                         )
                         
                         : (
-                          <TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => imagePermissions ? this.getImage() : openSettings()}
+                            disabled={isUploading || isLoading}
+                          >
                             <Image
                               source={images.appLogo}
                               style={PROFILE_IMAGE}
@@ -429,10 +536,16 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     <Button
                       style={JOIN_BUTTON}
                       textStyle={JOIN_BUTTON_TEXT}
-                      // disabled={!isValid || isLoading}
+                      disabled={isUploading || isLoading}
                       onPress={() => navigation.navigate('savings')}
-                      tx={`profile.mySavings`}
-                    />
+                    >
+                      {/*{translate(`profile.mySavings`).toString()}*/}
+                      <Text style={JOIN_BUTTON_TEXT}>{translate(`profile.mySavings`)}</Text>
+                    </Button>
+                    
+                    {
+                      isLoading || isUploading && <ActivityIndicator size="small" color={colors.purple} />
+                    }
         
                   </View>
         
@@ -832,7 +945,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     <Button
                       style={REDEEM_BUTTON}
                       textStyle={REDEEM_BUTTON_TEXT}
-                      disabled={!isValid || isLoading}
+                      disabled={!isValid || isLoading || isUploading}
                       onPress={() => handleSubmit()}
                       tx={`profile.redeem`}
                     />
@@ -849,7 +962,12 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  updateUserAsync: () => dispatch(updateUserAsync())
+  updateUserAsync: () => dispatch(updateUserAsync()),
+  notify: (message: string, type: string) => dispatch(notify(message, type)),
+  updateUserProfilePicture: () => dispatch(updateUserProfilePicture()),
+  updateUserProfilePictureFailure: () => dispatch(updateUserProfilePictureFailure()),
+  updateUserProfilePictureAsync: (imageURL: string) => dispatch(updateUserProfilePictureAsync(imageURL)),
+  openSettings: () => dispatch(openSettingsAsync()),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -857,6 +975,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   User: state.user.data,
   authRedeemKey: state.user.authRedeemKey,
   isLoading: state.user.loading,
+  isUploading: state.user.uploading,
 });
 
 export const ProfileScreen = connect<StateProps>(

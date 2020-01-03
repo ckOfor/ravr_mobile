@@ -2663,6 +2663,11 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
+
 css-in-js-utils@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/css-in-js-utils/-/css-in-js-utils-2.0.1.tgz#3b472b398787291b47cfe3e44fecfdd9e914ba99"
@@ -3136,6 +3141,11 @@ expo-google-sign-in@^8.0.0:
   integrity sha512-QLiqrfhT9cFC1VyDA3qW0XOeHP3Q1eRRl/3OoCKjXssTLqah0RwH4v1d4w3gvqzRKW/jHvyFqAl7nGdY0pKUuA==
   dependencies:
     invariant "^2.2.4"
+
+expo-image-picker@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.0.1.tgz#bae9e0d89722de9a6e60e55f0e4291fc099abb14"
+  integrity sha512-f4KVQFZSgNiYlt8smZ9kc/gaHkJeFLhRYiSgQdOlmLOkCuX4jxtg++PjCZLSSVwMVv/DUHT0EvUzOZqJokZfdg==
 
 expo-keep-awake@~8.0.0:
   version "8.0.0"

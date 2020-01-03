@@ -81,6 +81,21 @@ type updatePhoneNumberSuccess = {
   type: typeof UPDATE_PHONE_NUMBER_SUCCESS
 }
 
+export const UPDATE_USER_PROFILE_PICTURE= "UPDATE_USER_PROFILE_PICTURE"
+type updateUserProfilePicture = {
+  type: typeof  UPDATE_USER_PROFILE_PICTURE,
+}
+
+export const UPDATE_USER_PROFILE_PICTURE_FAILURE = "UPDATE_USER_PROFILE_PICTURE_FAILURE"
+type updateUserProfilePictureFailure = {
+  type: typeof UPDATE_USER_PROFILE_PICTURE_FAILURE,
+}
+
+export const UPDATE_USER_PROFILE_PICTURE_SUCCESS = "UPDATE_USER_PROFILE_PICTURE_SUCCESS"
+type updateUserProfilePictureSuccess = {
+  type: typeof UPDATE_USER_PROFILE_PICTURE_SUCCESS,
+}
+
 
 export type IUser = {
   id: number
@@ -106,6 +121,7 @@ export type UserState = {
   subject: string,
   message: string,
   authRedeemKey: string,
+  uploading: boolean,
 }
 
 export type UserAction =
@@ -125,3 +141,6 @@ export type UserAction =
   | updatePhoneNumber
   | updatePhoneNumberFailure
   | updatePhoneNumberSuccess
+  | updateUserProfilePicture
+  | updateUserProfilePictureFailure
+  | updateUserProfilePictureSuccess

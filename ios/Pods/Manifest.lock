@@ -26,6 +26,9 @@ PODS:
   - EXGoogleSignIn (8.0.0):
     - GoogleSignIn (~> 5.0.2)
     - UMCore
+  - EXImagePicker (8.0.1):
+    - UMCore
+    - UMFileSystemInterface
   - EXKeepAwake (8.0.0):
     - UMCore
   - EXLinearGradient (8.0.0):
@@ -322,6 +325,7 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXGoogleSignIn (from `../node_modules/expo-google-sign-in/ios`)
+  - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocalization (from `../node_modules/expo-localization/ios`)
@@ -411,6 +415,9 @@ EXTERNAL SOURCES:
   EXGoogleSignIn:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-google-sign-in/ios"
+  EXImagePicker:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-image-picker/ios"
   EXKeepAwake:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-keep-awake/ios"
@@ -538,6 +545,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 6e0d9bb6cc4ea404dbb8f583c1a8a2dcdf4b83b6
   EXFont: 6187b5ab46ee578d5f8e7f2ea092752e78772235
   EXGoogleSignIn: a1b520381af8954aa3e9f1e84407c05b016ae479
+  EXImagePicker: e02d5a9e45e3575391083fefaa0dc95f5ed45d03
   EXKeepAwake: 66e9f80b6d129633725a0e42f8d285c229876811
   EXLinearGradient: 75f302f9d6484267a3f6d3252df2e7a5f00e716a
   EXLocalization: 6a3ec1e9dda2ec9ba9dcc4a29dd840e5e950115e

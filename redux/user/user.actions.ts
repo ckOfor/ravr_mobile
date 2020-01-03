@@ -14,6 +14,9 @@ import {
   UPDATE_PHONE_NUMBER_SUCCESS,
   UPDATE_USER,
   UPDATE_USER_FAILURE,
+  UPDATE_USER_PROFILE_PICTURE,
+  UPDATE_USER_PROFILE_PICTURE_FAILURE,
+  UPDATE_USER_PROFILE_PICTURE_SUCCESS,
   UPDATE_USER_SUCCESS
 } from "../user";
 import {
@@ -21,7 +24,8 @@ import {
   logInUserPayload,
   logInWithEmail as apiLogInWithEmail,
   contactUs as apiContactUs,
-  updatePhone as apiUpdatePhone
+  updatePhone as apiUpdatePhone,
+  updatePicture as apiUpdatePicture
 } from "../../services/api";
 import { ThunkAction } from "redux-thunk";
 import { ApplicationState } from "../index";
@@ -213,38 +217,6 @@ export const updatePhoneNumberSuccess = () => ({
   type: UPDATE_PHONE_NUMBER_SUCCESS,
 })
 
-
-// export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
-//   dispatch,
-// ) => {
-//   console.tron.log(phoneNumber)
-//   // console.log(email)
-//   dispatch(updatePhoneNumber())
-//
-//   const state = getState();
-//
-//   console.log(authType)
-//
-//   //
-//   // try {
-//   //   Firebase.auth().onAuthStateChanged(function(user) {
-//   //     if (user) {
-//   //       const password = user.uid
-//   //       const email = user.email
-//   //       console.tron.log(phoneNumber, email, password)
-//   //       dispatch(updatePhoneAsync(phoneNumber, email, password))
-//   //     } else {
-//   //       console.tron.log("Failed")
-//   //       dispatch(updatePhoneNumberFailure())
-//   //     }
-//   //   });
-//   // } catch ({ message }) {
-//   //   dispatch(notify(`${message}`, 'danger'))
-//   //   dispatch(updatePhoneNumberFailure())
-//   // }
-// }
-
-
 export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<
   void,
   ApplicationState,
@@ -275,4 +247,53 @@ export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<
     dispatch(notify(`${message}`, 'danger'))
   }
   
+}
+
+export const updateUserProfilePicture = () => ({
+  type: UPDATE_USER_PROFILE_PICTURE
+})
+
+export const updateUserProfilePictureFailure = () => ({
+  type: UPDATE_USER_PROFILE_PICTURE_FAILURE
+})
+
+export const updateUserProfilePictureSuccess = () => ({
+  type: UPDATE_USER_PROFILE_PICTURE_SUCCESS
+})
+
+
+export const updateUserProfilePictureAsync = (pictureURL: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  dispatch(updateUserProfilePicture())
+  
+  const state = getState()
+  const email = state.auth.email;
+  const password = state.auth.uid;
+  
+  try {
+    const result = await apiUpdatePicture(pictureURL, email, password)
+    const { status, data, message } = result.data
+    console.tron.log(data)
+    console.tron.log(status)
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(updateUserAsync())
+      dispatch(updateUserProfilePictureSuccess())
+      return
+    }
+    
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(updateUserProfilePictureFailure())
+    
+  } catch ({ message }) {
+    console.tron.log(message)
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(updateUserProfilePictureFailure())
+  }
 }

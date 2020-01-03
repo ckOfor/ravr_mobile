@@ -39,6 +39,17 @@ const processResponse = async (response): Promise<any> => {
 }
 
 
+const updatePicture = async (pictureURL: string, email: string, password: string): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.put("/users/profile/edit", {
+    pictureURL,
+    email,
+    password
+  })
+  return processResponse(response)
+}
+
 const updatePhone = async (phoneNumber: string, email: string, password: string): Promise<
   Types.logInUserResponse
   > => {
@@ -527,5 +538,6 @@ export {
   searchAmountTours,
   createTransaction,
   contactUs,
-  updatePhone
+  updatePhone,
+  updatePicture
 }

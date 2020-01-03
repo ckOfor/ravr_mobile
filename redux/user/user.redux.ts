@@ -12,6 +12,9 @@ import {
   UPDATE_PHONE_NUMBER,
   UPDATE_PHONE_NUMBER_FAILURE,
   UPDATE_PHONE_NUMBER_SUCCESS,
+  UPDATE_USER_PROFILE_PICTURE,
+  UPDATE_USER_PROFILE_PICTURE_FAILURE,
+  UPDATE_USER_PROFILE_PICTURE_SUCCESS,
   UserAction,
   UserState,
 } from "./user.types"
@@ -40,6 +43,7 @@ const initialState: UserState = {
   subject: '',
   message: '',
   authRedeemKey: '',
+  uploading: false
 }
 
 export function userReducer(
@@ -71,6 +75,19 @@ export function userReducer(
       return {
         ...state,
         loading: true
+      }
+  
+    case UPDATE_USER_PROFILE_PICTURE:
+      return {
+        ...state,
+        uploading: true
+      }
+  
+    case UPDATE_USER_PROFILE_PICTURE_FAILURE:
+    case UPDATE_USER_PROFILE_PICTURE_SUCCESS:
+      return {
+        ...state,
+        uploading: false
       }
   
   
