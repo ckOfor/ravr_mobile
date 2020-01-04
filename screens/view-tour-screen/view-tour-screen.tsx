@@ -175,7 +175,7 @@ const discoverMoreTextStyle: TextStyle = {
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
   height: 233,
-  width: 148,
+  width: Layout.window.width / 2.4,
   borderRadius: 12,
 }
 

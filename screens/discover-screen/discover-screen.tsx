@@ -4,6 +4,7 @@ import {
 } from "react-native"
 import {colors, fonts, images} from "../../theme"
 import { ITours } from "../../services/api";
+import {Layout} from "../../constants";
 
 interface WeekendScreenProps {
   forwardedRef?: (ref: any) => void
@@ -15,7 +16,7 @@ interface WeekendScreenProps {
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
   height: 233,
-  width: 148,
+  width: Layout.window.width / 2.5,
   borderRadius: 12,
 }
 

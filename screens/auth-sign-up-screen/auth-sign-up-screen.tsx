@@ -280,7 +280,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                     <TextField
                       name="confirmPassword"
                       secureTextEntry
-                      placeholderTx="common.passwordPlaceHolder"
+                      placeholderTx="common.confirmPasswordPlaceHolder"
                       value={values.confirmPassword}
                       onChangeText={handleChange("confirmPassword")}
                       onBlur={handleBlur("confirmPassword")}

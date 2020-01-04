@@ -16,8 +16,8 @@ interface WeekendScreenProps {
 
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
-  height: 233,
-  width: 148,
+  height: 235.5,
+  width: Layout.window.width / 2.5,
   borderRadius: 12,
 }
 

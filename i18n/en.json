@@ -4,7 +4,8 @@
     "slogan": "Everywhere you’ve always wanted to be, is here!",
     "emailPlaceHolder": "jane@doe.com",
     "fullNamePlaceHolder": "Jane Doe",
-    "passwordPlaceHolder": "********",
+    "passwordPlaceHolder": "Password",
+    "confirmPasswordPlaceHolder": "Confirm Password",
     "fieldRequired": "This field is required",
     "fieldValidEmail": "Must be a valid email",
     "fieldTooShort": "This field is too short!",
@@ -78,7 +79,7 @@
     "prices": "We organize every day tours with the goal to offer you the absolute and authentic experience with the best prices in the area."
   },
   "search": {
-    "search": "Search."
+    "search": "Search"
   },
   "payment": {
     "back": "< Ravr.",

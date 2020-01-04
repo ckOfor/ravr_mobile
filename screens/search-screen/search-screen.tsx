@@ -91,7 +91,7 @@ const SEARCH_BUTTON_TEXT: TextStyle = {
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
   height: 235.5,
-  width: 342.78,
+  width: Layout.window.width / 1.1,
   borderRadius: 12,
 }
 
