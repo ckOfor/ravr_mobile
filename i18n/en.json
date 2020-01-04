@@ -108,7 +108,8 @@
     "redeemHeader": "Redeem coins.",
     "code": "Enter code",
     "redeem": "Redeem",
-    "logout": "Logout"
+    "logout": "Logout",
+    "moreText": "Your phone number is {{phone}}, please send us a mail using your registered email to edit your profile"
   },
   "contactUs": {
     "header": "Hello Ravr.",

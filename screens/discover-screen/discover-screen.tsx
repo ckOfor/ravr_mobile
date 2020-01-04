@@ -1,6 +1,6 @@
 import * as React from "react"
 import {
-  TouchableOpacity, Image, View, ImageStyle, TextStyle, FlatList, Text
+  TouchableOpacity, Image, View, ImageStyle, TextStyle, FlatList, Text, Platform, StatusBar
 } from "react-native"
 import {colors, fonts, images} from "../../theme"
 import { ITours } from "../../services/api";
@@ -53,6 +53,7 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
   //   // this.scrollView.scrollTo({ x: scrollTo, animated: true });
   // }
   
+  
   render() {
     const {
       forwardedRef, discoverTours, viewTours, setSelectedTours
@@ -60,6 +61,11 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
     
     return (
       <View>
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         {
           discoverTours[0].id !== null && (
             <FlatList

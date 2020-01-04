@@ -14,7 +14,7 @@ import {
   ImageStyle,
   AppState,
   NativeMethodsMixinStatic,
-  KeyboardAvoidingView
+  KeyboardAvoidingView, Platform, Keyboard
 } from "react-native"
 
 // third-party
@@ -143,7 +143,7 @@ const QUOTE_BUTTON: ViewStyle = {
   width: Layout.window.width / 1.4,
   marginTop: 10,
   backgroundColor: colors.purple,
-  marginBottom: Layout.window.height / 7,
+  marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
 }
 
 const QUOTE_BUTTON_TEXT: TextStyle = {
@@ -165,6 +165,32 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   componentDidMount(): void {
     AppState.addEventListener("change", this.handleAppStateChange)
     this.getFeeds()
+  
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
+  }
+  
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+  
+  _keyboardDidShow = () => {
+    this.setState({
+      keyboardUp: true
+    })
+  }
+  
+  _keyboardDidHide = () =>  {
+    this.setState({
+      keyboardUp: false
+    })
   }
   
   getFeeds = () => {
@@ -198,20 +224,35 @@ class Home extends React.Component<NavigationScreenProps & Props> {
       navigation, userPicture, weekendTours, discoverTours, authSearchKey, isLoading
     } = this.props
     const {
-      scrollTo
+      keyboardUp
     } = this.state
     
     // console.tron.log(userPicture === '')
     return (
 	    <KeyboardAvoidingView
         enabled={true}
-        behavior={"position"}
-        style={{ flex: 1 }}
+        behavior={"padding"}
+        style={
+          keyboardUp
+            ? {
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center'
+            }
+            : {
+              flex: 1,
+            }
+        }
+        keyboardVerticalOffset={100}
       >
         <View
           style={ROOT}
         >
-          <StatusBar barStyle={"dark-content"} />
+          {
+            Platform.OS === "ios"
+              ? <StatusBar barStyle="dark-content" />
+              : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+          }
       
           <ScrollView
             showsHorizontalScrollIndicator={false}
@@ -456,7 +497,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
-  userPicture: state.auth.picture,
+  userPicture: state.user.data.pictureURL,
   weekendTours: state.tour.weekendTours,
   discoverTours: state.tour.discoverTours,
   isLoading: state.tour.loading,

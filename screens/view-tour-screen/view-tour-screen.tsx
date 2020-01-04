@@ -377,11 +377,11 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           showsHorizontalScrollIndicator={false}
           pinchGestureEnabled
           contentContainerStyle={{
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            height: 233,
           }}
           style={{
             marginTop: '5%',
-            marginBottom: '5%',
             marginRight: '5%',
           }}
           // ref={forwardedRef}
@@ -454,10 +454,10 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
         <Tabs
           style={{
-            marginTop: 10,
+            marginTop: 30,
             marginBottom: 20,
             width: Layout.window.width / 1.2,
-            alignSelf: 'center'
+            alignSelf: 'center',
           }}
           tabBarUnderlineStyle={{
             backgroundColor: colors.purple,

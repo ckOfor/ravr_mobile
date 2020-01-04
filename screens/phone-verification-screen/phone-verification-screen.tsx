@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView
+  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView, Platform
 } from "react-native"
 
 // third-party libraries
@@ -134,7 +134,7 @@ class PhoneVerification extends React.Component<NavigationScreenProps & Props> {
     return (
       <KeyboardAvoidingView
         enabled={true}
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <ImageBackground

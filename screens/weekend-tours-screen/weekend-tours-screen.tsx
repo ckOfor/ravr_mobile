@@ -40,7 +40,7 @@ type Props = DispatchProps & StateProps & WeekendToursScreenProps
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
   height: 235.5,
-  width: 342.78,
+  width: Layout.window.width / 1.1,
   borderRadius: 12,
 }
 
@@ -101,6 +101,12 @@ class WeekendTours extends React.Component<NavigationScreenProps & Props> {
       limit: state.limit + 2
     }), () => this.fetchTours(this.state.limit + 10))
   }
+  
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
   
   public render(): React.ReactNode {
     const {
@@ -167,18 +173,20 @@ class WeekendTours extends React.Component<NavigationScreenProps & Props> {
               onRefresh={() => this.fetchTours(limit)}
             />
           }
-          onScrollEndDrag={() => {
-            this.fetchTours(limit)
-            this.setState({
-              limit: limit + 10
-            })
+          scrollsToTop
+          onScroll={({nativeEvent}) => {
+            if (this.isCloseToBottom(nativeEvent)) {
+              this.fetchTours(limit)
+              this.setState({
+                limit: limit + 10
+              })
+            }
           }}
           showsHorizontalScrollIndicator={false}
         >
           {
             tours[0].id !== null && (
               <FlatList
-                onEndReached={() => this.fetchTours(limit)}
                 data={tours}
                 numColumns={1}
                 style={{

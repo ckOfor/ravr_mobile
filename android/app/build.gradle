@@ -106,6 +106,14 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file('/Users/oforchinedu/Desktop/ravr/android/releaseKeystore.jks')
+            storePassword 'ravrapp'
+            keyAlias = 'ravrapp'
+            keyPassword 'ravrapp'
+        }
+    }
     splits {
         abi {
             reset()
@@ -144,6 +152,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 dependencies {
+    implementation project(':react-native-android-open-settings')
+    implementation project(':react-native-paystack')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-screens')
     implementation project(':react-native-reanimated')

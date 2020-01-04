@@ -13,6 +13,7 @@ import configureStore from "./redux/create-store"
 import { startup, checkLocationPermissionAsync } from "./redux/startup"
 import { Root } from "native-base";
 import SplashScreen from 'react-native-splash-screen'
+import {colors} from "./theme";
 
 useScreens()
 
@@ -54,7 +55,7 @@ class App extends React.Component<Props, State> {
             {
               Platform.OS === "ios"
                 ? <StatusBar barStyle="light-content" />
-                : <StatusBar barStyle={"light-content"} translucent backgroundColor={'transparent'} />
+                : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
             }
             <Root>
               <AppWithNavigationState />

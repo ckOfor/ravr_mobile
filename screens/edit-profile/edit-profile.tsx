@@ -1,18 +1,27 @@
+// react
 import React from "react"
+
+// react-native
 import {
-  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking, Alert
+  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Alert, Platform
 } from "react-native"
+
+// third-party
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
+
+// redux
 import { ApplicationState } from "../../redux";
-import { Layout } from "../../constants";
-import {translate} from "../../i18n";
-import { colors, fonts, images } from "../../theme";
-import {clearUserAsync, IUser} from "../../redux/user";
+import { clearUserAsync, IUser } from "../../redux/user";
 import { updateUserAsync } from "../../redux/user";
-import {clearAuthAsync} from "../../redux/auth";
-import {clearTours} from "../../redux/tour";
+import { clearAuthAsync } from "../../redux/auth";
+import { clearTours } from "../../redux/tour";
+
+// styles
+import { Layout } from "../../constants";
+import { translate } from "../../i18n";
+import { colors, fonts } from "../../theme";
 
 interface DispatchProps {
   updateUserAsync: () => void
@@ -23,6 +32,7 @@ interface DispatchProps {
 
 interface StateProps {
   User: IUser
+  phoneNumber: string
 }
 
 interface EditProfileProps extends NavigationScreenProps {}
@@ -61,18 +71,29 @@ const moreTextStyle: TextStyle = {
   width: Layout.window.width / 1.5,
 }
 
+const discoverMoreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
 class EditProfile extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, clearUserAsync, clearAuthAsync, clearTours
+      navigation, clearUserAsync, clearAuthAsync, clearTours, phoneNumber
     } = this.props
     
     return (
       <View
         style={ROOT}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         
         <ScrollView
           // onScroll={this.handleScroll}
@@ -152,6 +173,24 @@ class EditProfile extends React.Component<NavigationScreenProps & Props> {
               </Text>
             </TouchableOpacity>
           </View>
+  
+          <View
+            style={{
+              flex: 1,
+              height: Layout.window.height / 2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+    
+              style={discoverMoreTextStyle}
+            >
+              {translate(`profile.moreText`, {
+                phone: `${phoneNumber}`
+              })}
+            </Text>
+          </View>
           
         
         </ScrollView>
@@ -170,6 +209,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
   User: state.user.data,
+  phoneNumber: state.user.data.phoneNumber,
 });
 
 export const EditProfileScreen = connect<StateProps>(

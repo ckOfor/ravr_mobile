@@ -1,6 +1,6 @@
 import React from "react"
 import {
-  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking
+  View, Text, ViewStyle, StatusBar, TextStyle, ScrollView, TouchableOpacity, Image, ImageStyle, Linking, Platform
 } from "react-native"
 import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
@@ -72,7 +72,11 @@ class Savings extends React.Component<NavigationScreenProps & Props> {
       <View
         style={ROOT}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         
         <ScrollView
           // onScroll={this.handleScroll}

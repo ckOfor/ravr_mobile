@@ -31,7 +31,7 @@ const INPUT: TextStyle = {
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
   borderColor: colors.transparent,
-  elevation: 1,
+  elevation: 3,
   height: 50,
   borderRadius: 100
 }

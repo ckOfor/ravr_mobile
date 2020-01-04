@@ -3,8 +3,20 @@ import React from "react"
 
 // react-native
 import {
-  View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView
+  View,
+  Text,
+  ViewStyle,
+  ImageBackground,
+  ImageStyle,
+  Image,
+  TextStyle,
+  TouchableOpacity,
+  NativeMethodsMixinStatic,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView
 } from "react-native"
 
 // third-party libraries
@@ -21,7 +33,7 @@ import { ApplicationState } from "../../redux";
 
 // styles
 import { colors, fonts, images } from "../../theme";
-import { Layout } from "../../constants";
+import {Layout, WhichPlatform} from "../../constants";
 import { translate } from "../../i18n";
 import { TextField } from "../../components/text-field";
 import { Button } from "../../components/button";
@@ -181,157 +193,164 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
     return (
       <KeyboardAvoidingView
         enabled={true}
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ImageBackground
-          source={images.bkImage}
-          style={backgroundImageStyle}
-          resizeMethod={'scale'}
-          resizeMode='cover'
+        <ScrollView
+          contentContainerStyle={{
+            height: '100%'
+          }}
         >
-  
-          <View
-            style={{
-              height: '10%',
-              marginTop: Layout.window.height / 20,
-            }}
+          <ImageBackground
+            source={images.bkImage}
+            style={backgroundImageStyle}
+            resizeMethod={'scale'}
+            resizeMode='cover'
           >
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
-              <Image
-                style={APP_LOGO}
-                source={images.appLogo}
-                resizeMethod={'auto'}
-                resizeMode='cover'
-              />
-            </TouchableOpacity>
-          </View>
-  
-          <View
-            style={{
-              height: '15%',
-            }}
-          >
-            <Text
-        
-              style={signInTextStyle}
-            >
-              {translate(`signUpScreen.welcomeText`)}
-            </Text>
-          </View>
     
-          <Formik
-            initialValues={{
-              email: authEmail,
-              password: ""
-            }}
-            validationSchema={schema}
-            onSubmit={this.submit}
-            enableReinitialize
-          >
-            {({
-                values,
-                handleChange,
-                handleBlur,
-                errors,
-                isValid,
-                handleSubmit
-              }: FormikProps<MyFormValues>) => (
-              <View>
+            <View
+              style={{
+                height: '10%',
+                marginTop: Layout.window.height / 20,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+              >
+                <Image
+                  style={APP_LOGO}
+                  source={images.appLogo}
+                  resizeMethod={'auto'}
+                  resizeMode='cover'
+                />
+              </TouchableOpacity>
+            </View>
+    
+            <View
+              style={{
+                height: '15%',
+              }}
+            >
+              <Text
+        
+                style={signInTextStyle}
+              >
+                {translate(`signUpScreen.welcomeText`)}
+              </Text>
+            </View>
+    
+            <Formik
+              initialValues={{
+                email: authEmail,
+                password: ""
+              }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
+            >
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
           
-                <View
-                  style={FIELD}
-                >
-                  <TextField
-                    name="email"
-                    keyboardType="email-address"
-                    placeholderTx="common.emailPlaceHolder"
-                    value={values.email}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    isInvalid={!isValid}
-                    fieldError={errors.email}
-                    onSubmitEditing={() => this.passwordInput.focus()}
-                    forwardedRef={i => {
-                      this.emailInput = i
-                    }}
-                  />
+                  <View
+                    style={FIELD}
+                  >
+                    <TextField
+                      name="email"
+                      keyboardType="email-address"
+                      placeholderTx="common.emailPlaceHolder"
+                      value={values.email}
+                      onChangeText={handleChange("email")}
+                      onBlur={handleBlur("email")}
+                      autoCapitalize="none"
+                      returnKeyType="next"
+                      isInvalid={!isValid}
+                      fieldError={errors.email}
+                      onSubmitEditing={() => this.passwordInput.focus()}
+                      forwardedRef={i => {
+                        this.emailInput = i
+                      }}
+                    />
             
-                  <TextField
-                    name="password"
-                    secureTextEntry
-                    placeholderTx="common.passwordPlaceHolder"
-                    value={values.password}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
-                    autoCapitalize="none"
-                    returnKeyType="done"
-                    isInvalid={!isValid}
-                    fieldError={errors.password}
-                    forwardedRef={i => {
-                      this.passwordInput = i
-                    }}
-                    onSubmitEditing={() => handleSubmit()}
-                  />
+                    <TextField
+                      name="password"
+                      secureTextEntry
+                      placeholderTx="common.passwordPlaceHolder"
+                      value={values.password}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      autoCapitalize="none"
+                      returnKeyType="done"
+                      isInvalid={!isValid}
+                      fieldError={errors.password}
+                      forwardedRef={i => {
+                        this.passwordInput = i
+                      }}
+                      onSubmitEditing={() => handleSubmit()}
+                    />
             
-                  <Button
-                    style={FORGOT_PASSWORD_LINK_BUTTON}
-                    textStyle={FORGOT_PASSWORD__LINK_TEXT}
-                    preset="link"
-                    tx="signUpScreen.forgotPassword"
-                    onPress={() => navigation.navigate('forgotPassword')}
-                  />
+                    <Button
+                      style={FORGOT_PASSWORD_LINK_BUTTON}
+                      textStyle={FORGOT_PASSWORD__LINK_TEXT}
+                      preset="link"
+                      tx="signUpScreen.forgotPassword"
+                      onPress={() => navigation.navigate('forgotPassword')}
+                    />
             
-                  <Button
-                    style={CONTINUE_BUTTON}
-                    textStyle={CONTINUE_BUTTON_TEXT}
-                    disabled={!isValid || isLoading}
-                    onPress={() => handleSubmit()}
-                    tx={`signUpScreen.signIn`}
-                  />
+                    <Button
+                      style={CONTINUE_BUTTON}
+                      textStyle={CONTINUE_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`signUpScreen.signIn`}
+                    />
+                  </View>
                 </View>
-              </View>
-            )}
-          </Formik>
-    
-          <Text
-      
-            style={bottomTextStyle}
-          >
-            {translate("signUpScreen.yes")}
-          </Text>
-    
-          <TouchableOpacity
-            onPress={() => navigation.navigate('authSignUp')}
-          >
+              )}
+            </Formik>
     
             <Text
+      
+              style={bottomTextStyle}
+            >
+              {translate("signUpScreen.yes")}
+            </Text>
+    
+            <TouchableOpacity
+              onPress={() => navigation.navigate('authSignUp')}
+            >
+      
+              <Text
         
-              style={termsAndConditions}
-            >
-              {translate(`signUpScreen.createAccount`)}
+                style={termsAndConditions}
+              >
+                {translate(`signUpScreen.createAccount`)}
       
-            </Text>
-          </TouchableOpacity>
-  
-          <TouchableOpacity
-            onPress={() => navigation.navigate('landing')}
-          >
+              </Text>
+            </TouchableOpacity>
     
-            <Text
-      
-              style={termsAndConditions}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('landing')}
             >
-              {translate(`signUp.social`)}
-    
-            </Text>
-          </TouchableOpacity>
+      
+              <Text
+        
+                style={termsAndConditions}
+              >
+                {translate(`signUp.social`)}
+      
+              </Text>
+            </TouchableOpacity>
   
-        </ImageBackground>
+          </ImageBackground>
+        </ScrollView>
+        
       </KeyboardAvoidingView>
     )
   }

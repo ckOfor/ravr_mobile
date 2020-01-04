@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   FlatList,
-  Image, ImageStyle, RefreshControl,
+  Image, ImageStyle, Platform, RefreshControl,
   ScrollView, StatusBar, Text, TextStyle, TouchableOpacity, View, ViewStyle
 } from "react-native"
 
@@ -102,6 +102,12 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
     }), () => this.fetchTours(this.state.limit + 10))
   }
   
+  isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
+  
   public render(): React.ReactNode {
     const {
       navigation, tours, setSelectedTours, isLoading
@@ -118,7 +124,11 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
           height: Layout.window.height,
         }}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
     
         
         <TouchableOpacity
@@ -168,11 +178,13 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
               onRefresh={() => this.fetchTours(limit)}
             />
           }
-          onScrollEndDrag={() => {
-            this.fetchTours(limit)
-            this.setState({
-              limit: limit + 10
-            })
+          onScroll={({nativeEvent}) => {
+            if (this.isCloseToBottom(nativeEvent)) {
+              this.fetchTours(limit)
+              this.setState({
+                limit: limit + 10
+              })
+            }
           }}
           showsHorizontalScrollIndicator={false}
         >

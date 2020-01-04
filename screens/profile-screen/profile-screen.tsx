@@ -13,7 +13,7 @@ import {
   Image,
   ImageStyle,
   Linking,
-  NativeMethodsMixinStatic, KeyboardAvoidingView, AppState, ActivityIndicator
+  NativeMethodsMixinStatic, KeyboardAvoidingView, AppState, ActivityIndicator, Platform, Keyboard
 } from "react-native"
 
 // third-party
@@ -93,7 +93,7 @@ const REDEEM_BUTTON: ViewStyle = {
   width: Layout.window.width / 1.4,
   marginTop: 10,
   backgroundColor: colors.purple,
-  marginBottom: Layout.window.height / 7,
+  marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
 }
 
 const REDEEM_BUTTON_TEXT: TextStyle = {
@@ -244,22 +244,47 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     this.props.updateUserAsync()
     this.getPermissionAsync();
     AppState.addEventListener("change", this.handleAppStateChange)
+  
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
+  }
+  
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+  
+  _keyboardDidShow = () => {
+    this.setState({
+      keyboardUp: true
+    })
+  }
+  
+  _keyboardDidHide = () =>  {
+    this.setState({
+      keyboardUp: false
+    })
   }
   
   getPermissionAsync = async () => {
     const { notify } = this.props
-    if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        notify('Sorry, we need camera roll permissions to make this work!', 'danger')
-        this.setState({
-          imagePermissions: false
-        })
-      } else {
-        this.setState({
-          imagePermissions: true
-        })
-      }
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status !== 'granted') {
+      console.tron.log(status)
+      notify('Sorry, we need camera roll permissions to make this work!', 'danger')
+      this.setState({
+        imagePermissions: false
+      })
+    } else {
+      this.setState({
+        imagePermissions: true
+      })
     }
   }
   
@@ -313,7 +338,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   }
   
   getImage = async () => {
-    // console.tron.log('called getImage')
+    console.tron.log('called getImage')
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsEditing: true,
@@ -352,26 +377,45 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       rsvp,
       ref,
       call,
-      imagePermissions
+      imagePermissions,
+      keyboardUp
     } = this.state
+    
+    console.tron.log(this.state)
     
     return (
       <KeyboardAvoidingView
         enabled={true}
-        behavior={"position"}
-        style={{ flex: 1 }}
+        behavior={"padding"}
+        
+        style={
+          keyboardUp
+            ? {
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center'
+              }
+            : {
+                flex: 1,
+              }
+        }
+        keyboardVerticalOffset={100}
       >
         <View
           style={ROOT}
         >
-          <StatusBar barStyle={"dark-content"} />
+          {
+            Platform.OS === "ios"
+              ? <StatusBar barStyle="dark-content" />
+              : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+          }
     
           <ScrollView
             scrollEnabled
             showsVerticalScrollIndicator={false}
             pinchGestureEnabled
             contentContainerStyle={{
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
             onContentSizeChange={(contentWidth, contentHeight)=>{
               // this.setState((state) => ({
@@ -631,7 +675,8 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                   showsHorizontalScrollIndicator={false}
                   pinchGestureEnabled
                   contentContainerStyle={{
-                    justifyContent: "space-between"
+                    justifyContent: "space-between",
+                    height: 233,
                   }}
                   style={{
                     marginTop: '5%',

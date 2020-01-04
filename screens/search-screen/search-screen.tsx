@@ -6,7 +6,7 @@ import {
   FlatList,
   Image,
   ImageStyle,
-  NativeMethodsMixinStatic,
+  NativeMethodsMixinStatic, Platform,
   RefreshControl,
   ScrollView,
   StatusBar,
@@ -183,7 +183,11 @@ class Search extends React.Component<NavigationScreenProps & Props> {
           height: Layout.window.height,
         }}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         
         <ScrollView
           showsHorizontalScrollIndicator={false}

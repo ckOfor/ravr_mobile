@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView
+  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView, Platform, ScrollView
 } from "react-native"
 
 // third-party libraries
@@ -144,119 +144,125 @@ class ForgotPassword extends React.Component<NavigationScreenProps & Props> {
     return (
       <KeyboardAvoidingView
         enabled={true}
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ImageBackground
-          source={images.manBk}
-          style={backgroundImageStyle}
-          resizeMethod={'scale'}
-          resizeMode='cover'
+        <ScrollView
+          contentContainerStyle={{
+            height: '100%'
+          }}
         >
-          
-          <View
-            style={{
-              height: '10%',
-              marginTop: Layout.window.height / 20,
-            }}
+          <ImageBackground
+            source={images.manBk}
+            style={backgroundImageStyle}
+            resizeMethod={'scale'}
+            resizeMode='cover'
           >
+            
+            <View
+              style={{
+                height: '10%',
+                marginTop: Layout.window.height / 20,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+              >
+                <Image
+                  style={APP_LOGO}
+                  source={images.appLogo}
+                  resizeMethod={'auto'}
+                  resizeMode='cover'
+                />
+              </TouchableOpacity>
+            </View>
+            
+            <View
+              style={{
+                height: '15%',
+                marginTop: Layout.window.height / 20,
+              }}
+            >
+              <Text
+                
+                style={signInTextStyle}
+              >
+                {translate(`forgotPassword.resetAccount`)}
+              </Text>
+            </View>
+            
+            <Formik
+              initialValues={{
+                email: authEmail,
+                password: ""
+              }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
+            >
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
+                  
+                  <View
+                    style={FIELD}
+                  >
+                    <TextField
+                      name="email"
+                      keyboardType="email-address"
+                      placeholderTx="common.emailPlaceHolder"
+                      value={values.email}
+                      onChangeText={handleChange("email")}
+                      onBlur={handleBlur("email")}
+                      autoCapitalize="none"
+                      returnKeyType="next"
+                      isInvalid={!isValid}
+                      fieldError={errors.email}
+                      forwardedRef={i => {
+                        this.emailInput = i
+                      }}
+                    />
+                    
+                    <Button
+                      style={CONTINUE_BUTTON}
+                      textStyle={CONTINUE_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`forgotPassword.reset`}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
+      
+            <Text
+        
+              style={bottomTextStyle}
+            >
+              {translate("forgotPassword.remember")}
+            </Text>
+      
             <TouchableOpacity
               onPress={() => navigation.goBack()}
             >
-              <Image
-                style={APP_LOGO}
-                source={images.appLogo}
-                resizeMethod={'auto'}
-                resizeMode='cover'
-              />
+        
+              <Text
+          
+                style={termsAndConditions}
+              >
+                {translate(`forgotPassword.wait`)}
+        
+              </Text>
             </TouchableOpacity>
-          </View>
           
-          <View
-            style={{
-              height: '15%',
-              marginTop: Layout.window.height / 20,
-            }}
-          >
-            <Text
-              
-              style={signInTextStyle}
-            >
-              {translate(`forgotPassword.resetAccount`)}
-            </Text>
-          </View>
-          
-          <Formik
-            initialValues={{
-              email: authEmail,
-              password: ""
-            }}
-            validationSchema={schema}
-            onSubmit={this.submit}
-            enableReinitialize
-          >
-            {({
-                values,
-                handleChange,
-                handleBlur,
-                errors,
-                isValid,
-                handleSubmit
-              }: FormikProps<MyFormValues>) => (
-              <View>
-                
-                <View
-                  style={FIELD}
-                >
-                  <TextField
-                    name="email"
-                    keyboardType="email-address"
-                    placeholderTx="common.emailPlaceHolder"
-                    value={values.email}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    isInvalid={!isValid}
-                    fieldError={errors.email}
-                    forwardedRef={i => {
-                      this.emailInput = i
-                    }}
-                  />
-                  
-                  <Button
-                    style={CONTINUE_BUTTON}
-                    textStyle={CONTINUE_BUTTON_TEXT}
-                    disabled={!isValid || isLoading}
-                    onPress={() => handleSubmit()}
-                    tx={`forgotPassword.reset`}
-                  />
-                </View>
-              </View>
-            )}
-          </Formik>
-    
-          <Text
-      
-            style={bottomTextStyle}
-          >
-            {translate("forgotPassword.remember")}
-          </Text>
-    
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-          >
-      
-            <Text
-        
-              style={termsAndConditions}
-            >
-              {translate(`forgotPassword.wait`)}
-      
-            </Text>
-          </TouchableOpacity>
-        
-        </ImageBackground>
+          </ImageBackground>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

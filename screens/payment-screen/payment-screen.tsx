@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   ImageStyle,
   NativeMethodsMixinStatic,
-  KeyboardAvoidingView
+  KeyboardAvoidingView, Platform
 } from "react-native"
 
 // third-parties
@@ -223,7 +223,7 @@ class Payment extends React.Component<NavigationScreenProps & Props> {
     return (
       <KeyboardAvoidingView
         enabled={true}
-        behavior={"padding"}
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
         style={{ flex: 1 }}
       >
         <View

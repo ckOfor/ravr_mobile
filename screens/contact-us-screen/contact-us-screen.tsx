@@ -14,7 +14,7 @@ import {
   ImageStyle,
   Linking,
   ImageBackground,
-  NativeMethodsMixinStatic
+  NativeMethodsMixinStatic, Platform
 } from "react-native"
 
 // third-party
@@ -122,7 +122,11 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
       <View
         style={ROOT}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
   
         <Text
     
@@ -150,7 +154,7 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
   
           <View
             style={{
-              backgroundColor: '#FFF',
+              // backgroundColor: '#FFF',
               justifyContent: 'center',
               alignItems: 'center',
               width: Layout.window.width / 1.2,
@@ -168,7 +172,7 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.1,
                 borderColor: 'transparent',
-                elevation: 1,
+                elevation: 2,
               }}
             >
               <Input
@@ -197,7 +201,7 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
                 shadowOpacity: 0.1,
                 borderColor: 'transparent',
                 borderRadius: 8,
-                elevation: 1,
+                elevation: 2,
               }}
             >
               <Textarea
