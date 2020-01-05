@@ -10,6 +10,7 @@ import {
 // import { Icon } from "../components/icon"
 import { Icon } from "native-base"
 import { images } from "../theme";
+import {Layout} from "../constants";
 
 /**
  * The default stack navigator config for this app.
@@ -19,14 +20,14 @@ export const DEFAULT_STACK_NAVIGATOR_CONFIG: StackNavigatorConfig = {
   defaultNavigationOptions: {
     header: null,
     gesturesEnabled: false,
-    headerTitleAllowFontScaling: false
-  }
+    headerTitleAllowFontScaling: false,
+  },
 }
 
 /**
  * The default stack navigator config for this app.
  */
-export const DEFAULT_BOTTOM_NAVIIGATION: BottomTabNavigatorConfig = {
+export const DEFAULT_BOTTOM_NAVIGATION: BottomTabNavigatorConfig = {
   defaultNavigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, horizontal, tintColor }) => {
       const { routeName } = navigation.state;

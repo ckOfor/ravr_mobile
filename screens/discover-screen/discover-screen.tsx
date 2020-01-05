@@ -16,7 +16,7 @@ interface WeekendScreenProps {
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
   height: 233,
-  width: Layout.window.width / 2.5,
+  width: Layout.window.width / 2.4,
   borderRadius: 12,
 }
 
@@ -111,14 +111,7 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
               
                         style={discoverMoreTextStyle}
                       >
-                        {tripName.substring(0, 9)}
-                      </Text>
-            
-                      <Text
-              
-                        style={discoverMoreTextStyle}
-                      >
-                        ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        {tripName.substring(0, 20)}
                       </Text>
                     </View>
                   </TouchableOpacity>

@@ -3,12 +3,11 @@ import React from "react"
 
 // react-native
 import {
-  Image, ImageStyle, Linking, NativeMethodsMixinStatic,
-  ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle
+  Image, ImageStyle, Linking, NativeMethodsMixinStatic, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle,
 } from "react-native"
 
 // third-party libraries
-import { NavigationScreenProps } from "react-navigation"
+import {NavigationActions, NavigationScreenProps} from "react-navigation"
 import moment from 'moment'
 import { Tab, Tabs } from 'native-base';
 import { translate } from "../../i18n";
@@ -684,10 +683,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 
 })
 
-let mapStateToProps: (state: ApplicationState) => StateProps;
-mapStateToProps = (state: ApplicationState): StateProps => ({
+let mapStateToProps: (state: ApplicationState, dispatch: Dispatch<any>) => StateProps;
+mapStateToProps = (state: ApplicationState, dispatch): StateProps => ({
   isLoading: state.tour.loading,
-  selectedTour: state.tour.selectedTour
+  selectedTour: state.tour.selectedTour,
 });
 
 export const ViewTourScreen = connect<StateProps>(

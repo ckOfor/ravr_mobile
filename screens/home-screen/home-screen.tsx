@@ -201,14 +201,11 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   
   
   handleAppStateChange = nextAppState => {
-    console.tron.log('CAlleds')
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
+    console.tron.log('CAlleds', this.state.appState)
+    if (this.state.appState.match(/background/)) {
       this.getFeeds()
     }
-    
+
     this.setState({ appState: nextAppState })
   }
   

@@ -298,7 +298,7 @@ export const logInWithSocialAuth = (): ThunkAction<void, ApplicationState, null,
         dispatch(updateUserAsync())
         return data.phoneNumber === ""
           ? dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
-          : dispatch(NavigationActions.navigate({ routeName: "home" }))
+          : dispatch(NavigationActions.navigate({ routeName: "Main" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
@@ -468,7 +468,7 @@ export const logInUserAsync = ({
         dispatch(updateUserAsync())
         return data.phoneNumber === ""
           ? dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
-          : dispatch(NavigationActions.navigate({ routeName: "home" }))
+          : dispatch(NavigationActions.navigate({ routeName: "Main" }))
       } else {
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }

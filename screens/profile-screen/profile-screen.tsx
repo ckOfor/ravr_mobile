@@ -17,7 +17,7 @@ import {
 } from "react-native"
 
 // third-party
-import { NavigationScreenProps } from "react-navigation"
+import {NavigationEvents, NavigationScreenProps} from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
 import moment from "moment";
@@ -51,6 +51,7 @@ import { Button } from "../../components/button";
 import {Formik, FormikProps} from "formik";
 import {TextField} from "../../components/text-field";
 import {openSettingsAsync} from "../../redux/startup";
+import SplashScreen from "react-native-splash-screen";
 
 interface DispatchProps {
   updateUserAsync: () => void
@@ -235,15 +236,14 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     ref: '',
     call: '',
     imagePermissions: false,
+    keyboardUp: false,
     appState: AppState.currentState,
   }
   
   redeemKeyInput: NativeMethodsMixinStatic | any
   
   componentDidMount(): void {
-    this.props.updateUserAsync()
-    this.getPermissionAsync();
-    AppState.addEventListener("change", this.handleAppStateChange)
+    // this.props.updateUserAsync()
   
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -273,18 +273,21 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   }
   
   getPermissionAsync = async () => {
-    const { notify } = this.props
+    const { notify, openSettings } = this.props
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    console.tron.log('Called', status)
     if (status !== 'granted') {
       console.tron.log(status)
       notify('Sorry, we need camera roll permissions to make this work!', 'danger')
       this.setState({
         imagePermissions: false
       })
+      setTimeout(() => openSettings() , 3000);
     } else {
       this.setState({
         imagePermissions: true
       })
+      this.getImage()
     }
   }
   
@@ -349,17 +352,6 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       this.uploadImage(result.uri)
     }
   };
-  
-  handleAppStateChange = nextAppState => {
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
-      this.getPermissionAsync()
-    }
-    
-    this.setState({ appState: nextAppState })
-  }
   
   public render(): React.ReactNode {
     const {
@@ -467,7 +459,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                       User.pictureURL !== ""
                         ? (
                           <TouchableOpacity
-                            onPress={() => imagePermissions ? this.getImage() : openSettings()}
+                            onPress={this.getPermissionAsync}
                             disabled={isUploading || isLoading}
                           >
                             <Image
@@ -481,7 +473,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                         
                         : (
                           <TouchableOpacity
-                            onPress={() => imagePermissions ? this.getImage() : openSettings()}
+                            onPress={this.getPermissionAsync}
                             disabled={isUploading || isLoading}
                           >
                             <Image

@@ -8,7 +8,7 @@ import { PaymentScreen } from "../screens/payment-screen";
 
 export const TourNavigator = createStackNavigator(
   {
-    homePage: {
+    home: {
       screen: HomeScreen,
       navigationOptions: {
         header: null

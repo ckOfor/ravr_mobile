@@ -11,6 +11,8 @@ import { ApplicationState } from ".."
 import { RN_GOOGLE_MAPS_IOS_API_KEY } from "react-native-dotenv"
 // import {saveRideLocation, saveRideLocationAddress, saveRideLocationName} from "../ride";
 import axios from 'axios'
+import {NavigationActions} from "react-navigation";
+import {store} from "../../App";
 
 /**
  *  Actions
@@ -81,6 +83,17 @@ export const fetchUserLocationAPIAsync = (location): ThunkAction<
   } catch (error) {
   
   }
+}
+
+
+export const goBack = (): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  store.dispatch(NavigationActions.navigate({ routeName: 'home' }))
 }
 
 

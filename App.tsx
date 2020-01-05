@@ -15,7 +15,7 @@ import { Root } from "native-base";
 import SplashScreen from 'react-native-splash-screen'
 import {colors} from "./theme";
 
-useScreens()
+// useScreens()
 
 export const { store, persistor } = configureStore()
 

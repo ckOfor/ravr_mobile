@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "react-navigation"
 import { TourNavigator } from "./home-page-navigator";
-import { DEFAULT_BOTTOM_NAVIIGATION } from "./navigation-config"
+import { DEFAULT_BOTTOM_NAVIGATION } from "./navigation-config"
 import { SearchScreen } from "../screens/search-screen";
 import { ProfileNavigator } from "./profile-navigator";
 import { ContactUsScreen } from "../screens/contact-us-screen";
@@ -30,4 +30,4 @@ export const MainNavigator = createBottomTabNavigator({
       header: null
     }
   },
-}, DEFAULT_BOTTOM_NAVIIGATION)
+}, DEFAULT_BOTTOM_NAVIGATION)

@@ -95,7 +95,7 @@ class LocationPermissionsPage extends React.Component<Props> {
   // }
   //
   // componentWillUnmount() {
-  //   AppState.removeEventListener("change", this.handleAppStateChange)
+  //   AppState.removeEventListener("change", this.handleAppChange)
   // }
   //
   // askUserLocation = async () => {
@@ -115,7 +115,7 @@ class LocationPermissionsPage extends React.Component<Props> {
   //   }
   // }
   //
-  // handleAppStateChange = nextAppState => {
+  // handleAppChange = nextAppState => {
   //   if (
   //     this.state.appState.match(/inactive|background/) &&
   //     nextAppState === "active"
@@ -127,7 +127,7 @@ class LocationPermissionsPage extends React.Component<Props> {
   // }
   //
   // checkUserLocationStatus = async () => {
-  //   AppState.addEventListener("change", this.handleAppStateChange)
+  //   AppState.addEventListener("change", this.handleAppChange)
   //   const { checkLocation, getUserLocation } = this.props
   //   try {
   //     const locationPermission = await checkLocation()
@@ -154,7 +154,7 @@ class LocationPermissionsPage extends React.Component<Props> {
   //
   //     if(notificationPermission) {
   //       getFirebaseToken()
-  //       AppState.removeEventListener("change", this.handleAppStateChange)
+  //       AppState.removeEventListener("change", this.handleAppChange)
   //       navigation.navigate("authLanding")
   //     } else {
   //       requestNotificationPermission()
