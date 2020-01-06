@@ -3,6 +3,7 @@ import React from "react"
 
 // react-native
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   ImageStyle,
@@ -190,7 +191,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
         }
         
         <ScrollView
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -286,8 +287,13 @@ class Search extends React.Component<NavigationScreenProps & Props> {
                     textStyle={SEARCH_BUTTON_TEXT}
                     disabled={!isValid || isLoading}
                     onPress={() => handleSubmit()}
-                    tx={`search.search`}
-                  />
+                  >
+                    {
+                      isLoading
+                        ? <ActivityIndicator size="small" color={colors.palette.white} />
+                        : <Text style={SEARCH_BUTTON_TEXT}>{translate(`search.search`)}</Text>
+                    }
+                  </Button>
                 </View>
               </View>
             )}

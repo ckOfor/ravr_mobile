@@ -14,7 +14,7 @@ import {
   ImageStyle,
   AppState,
   NativeMethodsMixinStatic,
-  KeyboardAvoidingView, Platform, Keyboard
+  KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator
 } from "react-native"
 
 // third-party
@@ -240,7 +240,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
           }
       
           <ScrollView
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
           >
             {/*<Text*/}
             
@@ -341,8 +341,13 @@ class Home extends React.Component<NavigationScreenProps & Props> {
                       textStyle={QUOTE_BUTTON_TEXT}
                       disabled={!isValid || isLoading}
                       onPress={() => handleSubmit()}
-                      tx={`home.quote`}
-                    />
+                    >
+                      {
+                        isLoading
+                          ? <ActivityIndicator size="small" color={colors.palette.white} />
+                          : <Text style={QUOTE_BUTTON_TEXT}>{translate(`home.quote`)}</Text>
+                      }
+                    </Button>
                   </View>
                 </View>
               )}
