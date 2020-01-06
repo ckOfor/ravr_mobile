@@ -2,17 +2,16 @@ import {
   AuthAction,
   AuthState,
   CHECK_PHONE_EXISTS_SUCCESS,
+  CLEAR_AUTH,
   CLEAR_TOKEN,
-  SAVE_SELECTED_ROLE,
-  SAVE_SELECTED_SCHOOL,
+  LOG_IN_WITH_EMAIL,
+  LOG_IN_WITH_EMAIL_FAILURE,
+  LOG_IN_WITH_EMAIL_SUCCESS,
   SET_AUTH_EMAIL,
-  SET_AUTH_FIRST_NAME,
-  SET_AUTH_LAST_NAME,
+  SET_AUTH_FULL_NAME,
   SET_AUTH_PASSWORD,
   SET_AUTH_PHONE,
   SET_AUTH_PICTURE,
-  SET_AUTH_ROLES,
-  SET_AUTH_SCHOOLS,
   SET_AUTH_TYPE,
   SET_AUTH_UID,
   SET_FCM_TOKEN,
@@ -20,10 +19,8 @@ import {
   SET_USER_EXISTS,
   SOCIAL_AUTHENTICATION,
   SOCIAL_AUTHENTICATION_FAILURE,
-  SOCIAL_AUTHENTICATION_SUCCESS,
-  SET_AUTH_FULL_NAME, CLEAR_AUTH
+  SOCIAL_AUTHENTICATION_SUCCESS
 } from "./auth.types"
-import {CLEAR_USER} from "../user";
 
 export const ISelected = {
   name: '',
@@ -123,6 +120,7 @@ export function authReducer(
       }
       
     case SOCIAL_AUTHENTICATION:
+    case LOG_IN_WITH_EMAIL:
       return {
         ...state,
         loading: true
@@ -130,6 +128,8 @@ export function authReducer(
       
       
     case SOCIAL_AUTHENTICATION_FAILURE:
+    case LOG_IN_WITH_EMAIL_FAILURE:
+    case LOG_IN_WITH_EMAIL_SUCCESS:
       return {
         ...state,
         loading: false

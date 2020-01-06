@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, Keyboard, KeyboardAvoidingView, Platform, ScrollView
+  TouchableOpacity, NativeMethodsMixinStatic, Keyboard, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator
 } from "react-native"
 
 // third-party libraries
@@ -297,14 +297,19 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                         Keyboard.dismiss()
                       }}
                     />
-                    
+  
                     <Button
                       style={CONTINUE_BUTTON}
                       textStyle={CONTINUE_BUTTON_TEXT}
                       disabled={!isValid || isLoading}
                       onPress={() => handleSubmit()}
-                      tx={`signUp.signUp`}
-                    />
+                    >
+                      {
+                        isLoading
+                          ? <ActivityIndicator size="small" color={colors.palette.white} />
+                          : <Text style={CONTINUE_BUTTON_TEXT}>{translate(`signUp.signUp`)}</Text>
+                      }
+                    </Button>
                   </View>
                 </View>
               )}

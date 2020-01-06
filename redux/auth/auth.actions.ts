@@ -45,7 +45,7 @@ import {
   SOCIAL_AUTHENTICATION_FAILURE,
   SOCIAL_AUTHENTICATION_SUCCESS,
   SET_AUTH_FULL_NAME,
-  SET_USER, CLEAR_AUTH,
+  SET_USER, CLEAR_AUTH, LOG_IN_WITH_EMAIL_FAILURE,
 } from "./auth.types";
 import {Layout} from "../../constants";
 import {CLEAR_USER, setUserDetails, updateUserAsync} from "../user";
@@ -60,6 +60,8 @@ export const facebookAuth = () => ({
 })
 
 export const logInUserWithEmail = () => ({ type: LOG_IN_WITH_EMAIL })
+export const logInUserWithEmailFailure = () => ({ type: LOG_IN_WITH_EMAIL_FAILURE })
+
 const logInUserWithEmailSuccess = (payload: any) => ({
   type: LOG_IN_WITH_EMAIL_SUCCESS,
   payload
@@ -449,6 +451,7 @@ export const logInUserAsync = ({
   dispatch(setAuthEmail(email))
   dispatch(setAuthType('email'))
   const notificationId = getState().auth.FCMToken;
+  dispatch(logInUserWithEmail())
 
   try {
     const result = await apiLogInWithEmail({
@@ -461,6 +464,7 @@ export const logInUserAsync = ({
     if (status) {
   
       if(data.userType === 'tourist') {
+        dispatch(setAuthEmail(email))
         dispatch(setUser(data))
         dispatch(setUserDetails(data))
         console.tron.log(data)
@@ -470,14 +474,16 @@ export const logInUserAsync = ({
           ? dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
           : dispatch(NavigationActions.navigate({ routeName: "Main" }))
       } else {
+        dispatch(logInUserWithEmailFailure())
         dispatch(notify(`Use our web app to manage your tours`, 'danger'))
       }
     } else {
       dispatch(notify(`${message}`, 'danger'))
+      dispatch(logInUserWithEmailFailure())
     }
   } catch ({ message }) {
     console.log(message )
-    dispatch(socialAuthenticationFailure())
+    dispatch(logInUserWithEmailFailure())
     dispatch(notify(`${message}`, 'danger'))
   }
 }

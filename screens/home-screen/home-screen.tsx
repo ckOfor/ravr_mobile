@@ -143,7 +143,6 @@ const QUOTE_BUTTON: ViewStyle = {
   width: Layout.window.width / 1.4,
   marginTop: 10,
   backgroundColor: colors.purple,
-  marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
 }
 
 const QUOTE_BUTTON_TEXT: TextStyle = {
@@ -229,17 +228,6 @@ class Home extends React.Component<NavigationScreenProps & Props> {
 	    <KeyboardAvoidingView
         enabled={true}
         behavior={"padding"}
-        style={
-          keyboardUp
-            ? {
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'center'
-            }
-            : {
-              flex: 1,
-            }
-        }
         keyboardVerticalOffset={100}
       >
         <View
@@ -254,18 +242,118 @@ class Home extends React.Component<NavigationScreenProps & Props> {
           <ScrollView
             showsHorizontalScrollIndicator={false}
           >
-            <Text
-          
-              style={appNameTextStyle}
+            {/*<Text*/}
+            
+            {/*  style={appNameTextStyle}*/}
+            {/*>*/}
+            {/*  {translate(`home.appName`)}*/}
+            {/*</Text>*/}
+  
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: "space-between",
+                marginTop: Layout.window.height / 15,
+              }}
             >
-              {translate(`home.appName`)}
+              <View
+                // onPress={() => navigation.navigate('profile')}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text
+        
+                  style={discoverTextStyle}
+                >
+                  {translate(`home.findTour`)}
+                </Text>
+              </View>
+    
+              <TouchableOpacity
+                style={{
+                  marginTop: 15,
+                }}
+                onPress={() => navigation.navigate('search')}
+              >
+                <Text
+        
+                  style={discoverMoreTextStyle}
+                >
+                  {translate(`home.go`)}
+                </Text>
+    
+              </TouchableOpacity>
+            </View>
+  
+            <Text
+    
+              style={findMyTourTextStyle}
+            >
+              {translate(`home.findTourMore`)}
             </Text>
+  
+  
+            <Formik
+              initialValues={{
+                searchKey: authSearchKey
+              }}
+              validationSchema={schema}
+              onSubmit={this.submit}
+              enableReinitialize
+            >
+              {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  isValid,
+                  handleSubmit
+                }: FormikProps<MyFormValues>) => (
+                <View>
+        
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}
+                  >
+                    <TextField
+                      name="searchKey"
+                      keyboardType="default"
+                      placeholderTx="home.search"
+                      value={values.searchKey}
+                      onChangeText={handleChange("searchKey")}
+                      onBlur={handleBlur("searchKey")}
+                      autoCapitalize="none"
+                      returnKeyType="search"
+                      isInvalid={!isValid}
+                      fieldError={errors.searchKey}
+                      forwardedRef={i => {
+                        this.searchKeyInput = i
+                      }}
+                      onSubmitEditing={() => handleSubmit()}
+                    />
+          
+                    <Button
+                      style={QUOTE_BUTTON}
+                      textStyle={QUOTE_BUTTON_TEXT}
+                      disabled={!isValid || isLoading}
+                      onPress={() => handleSubmit()}
+                      tx={`home.quote`}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
         
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: "space-evenly",
-                width: Layout.window.width
+                width: Layout.window.width,
+                marginTop: 30
               }}
             >
               <TouchableOpacity
@@ -378,105 +466,6 @@ class Home extends React.Component<NavigationScreenProps & Props> {
               viewTours={() => navigation.navigate('viewTour')}
               {...this.props}
             />
-        
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: "space-between",
-                marginTop: Layout.window.height / 25
-              }}
-            >
-              <View
-                // onPress={() => navigation.navigate('profile')}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text
-              
-                  style={discoverTextStyle}
-                >
-                  {translate(`home.findTour`)}
-                </Text>
-              </View>
-          
-              <TouchableOpacity
-                style={{
-                  marginTop: 15,
-                }}
-                onPress={() => navigation.navigate('search')}
-              >
-                <Text
-              
-                  style={discoverMoreTextStyle}
-                >
-                  {translate(`home.go`)}
-                </Text>
-          
-              </TouchableOpacity>
-            </View>
-        
-            <Text
-          
-              style={findMyTourTextStyle}
-            >
-              {translate(`home.findTourMore`)}
-            </Text>
-        
-            <Formik
-              initialValues={{
-                searchKey: authSearchKey
-              }}
-              validationSchema={schema}
-              onSubmit={this.submit}
-              enableReinitialize
-            >
-              {({
-                  values,
-                  handleChange,
-                  handleBlur,
-                  errors,
-                  isValid,
-                  handleSubmit
-                }: FormikProps<MyFormValues>) => (
-                <View>
-              
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      marginTop: 20
-                    }}
-                  >
-                    <TextField
-                      name="searchKey"
-                      keyboardType="default"
-                      placeholderTx="home.search"
-                      value={values.searchKey}
-                      onChangeText={handleChange("searchKey")}
-                      onBlur={handleBlur("searchKey")}
-                      autoCapitalize="none"
-                      returnKeyType="search"
-                      isInvalid={!isValid}
-                      fieldError={errors.searchKey}
-                      forwardedRef={i => {
-                        this.searchKeyInput = i
-                      }}
-                      onSubmitEditing={() => handleSubmit()}
-                    />
-                
-                    <Button
-                      style={QUOTE_BUTTON}
-                      textStyle={QUOTE_BUTTON_TEXT}
-                      disabled={!isValid || isLoading}
-                      onPress={() => handleSubmit()}
-                      tx={`home.quote`}
-                    />
-                  </View>
-                </View>
-              )}
-            </Formik>
-      
           </ScrollView>
         </View>
       </KeyboardAvoidingView>

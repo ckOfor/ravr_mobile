@@ -73,7 +73,7 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
               data={discoverTours}
               numColumns={2}
               style={{
-                marginBottom: 0
+                marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
               }}
               contentContainerStyle={{
                 paddingBottom: 0

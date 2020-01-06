@@ -16,7 +16,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView, ActivityIndicator
 } from "react-native"
 
 // third-party libraries
@@ -235,7 +235,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         
                 style={signInTextStyle}
               >
-                {translate(`signUpScreen.welcomeText`)}
+                {translate(`signInScreen.welcomeText`)}
               </Text>
             </View>
     
@@ -299,7 +299,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                       style={FORGOT_PASSWORD_LINK_BUTTON}
                       textStyle={FORGOT_PASSWORD__LINK_TEXT}
                       preset="link"
-                      tx="signUpScreen.forgotPassword"
+                      tx="signInScreen.forgotPassword"
                       onPress={() => navigation.navigate('forgotPassword')}
                     />
             
@@ -308,8 +308,13 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                       textStyle={CONTINUE_BUTTON_TEXT}
                       disabled={!isValid || isLoading}
                       onPress={() => handleSubmit()}
-                      tx={`signUpScreen.signIn`}
-                    />
+                    >
+                      {
+                        isLoading
+                          ? <ActivityIndicator size="small" color={colors.palette.white} />
+                          : <Text style={CONTINUE_BUTTON_TEXT}>{translate(`signInScreen.signIn`)}</Text>
+                      }
+                    </Button>
                   </View>
                 </View>
               )}
@@ -319,7 +324,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
       
               style={bottomTextStyle}
             >
-              {translate("signUpScreen.yes")}
+              {translate("signInScreen.yes")}
             </Text>
     
             <TouchableOpacity
@@ -330,7 +335,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         
                 style={termsAndConditions}
               >
-                {translate(`signUpScreen.createAccount`)}
+                {translate(`signInScreen.createAccount`)}
       
               </Text>
             </TouchableOpacity>

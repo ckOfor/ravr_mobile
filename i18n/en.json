@@ -20,7 +20,7 @@
     "termsAndConditions_01": "“Agree and Continue”",
     "termsAndConditions_02": " box which further makes it clear to the user that an agreement is taking place."
   },
-  "signUpScreen": {
+  "signInScreen": {
     "welcomeText": "Welcome to Ravr.",
     "emailPlaceHolder": "Welcome to Ravr.",
     "forgotPassword": "Forgot password?",

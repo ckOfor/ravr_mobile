@@ -145,13 +145,23 @@ type CheckEmailExistsSuccessAction = {
   }
 }
 
+
 export const LOG_IN_WITH_EMAIL = "LOG_IN_WITH_EMAIL"
+type loginWithEmail = {
+  type: typeof LOG_IN_WITH_EMAIL
+  payload: string
+}
+
+export const LOG_IN_WITH_EMAIL_FAILURE = "LOG_IN_WITH_EMAIL_FAILURE"
+type loginWithEmailFailure = {
+  type: typeof LOG_IN_WITH_EMAIL_FAILURE
+  payload: string
+}
+
 export const LOG_IN_WITH_EMAIL_SUCCESS = "LOG_IN_WITH_EMAIL_SUCCESS"
-type logInWithEmailSuccessAction = {
+type loginWithEmailSuccess = {
   type: typeof LOG_IN_WITH_EMAIL_SUCCESS
-  payload: {
-    email: string
-  }
+  payload: string
 }
 
 export const LOG_IN_WITH_GMAIL = "LOG_IN_WITH_GMAIL"
@@ -242,3 +252,6 @@ export type AuthAction =
   | SocialAuthenticationActionSuccess
   | SetAuthFullNameAction
   | clearAuth
+  | loginWithEmail
+  | loginWithEmailFailure
+  | loginWithEmailSuccess
