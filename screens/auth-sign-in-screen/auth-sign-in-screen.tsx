@@ -28,7 +28,7 @@ import Firebase from '../../config/FirebaseClient'
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
-import {logInUserAsync, notify, setAuthUserID} from "../../redux/auth"
+import {logInUserAsync, logInUserWithEmail, logInUserWithEmailFailure, notify, setAuthUserID} from "../../redux/auth"
 import { ApplicationState } from "../../redux";
 
 // styles
@@ -45,6 +45,8 @@ interface DispatchProps {
   loginUser: (values: MyFormValues) => void
   setAuthUserID: (id: string) => void
   notify: (message: string, type: string) => void
+  logInUserWithEmail: () => void
+  logInUserWithEmailFailure: () => void
 }
 
 interface StateProps {
@@ -150,7 +152,8 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
   passwordInput: NativeMethodsMixinStatic | any
   
   submit = values => {
-    const { notify } = this.props
+    const { notify, logInUserWithEmail, logInUserWithEmailFailure } = this.props
+    logInUserWithEmail()
     try {
       Firebase.auth()
         .signInWithEmailAndPassword(values.email, values.password)
@@ -164,10 +167,12 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
               .then((success) => {
                 console.tron.log(success)
                 notify(`We have sent a verification link to ${values.email}`, 'success')
+                logInUserWithEmailFailure()
               })
               .catch(error =>{
                 console.tron.log(error)
                 notify(`${error.message}`, 'danger')
+                logInUserWithEmailFailure()
               })
             return
           } else {
@@ -178,9 +183,11 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         })
         .catch(error =>{
           notify(`${error.message}`, 'danger')
+          logInUserWithEmailFailure()
         })
     } catch ({message}) {
       notify(`${message}`, 'danger')
+      logInUserWithEmailFailure()
     }
   }
   
@@ -363,6 +370,8 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   loginUser: values => dispatch(logInUserAsync(values as logInUserPayload)),
+  logInUserWithEmail: () => dispatch(logInUserWithEmail()),
+  logInUserWithEmailFailure: () => dispatch(logInUserWithEmailFailure()),
   setAuthUserID: (id: string) => dispatch(setAuthUserID(id)),
   notify: (message: string, type: string) => dispatch(notify(message, type))
 })

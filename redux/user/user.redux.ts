@@ -26,6 +26,8 @@ export const IUser = {
   email: '',
   userType: '',
   phoneNumber: '',
+  ravrId: '',
+  registrationBonus: true,
   notificationID: '',
   gender: '',
   authType: '',

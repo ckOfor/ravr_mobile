@@ -6,6 +6,7 @@ import { AuthSignInScreen } from "../screens/auth-sign-in-screen";
 import { ForgotPasswordScreen } from "../screens/forgot-password-screen";
 import { AuthSignUpScreen } from "../screens/auth-sign-up-screen";
 import { PhoneVerificationScreen } from "../screens/phone-verification-screen";
+import {ReferralScreen} from "../screens/referal-screen";
 
 export const AuthNavigator = createStackNavigator(
   {
@@ -17,6 +18,12 @@ export const AuthNavigator = createStackNavigator(
     },
     authSignIn: {
       screen: AuthSignInScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    referral: {
+      screen: ReferralScreen,
       navigationOptions: {
         header: null
       }
@@ -45,8 +52,9 @@ export const AuthNavigator = createStackNavigator(
         header: null
       }
     },
+    
   },
-  DEFAULT_STACK_NAVIGATOR_CONFIG
+  DEFAULT_STACK_NAVIGATOR_CONFIG,
 )
 
 

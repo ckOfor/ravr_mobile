@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   FlatList,
-  Image, ImageStyle, RefreshControl,
+  Image, ImageStyle, Platform, RefreshControl,
   ScrollView, StatusBar, Text, TextStyle, TouchableOpacity, View, ViewStyle
 } from "react-native"
 
@@ -124,7 +124,11 @@ class WeekendTours extends React.Component<NavigationScreenProps & Props> {
           height: Layout.window.height,
         }}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         
         
         <TouchableOpacity

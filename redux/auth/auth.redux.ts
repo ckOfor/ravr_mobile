@@ -1,4 +1,7 @@
 import {
+  ADD_REFERRAL_CODE,
+  ADD_REFERRAL_CODE_FAILURE,
+  ADD_REFERRAL_CODE_SUCCESS,
   AuthAction,
   AuthState,
   CHECK_PHONE_EXISTS_SUCCESS,
@@ -121,6 +124,7 @@ export function authReducer(
       
     case SOCIAL_AUTHENTICATION:
     case LOG_IN_WITH_EMAIL:
+    case ADD_REFERRAL_CODE:
       return {
         ...state,
         loading: true
@@ -130,6 +134,8 @@ export function authReducer(
     case SOCIAL_AUTHENTICATION_FAILURE:
     case LOG_IN_WITH_EMAIL_FAILURE:
     case LOG_IN_WITH_EMAIL_SUCCESS:
+    case ADD_REFERRAL_CODE_FAILURE:
+    case ADD_REFERRAL_CODE_SUCCESS:
       return {
         ...state,
         loading: false

@@ -9,14 +9,12 @@ import { AsyncStorage } from 'react-native';
 import Firebase from '../../config/FirebaseClient'
 import {NavigationActions} from "react-navigation";
 import {
-  logInUserPayload,
+  logInUserPayload, IUser,
   logInWithEmail as apiLogInWithEmail,
   forgotPassword as apiForgotPassword,
   logInWithSocialAuth as apiLogInWithSocial,
-  getAllSchools as apiGetAllSchools,
-  getAllRoles as apiGetAllRoles,
   signUpWithSocialAuth as apiSignUpWithSocialAuth,
-  signUpWithEmailAndPassword as apiSignUpWithEmailAndPassword, IUser,
+  addReferralCode as apiAddReferralCode,
 } from "../../services/api"
 import { Toast } from "native-base";
 // import {setUser, updateUserAsync} from "../user";
@@ -45,7 +43,12 @@ import {
   SOCIAL_AUTHENTICATION_FAILURE,
   SOCIAL_AUTHENTICATION_SUCCESS,
   SET_AUTH_FULL_NAME,
-  SET_USER, CLEAR_AUTH, LOG_IN_WITH_EMAIL_FAILURE,
+  SET_USER,
+  CLEAR_AUTH,
+  LOG_IN_WITH_EMAIL_FAILURE,
+  ADD_REFERRAL_CODE,
+  ADD_REFERRAL_CODE_FAILURE,
+  ADD_REFERRAL_CODE_SUCCESS,
 } from "./auth.types";
 import {Layout} from "../../constants";
 import {CLEAR_USER, setUserDetails, updateUserAsync} from "../user";
@@ -361,6 +364,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
       dispatch(logInUserWithGmailSuccess(email))
       dispatch(updateUserAsync())
       dispatch(NavigationActions.navigate({ routeName: "phoneVerification" }))
+      dispatch(setUserDetails(data))
 
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -411,6 +415,7 @@ export const signUpWithEmailAuth = ({ email, fullName }, password: string): Thun
       dispatch(notify( `${message}`, 'success'))
       dispatch(logInUserWithFacebookSuccess(email))
       dispatch(logInUserWithEmailSuccess(email))
+      dispatch(setUserDetails(data))
       
       try {
         Firebase.auth()
@@ -432,8 +437,8 @@ export const signUpWithEmailAuth = ({ email, fullName }, password: string): Thun
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
+      dispatch(socialAuthenticationFailure())
     }
-    dispatch(socialAuthenticationFailure())
     
   } catch ({ message }){
     dispatch(notify(`${message}`, 'danger'))
@@ -488,35 +493,47 @@ export const logInUserAsync = ({
   }
 }
 
-export const forgotPasswordAsync = ({email}): ThunkAction<void, ApplicationState, null, Action<any>> => async (
-  dispatch,
+export const clearAuthAsync = () => ({ type: CLEAR_AUTH })
+
+
+export const addReferralCode = () => ({
+  type: ADD_REFERRAL_CODE,
+})
+
+export const addReferralCodeFailure = () => ({
+  type: ADD_REFERRAL_CODE_FAILURE,
+})
+
+export const addReferralCodeSuccess = () => ({
+  type: ADD_REFERRAL_CODE_SUCCESS,
+})
+
+
+export const addReferralCodeAsync = (code): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch, getState
 ) => {
-  console.log(email)
-  dispatch(setAuthEmail(email))
-
+  console.log(code)
+  dispatch(addReferralCode())
+  
   try {
-    const result = await apiForgotPassword(email)
+    const id = getState().user.data.id;
+    const result = await apiAddReferralCode(id, code)
     const { status, message, data } = result.data
-
+    
     if (status) {
-      Toast.show({ text: `${message}`, type: 'success', position: 'top', duration: 3000,
-        style: {
-          marginTop: Layout.window.height / 2,
-          width: Layout.window.width / 3,
-          alignSelf: 'center'
-        } })
-      
+      dispatch(addReferralCodeSuccess())
       dispatch(notify(`${message}`, 'success'))
-      dispatch(NavigationActions.navigate({ routeName: "auth" }))
+      dispatch(updateUserAsync())
+      dispatch(NavigationActions.navigate({ routeName: "home" }))
     } else {
       dispatch(notify(`${message}`, 'danger'))
+      dispatch(addReferralCodeFailure())
     }
   } catch ({ message }) {
+    dispatch(addReferralCodeFailure())
     dispatch(notify(`${message}`, 'danger'))
   }
 }
-
-export const clearAuthAsync = () => ({ type: CLEAR_AUTH })
 
 
 

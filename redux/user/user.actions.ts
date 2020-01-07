@@ -236,6 +236,7 @@ export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<
       console.tron.log(data)
       dispatch(updatePhoneNumberSuccess())
       dispatch(updateUserAsync())
+      // dispatch(NavigationActions.navigate({ routeName: "referral" }))
       dispatch(NavigationActions.navigate({ routeName: "home" }))
     } else {
       dispatch(notify(`${message}`, 'danger'))

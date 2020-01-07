@@ -16,7 +16,13 @@ import Firebase from '../../config/FirebaseClient'
 // redux
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
-import { notify, signUpWithEmailAuth } from "../../redux/auth"
+import {
+  notify,
+  signUpWithEmailAuth,
+  socialAuthentication,
+  socialAuthenticationFailure,
+  socialAuthenticationSuccess
+} from "../../redux/auth"
 import { ApplicationState } from "../../redux";
 
 // styles
@@ -29,6 +35,8 @@ import { Button } from "../../components/button";
 interface DispatchProps {
   notify: (message: string, type: string) => void
   signUpWithEmailAuth: ({ email, fullName }, password: string) => void
+  socialAuthentication: () => void
+  socialAuthenticationFailure: () => void
 }
 
 interface StateProps {
@@ -133,7 +141,10 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
   confirmPasswordInput: NativeMethodsMixinStatic | any
   
   submit = values => {
-    const { notify, signUpWithEmailAuth } = this.props
+    const {
+      notify, signUpWithEmailAuth, socialAuthentication, socialAuthenticationFailure
+    } = this.props
+    socialAuthentication()
     try {
       Firebase.auth()
         .createUserWithEmailAndPassword(values.email, values.password)
@@ -142,9 +153,11 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
         })
         .catch(error =>{
           notify(`${error.message}`, 'danger')
+          socialAuthenticationFailure()
         })
     } catch ({message}) {
       notify(`${message}`, 'danger')
+      socialAuthenticationFailure()
     }
   }
   
@@ -232,7 +245,7 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
                       value={values.fullName}
                       onChangeText={handleChange("fullName")}
                       onBlur={handleBlur("fullName")}
-                      autoCapitalize="none"
+                      autoCapitalize="words"
                       returnKeyType="next"
                       isInvalid={!isValid}
                       fieldError={errors.fullName}
@@ -344,7 +357,9 @@ class AuthSignUp extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   notify: (message: string, type: string) => dispatch(notify(message, type)),
-  signUpWithEmailAuth: ({ email, fullName }, password: string) => dispatch(signUpWithEmailAuth({ email, fullName }, password))
+  signUpWithEmailAuth: ({ email, fullName }, password: string) => dispatch(signUpWithEmailAuth({ email, fullName }, password)),
+  socialAuthentication: () => dispatch(socialAuthentication()),
+  socialAuthenticationFailure: () => dispatch(socialAuthenticationFailure())
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;

@@ -28,6 +28,13 @@
     "yes": "Do you want to explore with Ravr?",
     "createAccount": "Yes, Create my account! >"
   },
+  "referralScreen": {
+    "welcomeText": "Enter referral code.",
+    "code": "Code",
+    "question": "Don't have a referral code?",
+    "answer": "Skip please >",
+    "send": "send"
+  },
   "forgotPassword": {
     "resetAccount": "Reset my account.",
     "reset": "Reset",

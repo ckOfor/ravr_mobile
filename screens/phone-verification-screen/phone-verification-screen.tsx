@@ -4,7 +4,7 @@ import React from "react"
 // react-native
 import {
   View, Text, ViewStyle, ImageBackground, ImageStyle, Image, TextStyle,
-  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView, Platform
+  TouchableOpacity, NativeMethodsMixinStatic, KeyboardAvoidingView, Platform, ActivityIndicator
 } from "react-native"
 
 // third-party libraries
@@ -218,8 +218,13 @@ class PhoneVerification extends React.Component<NavigationScreenProps & Props> {
                     textStyle={CONTINUE_BUTTON_TEXT}
                     disabled={!isValid || isLoading}
                     onPress={() => handleSubmit()}
-                    tx={`phoneVerify.verify`}
-                  />
+                  >
+                    {
+                      isLoading
+                        ? <ActivityIndicator size="small" color={colors.palette.white} />
+                        : <Text style={CONTINUE_BUTTON_TEXT}>{translate(`phoneVerify.verify`)}</Text>
+                    }
+                  </Button>
                 </View>
               </View>
             )}
@@ -257,7 +262,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
-  isLoading: state.auth.loading,
+  isLoading: state.user.loading,
   authPhoneNumber: state.user.data.phoneNumber,
 });
 

@@ -236,6 +236,17 @@ const logInWithSocialAuth = async ({
   return processResponse(response)
 }
 
+
+const addReferralCode = async (id: string, code: string): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/referral", {
+    id,
+    code,
+  })
+  return processResponse(response)
+}
+
 const getAllSchools = async (): Promise<
   Types.getResponse
   > => {
@@ -539,5 +550,6 @@ export {
   createTransaction,
   contactUs,
   updatePhone,
-  updatePicture
+  updatePicture,
+  addReferralCode
 }

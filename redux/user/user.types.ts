@@ -105,6 +105,8 @@ export type IUser = {
   userType: string,
   phoneNumber: string,
   notificationID: string,
+  ravrId: string
+  registrationBonus: boolean
   gender: string,
   authType: string,
   status: string,

@@ -4,6 +4,7 @@ export const images = {
   googleLogo: require("../assets/google-logo.png"),
   facebookLogo: require("../assets/facebook-logo.png"),
   background: require("../assets/background.png"),
+  referralBk: require("../assets/background-2.png"),
   backIcon: require("../assets/icons-back.png"),
   bkImage: require("../assets/bk-image.png"),
   manBk: require("../assets/man-bk.png"),

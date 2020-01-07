@@ -205,9 +205,19 @@ type clearAuth = {
 }
 
 
-export type ISelected = {
-  name: string
-  id: number
+export const ADD_REFERRAL_CODE = "ADD_REFERRAL_CODE"
+type addReferralCode = {
+  type: typeof  ADD_REFERRAL_CODE,
+}
+
+export const ADD_REFERRAL_CODE_FAILURE = "ADD_REFERRAL_CODE_FAILURE"
+type addReferralCodeFailure = {
+  type: typeof ADD_REFERRAL_CODE_FAILURE,
+}
+
+export const ADD_REFERRAL_CODE_SUCCESS = "ADD_REFERRAL_CODE_SUCCESS"
+type addReferralCodeSuccess = {
+  type: typeof ADD_REFERRAL_CODE_SUCCESS,
 }
 
 export type AuthState = {
@@ -255,3 +265,6 @@ export type AuthAction =
   | loginWithEmail
   | loginWithEmailFailure
   | loginWithEmailSuccess
+  | addReferralCode
+  | addReferralCodeFailure
+  | addReferralCodeSuccess
