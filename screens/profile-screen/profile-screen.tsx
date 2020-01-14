@@ -35,7 +35,7 @@ import {
 // redux
 import { ApplicationState } from "../../redux";
 import {
-  IUser,
+  IUser, redeemCoinsAsync,
   updateUserProfilePicture,
   updateUserProfilePictureAsync,
   updateUserProfilePictureFailure
@@ -60,6 +60,7 @@ interface DispatchProps {
   updateUserProfilePictureFailure: () => void
   updateUserProfilePictureAsync: (imageURL: string) => void
   openSettings: () => void
+  redeemCoinsAsync: (code: string) => void
 }
 
 interface StateProps {
@@ -302,7 +303,8 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   
   
   submit = (value) => {
-    console.tron.log(value)
+    console.tron.log(value.redeemKey)
+    this.props.redeemCoinsAsync(value.redeemKey)
   }
   
   uploadImage(uri: any) {
@@ -373,7 +375,10 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       keyboardUp
     } = this.state
     
-    console.tron.log(this.state)
+    const requests = Transactions[0] !== undefined &&  Transactions.filter((transaction) => {
+      const { reference } = transaction
+      return reference === "request"
+    })
     
     return (
       <KeyboardAvoidingView
@@ -408,13 +413,6 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
             pinchGestureEnabled
             contentContainerStyle={{
               justifyContent: "space-between",
-            }}
-            onContentSizeChange={(contentWidth, contentHeight)=>{
-              // this.setState((state) => ({
-              //   scrollTo: state.scrollTo + 100
-              // }), () => {
-              //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-              // } )
             }}
           >
     
@@ -899,6 +897,266 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                 </ScrollView>
               )
             }
+  
+            {
+              requests[0] !== undefined && (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: 'space-between',
+                    marginLeft: 20,
+                    marginTop: 20,
+                    width: Layout.window.width / 1.15
+                  }}
+                  onPress={() => navigation.navigate('requests')}
+                >
+                  <Text
+          
+                    style={discoverTextStyle}
+                  >
+                    {translate(`profile.myRequestsHeader`)}
+                  </Text>
+        
+                  <Text
+          
+                    style={infoTextStyle}
+                  >
+                    {translate(`home.more`)}
+                  </Text>
+                </TouchableOpacity>
+              )
+            }
+  
+            {
+              requests[0] !== undefined && (
+                <ScrollView
+                  scrollEnabled
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pinchGestureEnabled
+                  contentContainerStyle={{
+                    justifyContent: "space-between",
+                    height: 233,
+                  }}
+                  style={{
+                    marginTop: '5%',
+                    marginRight: '5%',
+                  }}
+                >
+                  
+                  {
+                    requests.reverse().map((transaction) => {
+                      const { tripName, slots, userPays, createdAt, reference, contactNumber, tripImage } = transaction
+                      return (
+                        <TouchableOpacity
+                          style={{
+                            flexDirection: "column",
+                            marginLeft: 20,
+                          }}
+                          onPress={() => this.setState({
+                            isVisible: !isVisible,
+                            name: tripName,
+                            paid: slots *  userPays,
+                            payDay: createdAt,
+                            rsvp: slots,
+                            ref: reference,
+                            call: contactNumber,
+                          })}
+                        >
+                          <Image
+                            style={TRIP_IMAGE}
+                            source={{ uri: `${tripImage}` }}
+                            resizeMethod={'auto'}
+                            resizeMode='cover'
+                          />
+                
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between"
+                            }}
+                          >
+                            <Text
+                    
+                              style={infoTextStyle}
+                            >
+                              {tripName}
+                            </Text>
+                
+                          </View>
+                
+                          <Modal
+                            isVisible={isVisible}
+                            onBackdropPress={() => this.setState({ isVisible: !isVisible })}
+                          >
+                            <View
+                              style={{
+                                backgroundColor: colors.white,
+                                height: Layout.window.height / 2,
+                                justifyContent: "space-evenly",
+                              }}
+                            >
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  TripName:
+                                </Text>
+                      
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  {name}
+                                </Text>
+                    
+                              </View>
+                    
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  Paid:
+                                </Text>
+                      
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  {paid}
+                                </Text>
+                    
+                              </View>
+                    
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  Reference:
+                                </Text>
+                      
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  {ref}
+                                </Text>
+                    
+                              </View>
+                    
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  Payment Date:
+                                </Text>
+                      
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  { moment(payDay).format("ddd, MMM D, YYYY")}
+                                </Text>
+                    
+                              </View>
+                    
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  Slot(s):
+                                </Text>
+                      
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  {rsvp}
+                                </Text>
+                              </View>
+                    
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignSelf: "center",
+                                  justifyContent: "space-between",
+                                  width: Layout.window.width / 1.2
+                                }}
+                              >
+                                <Text
+                        
+                                  style={infoTextStyle}
+                                >
+                                  Contact:
+                                </Text>
+                      
+                                <TouchableOpacity
+                                  onPress={() => this.handlePhoneCall(`${call}`)}
+                                >
+                                  <Image
+                                    style={{
+                                      marginTop: 10
+                                    }}
+                                    source={images.callIcon}
+                                    resizeMethod={'auto'}
+                                    resizeMode='cover'
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                  
+                            </View>
+                          </Modal>
+              
+                        </TouchableOpacity>
+                      )
+                    })
+                  }
+      
+      
+      
+                </ScrollView>
+              )
+            }
     
             <View
               style={{
@@ -984,8 +1242,13 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                       textStyle={REDEEM_BUTTON_TEXT}
                       disabled={!isValid || isLoading || isUploading}
                       onPress={() => handleSubmit()}
-                      tx={`profile.redeem`}
-                    />
+                    >
+                      {
+                        isLoading
+                          ? <ActivityIndicator size="small" color={colors.palette.white} />
+                          : <Text style={REDEEM_BUTTON_TEXT}>{translate(`profile.redeem`)}</Text>
+                      }
+                    </Button>
                   </View>
                 </View>
               )}
@@ -1005,6 +1268,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   updateUserProfilePictureFailure: () => dispatch(updateUserProfilePictureFailure()),
   updateUserProfilePictureAsync: (imageURL: string) => dispatch(updateUserProfilePictureAsync(imageURL)),
   openSettings: () => dispatch(openSettingsAsync()),
+  redeemCoinsAsync: (code: string) => dispatch(redeemCoinsAsync(code)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;

@@ -6,6 +6,11 @@ export type createTransactionPayload = {
   slots: number
 }
 
+export type createRequestPayload = {
+  id: number
+  code: string
+}
+
 export type logInUserPayload = {
   email: string
   password: string

@@ -2,8 +2,9 @@ import { createStackNavigator } from "react-navigation"
 import { DEFAULT_STACK_NAVIGATOR_CONFIG } from "./navigation-config"
 import { ProfileScreen } from "../screens/profile-screen";
 import { TripsScreen } from "../screens/trips-screen";
-import {SavingsScreen} from "../screens/savings-screen";
+import { SavingsScreen } from "../screens/savings-screen";
 import { EditProfileScreen } from "../screens/edit-profile/edit-profile";
+import { RequestsScreen } from "../screens/requests- screen";
 
 export const ProfileNavigator = createStackNavigator(
   {
@@ -15,6 +16,12 @@ export const ProfileNavigator = createStackNavigator(
     },
     trips: {
       screen: TripsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    requests: {
+      screen: RequestsScreen,
       navigationOptions: {
         header: null
       }

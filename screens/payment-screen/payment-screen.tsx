@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   ImageStyle,
   NativeMethodsMixinStatic,
-  KeyboardAvoidingView, Platform
+  KeyboardAvoidingView, Platform, ActivityIndicator
 } from "react-native"
 
 // third-parties
@@ -193,26 +193,30 @@ class Payment extends React.Component<NavigationScreenProps & Props> {
   }
   
   submit  = (values) => {
-    this.setState({
-      slots: values.slots
-    })
-    const {
-      numberState, expiryState, cvcState, isCardValid, slots
-    } = this.state
-    const {
-      payStackCharges
-    } = this.props.SelectedTour
-    if(isCardValid) {
-      
-      if(parseInt(values.slots) === 1) {
-        this.setState({
-          amountInKobo: payStackCharges * 100
-        }, () => this.chargeCard())
-      } else {
-        this.calculatePricePerSlots(values.slots)
-      }
+    if (values.slots < 1) {
+      this.props.notify(`Invalid slot`, 'danger')
     } else {
-      this.props.notify(`Card Number is ${numberState}, Expiry Date is ${expiryState} and CVC is ${cvcState}`, 'danger')
+      this.setState({
+        slots: values.slots
+      })
+      const {
+        numberState, expiryState, cvcState, isCardValid, slots
+      } = this.state
+      const {
+        payStackCharges
+      } = this.props.SelectedTour
+      if(isCardValid) {
+    
+        if(parseInt(values.slots) === 1) {
+          this.setState({
+            amountInKobo: payStackCharges * 100
+          }, () => this.chargeCard())
+        } else {
+          this.calculatePricePerSlots(values.slots)
+        }
+      } else {
+        this.props.notify(`Card Number is ${numberState}, Expiry Date is ${expiryState} and CVC is ${cvcState}`, 'danger')
+      }
     }
   }
   
@@ -294,8 +298,13 @@ class Payment extends React.Component<NavigationScreenProps & Props> {
                         textStyle={RECHARGE_BUTTON_TEXT}
                         disabled={!isValid || isLoading}
                         onPress={() => handleSubmit()}
-                        tx={`payment.pay`}
-                      />
+                      >
+                        {
+                          isLoading
+                            ? <ActivityIndicator size="small" color={colors.white} />
+                            : <Text style={RECHARGE_BUTTON_TEXT}>{translate(`payment.pay`)}</Text>
+                        }
+                      </Button>
                       
                     </View>
                   </View>

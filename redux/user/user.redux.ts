@@ -3,9 +3,14 @@ import {
   CONTACT_US,
   CONTACT_US_FAILURE,
   CONTACT_US_SUCCESS,
+  CREATE_REQUEST,
+  CREATE_REQUEST_FAILURE,
   CREATE_TRANSACTION,
   CREATE_TRANSACTION_FAILURE,
   CREATE_TRANSACTION_SUCCESS,
+  REDEEM_COINS,
+  REDEEM_COINS_FAILURE,
+  REDEEM_COINS_SUCCESS, RESET_AUTH_REDEEM_KEY,
   SAVE_MESSAGE,
   SAVE_SUBJECT,
   SET_USER_DETAILS,
@@ -64,6 +69,12 @@ export function userReducer(
         ...state,
         message: action.payload
       }
+      
+    case RESET_AUTH_REDEEM_KEY:
+      return {
+        ...state,
+        authRedeemKey: ''
+      }
 
     case SET_USER_DETAILS:
       return {
@@ -74,6 +85,8 @@ export function userReducer(
     case CREATE_TRANSACTION:
     case CONTACT_US:
     case UPDATE_PHONE_NUMBER:
+    case CREATE_REQUEST:
+    case REDEEM_COINS:
       return {
         ...state,
         loading: true
@@ -99,6 +112,10 @@ export function userReducer(
     case CONTACT_US_SUCCESS:
     case UPDATE_PHONE_NUMBER_FAILURE:
     case UPDATE_PHONE_NUMBER_SUCCESS:
+    case CREATE_REQUEST_FAILURE:
+    case CREATE_TRANSACTION_SUCCESS:
+    case REDEEM_COINS_FAILURE:
+    case REDEEM_COINS_SUCCESS:
       return {
         ...state,
         loading: false

@@ -2,11 +2,11 @@ import {
   CLEAR_USER,
   CONTACT_US,
   CONTACT_US_FAILURE,
-  CONTACT_US_SUCCESS,
+  CONTACT_US_SUCCESS, CREATE_REQUEST,
   CREATE_TRANSACTION,
   CREATE_TRANSACTION_FAILURE,
   CREATE_TRANSACTION_SUCCESS,
-  IUser,
+  IUser, REDEEM_COINS, REDEEM_COINS_FAILURE, REDEEM_COINS_SUCCESS, RESET_AUTH_REDEEM_KEY,
   SAVE_MESSAGE,
   SAVE_SUBJECT,
   SET_USER_DETAILS,
@@ -20,8 +20,9 @@ import {
   UPDATE_USER_SUCCESS
 } from "../user";
 import {
+  redeemCoins as apiRedeemCoins,
   createTransaction as apiCreateTransaction,
-  logInUserPayload,
+  createRequest as apiCreateRequest,
   logInWithEmail as apiLogInWithEmail,
   contactUs as apiContactUs,
   updatePhone as apiUpdatePhone,
@@ -47,7 +48,6 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 
 export const setUserDetails = (user: IUser) => ({ type: SET_USER_DETAILS, payload: user })
 
-
 export const createTransaction = () => ({
   type: CREATE_TRANSACTION,
 })
@@ -59,7 +59,6 @@ export const createTransactionFailure = () => ({
 export const createTransactionSuccess = () => ({
   type: CREATE_TRANSACTION_SUCCESS,
 })
-
 
 export const createTransactionAsync = (reference: string, slots: number): ThunkAction<void, ApplicationState, null, Action<any>> => async (
   dispatch,
@@ -296,5 +295,102 @@ export const updateUserProfilePictureAsync = (pictureURL: string): ThunkAction<
     console.tron.log(message)
     dispatch(notify(`${message}`, 'danger'))
     dispatch(updateUserProfilePictureFailure())
+  }
+}
+
+export const createRequest = () => ({
+  type: CREATE_REQUEST,
+})
+
+export const createRequestFailure = () => ({
+  type: CREATE_TRANSACTION_FAILURE,
+})
+
+export const createRequestSuccess = () => ({
+  type: CREATE_TRANSACTION_SUCCESS,
+})
+
+export const createRequestAsync = (slots: number): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const id = state.user.data.id
+  const guideId = state.tour.selectedTour.userId
+  const tourId = state.tour.selectedTour.id
+  
+  dispatch(createRequest())
+  
+  try {
+    const result = await apiCreateRequest({
+      id,
+      guideId,
+      tourId,
+      reference: "request",
+      slots
+    })
+    const { status, message, data } = result.data
+    console.log(data)
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(createRequestSuccess())
+      dispatch(NavigationActions.navigate({ routeName: "viewTour" }))
+      dispatch(updateUserAsync())
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(createRequestFailure())
+    }
+    
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(createRequestFailure())
+  }
+}
+
+export const redeemCoins = () => ({
+  type: REDEEM_COINS,
+})
+
+export const redeemCoinsFailure = () => ({
+  type: REDEEM_COINS_FAILURE,
+})
+
+export const redeemCoinsSuccess = () => ({
+  type: REDEEM_COINS_SUCCESS,
+})
+
+export const resetRedeemKey = () => ({ type: RESET_AUTH_REDEEM_KEY })
+
+export const redeemCoinsAsync = (code: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const id = state.user.data.id
+  
+  dispatch(redeemCoins())
+  
+  try {
+    const result = await apiRedeemCoins({
+      id,
+      code,
+    })
+    const { status, message, data } = result.data
+    console.log(data)
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(redeemCoinsSuccess())
+      dispatch(updateUserAsync())
+      dispatch(resetRedeemKey())
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(redeemCoinsFailure())
+    }
+    
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(redeemCoinsFailure())
   }
 }

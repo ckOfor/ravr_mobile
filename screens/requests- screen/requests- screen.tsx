@@ -1,0 +1,352 @@
+// react
+import React from "react"
+
+// react-native
+import {
+  View,
+  Text,
+  ViewStyle,
+  StatusBar,
+  TextStyle,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ImageStyle,
+  Linking,
+  RefreshControl,
+  FlatList
+} from "react-native"
+
+// third-party
+import { NavigationScreenProps } from "react-navigation"
+import { connect } from "react-redux"
+import { Dispatch } from "redux";
+import moment from "moment";
+import Modal from "react-native-modal";
+import call from 'react-native-phone-call'
+
+// redux
+import { ApplicationState } from "../../redux";
+import { IUser } from "../../redux/user";
+import { updateUserAsync } from "../../redux/user";
+
+// style
+import { Layout } from "../../constants";
+import { translate } from "../../i18n";
+import {colors, fonts, images} from "../../theme";
+
+interface DispatchProps {
+  updateUserAsync: () => void
+}
+
+interface StateProps {
+  User: IUser
+  isLoading: boolean
+  tours: any
+}
+
+interface RequestsScreenProps extends NavigationScreenProps {}
+
+type Props = DispatchProps & StateProps & RequestsScreenProps
+
+const ROOT: ViewStyle = {
+  height: Layout.window.height,
+}
+
+
+const HEADER_TEXT: TextStyle = {
+  marginLeft: 20,
+  marginTop: Layout.window.height / 15,
+  color: colors.purple,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+}
+
+const discoverTextStyle: TextStyle = {
+  fontSize: 22,
+  marginLeft: 40,
+  color: colors.black,
+  fontFamily: fonts.latoRegular,
+  lineHeight: 40,
+  textAlign: 'left',
+  width: Layout.window.width / 1.9,
+}
+
+const discoverMoreTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'left',
+  width: Layout.window.width / 1.5,
+  marginLeft: 40,
+}
+
+const TRIP_IMAGE: ImageStyle = {
+  alignSelf: "flex-end",
+  height: 235.5,
+  width: Layout.window.width / 1.1,
+  borderRadius: 12,
+}
+
+const infoTextStyle: TextStyle = {
+  color: colors.blue1,
+  fontFamily: fonts.latoRegular,
+  marginLeft: 10,
+  marginTop: 10,
+}
+
+const SOCIAL_ICONS: ImageStyle = {
+  marginRight: 10,
+  // tintColor: colors.purple
+}
+
+class Requests extends React.Component<NavigationScreenProps & Props> {
+  
+  state={
+    isVisible: false,
+    name: '',
+    paid: '',
+    payDay: '',
+    rsvp: '',
+    ref: '',
+    call: '',
+  }
+  
+  
+  componentDidMount(): void {
+    this.updateUser()
+  }
+  
+  updateUser = () => {
+    this.props.updateUserAsync()
+  }
+  
+  handlePhoneCall = (phoneNumber) => {
+    const args = {
+      number: phoneNumber, // String value with the number to call
+      prompt: true // Optional boolean property. Determines if the user should be prompt prior to the call
+    }
+    
+    call(args).catch(console.error)
+  }
+  
+  public render(): React.ReactNode {
+    const {
+      navigation, tours, isLoading
+    } = this.props
+    
+    const {
+      isVisible,
+      name,
+      paid,
+      payDay,
+      rsvp,
+      ref,
+      call,
+    } = this.state
+  
+    const requests = tours[0] !== undefined &&  tours.filter((transaction) => {
+      const { reference } = transaction
+      return reference === "request"
+    })
+    
+    console.tron.log(requests)
+    
+    return (
+      <View
+        style={ROOT}
+      >
+        <StatusBar barStyle={"dark-content"} />
+        
+        <ScrollView
+          // onScroll={this.handleScroll}
+          scrollEnabled
+          showsVerticalScrollIndicator={false}
+          pinchGestureEnabled
+          contentContainerStyle={{
+            justifyContent: "space-between"
+          }}
+          onContentSizeChange={(contentWidth, contentHeight)=>{
+            // this.setState((state) => ({
+            //   scrollTo: state.scrollTo + 100
+            // }), () => {
+            //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
+            // } )
+          }}
+        >
+          
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+          >
+            <Text
+              
+              style={HEADER_TEXT}
+            >
+              {translate(`profile.headerText`)}
+            </Text>
+          </TouchableOpacity>
+          
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                
+                style={discoverTextStyle}
+              >
+                {translate(`profile.myRequestsHeader`)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          
+          <Text
+            
+            style={discoverMoreTextStyle}
+          >
+            {translate(`profile.requestHeader`)}
+          </Text>
+          
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+          >
+            {
+              requests[0].id !== null && (
+                <FlatList
+                  data={requests}
+                  numColumns={1}
+                  style={{
+                    marginRight: 15,
+                  }}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{
+                    paddingBottom: 120
+                  }}
+                  renderItem={(tours) => {
+                    const { index } = tours
+                    const {
+                      tripImage, tripName, userPays, tripLocation, tripDate, paymentStatus
+                    } = tours.item
+                    
+                    console.tron.log(tours)
+                    
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        style={{
+                          flexDirection: "column",
+                          marginLeft:  20,
+                          marginTop: 20,
+                        }}
+                      >
+                        <Image
+                          style={TRIP_IMAGE}
+                          source={{ uri: `${tripImage}` }}
+                          resizeMethod={'auto'}
+                          resizeMode='cover'
+                        />
+
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                          }}
+                        >
+                          <Text
+
+                            style={infoTextStyle}
+                          >
+                            {tripName}
+                          </Text>
+
+                          <Text
+
+                            style={infoTextStyle}
+                          >
+                            ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          </Text>
+                        </View>
+
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                          }}
+                        >
+                          <Text
+
+                            style={infoTextStyle}
+                          >
+                            {tripLocation.substring(0, 20)}
+                          </Text>
+
+                          <Text
+
+                            style={infoTextStyle}
+                          >
+                            { moment(tripDate).format("ddd, MMM D, YYYY")}
+                          </Text>
+
+                        </View>
+  
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                          }}
+                        >
+                          <Text
+      
+                            style={infoTextStyle}
+                          >
+                            Status
+                          </Text>
+    
+                          <Text
+      
+                            style={infoTextStyle}
+                          >
+                            {paymentStatus}
+                          </Text>
+  
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              )
+            }
+          
+          </ScrollView>
+        
+        
+        </ScrollView>
+      </View>
+    )
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
+  updateUserAsync: () => dispatch(updateUserAsync())
+})
+
+let mapStateToProps: (state: ApplicationState) => StateProps;
+mapStateToProps = (state: ApplicationState): StateProps => ({
+  User: state.user.data,
+  isLoading: state.user.loading,
+  tours: state.user.data.Transactions,
+});
+
+export const RequestsScreen = connect<StateProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(Requests)

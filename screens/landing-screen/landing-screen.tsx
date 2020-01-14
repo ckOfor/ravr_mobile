@@ -3,7 +3,7 @@ import React from "react"
 
 // react-native
 import {
-  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text
+  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator
 } from "react-native"
 
 // third-party libraries
@@ -91,7 +91,7 @@ const FACEBOOK: ViewStyle = {
   backgroundColor: colors.white
 }
 
-const facebookTextStyle: TextStyle = {
+const FACEBOOK_TEXT_STYLE: TextStyle = {
   marginLeft: 20,
   color: colors.purple,
 }
@@ -187,12 +187,11 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
             onPress={() => navigation.navigate('authSignIn')}
             disabled={isLoading}
           >
-            <Text
-    
-              style={facebookTextStyle}
-            >
-              {translate(`landingScreen.email`)}
-            </Text>
+            {
+              isLoading
+                ? <ActivityIndicator size="small" color={colors.purple} />
+                : <Text style={FACEBOOK_TEXT_STYLE}>{translate(`landingScreen.email`)}</Text>
+            }
           </Button>
           
           <View

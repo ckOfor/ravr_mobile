@@ -97,6 +97,41 @@ type updateUserProfilePictureSuccess = {
 }
 
 
+export const CREATE_REQUEST = "CREATE_REQUEST"
+type createRequest = {
+  type: typeof CREATE_REQUEST
+}
+
+export const CREATE_REQUEST_FAILURE = "CREATE_REQUEST_FAILURE"
+type createRequestFailure = {
+  type: typeof CREATE_REQUEST_FAILURE
+}
+
+export const CREATE_REQUEST_SUCCESS = "CREATE_REQUEST_SUCCESS"
+type createRequestSuccess = {
+  type: typeof CREATE_REQUEST_SUCCESS
+}
+
+export const REDEEM_COINS = "REDEEM_COINS"
+type redeemCoins = {
+  type: typeof REDEEM_COINS
+}
+
+export const REDEEM_COINS_FAILURE = "REDEEM_COINS_FAILURE"
+type redeemCoinsFailure = {
+  type: typeof REDEEM_COINS_FAILURE
+}
+
+export const REDEEM_COINS_SUCCESS = "REDEEM_COINS_SUCCESS"
+type redeemCoinsSuccess = {
+  type: typeof REDEEM_COINS_SUCCESS
+}
+
+export const RESET_AUTH_REDEEM_KEY = "RESET_AUTH_REDEEM_KEY"
+type resetAuthRedeemKey = {
+  type: typeof RESET_AUTH_REDEEM_KEY
+}
+
 export type IUser = {
   id: number
   fullName: string,
@@ -146,3 +181,10 @@ export type UserAction =
   | updateUserProfilePicture
   | updateUserProfilePictureFailure
   | updateUserProfilePictureSuccess
+  | createRequest
+  | createRequestFailure
+  | createRequestSuccess
+  | redeemCoins
+  | redeemCoinsFailure
+  | redeemCoinsSuccess
+  | resetAuthRedeemKey

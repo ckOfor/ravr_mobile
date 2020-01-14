@@ -90,6 +90,40 @@ const createTransaction = async ({
   return processResponse(response)
 }
 
+const redeemCoins = async ({
+ id,
+ code,
+}: Types.createRequestPayload): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.put("/users/coins/use", {
+    id,
+    code
+  })
+  return processResponse(response)
+}
+
+
+const createRequest = async ({
+ id,
+ guideId,
+ tourId,
+ reference,
+ slots
+ }: Types.createTransactionPayload): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/post/request", {
+    id,
+    guideId,
+    tourId,
+    reference,
+    slots
+  })
+  return processResponse(response)
+}
+
+
 const searchTextTours = async (searchKey: string, date?: string): Promise<
   Types.getResponse
   > => {
@@ -551,5 +585,7 @@ export {
   contactUs,
   updatePhone,
   updatePicture,
-  addReferralCode
+  addReferralCode,
+  createRequest,
+  redeemCoins,
 }

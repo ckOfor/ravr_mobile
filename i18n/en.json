@@ -61,15 +61,15 @@
     "weekend": "Best prices",
     "more": "More",
     "go": "Go >",
-    "quote": "Get Quote",
-    "findTour": "Find my tour.",
+    "quote": "Search",
+    "findTour": "Find my freedom.",
     "findTourMore": "We can help you find the perfect vacation to match your budget.",
     "recommendedTours": "Discover",
     "recommendedMore": "With us, you get the best local and international tourism deals and packages",
     "search": "Search by name, location or amount."
   },
   "viewTour": {
-    "join": "Join",
+    "join": "Pay now",
     "save": "Save for this trip",
     "saveMore": "You don’t want to lose sleep over calculating an exact budget — plan one with some wiggle room. It’s all about staying flexible.",
     "tabOne": "Content",
@@ -77,7 +77,11 @@
     "tabThree": "Savings",
     "experience": "Check out offbeat things to do and get an authentic experience.",
     "welcomeText": "< Welcome to Ravr.",
-    "popular": "Popular."
+    "popular": "Popular.",
+    "confirm": "Confirm",
+    "monthSavings": "Maximum months to save exceeded",
+    "number": "Invalid Input",
+    "useCoins": "Use Coins"
   },
   "weekends": {
     "header": "Weekends.",
@@ -93,7 +97,15 @@
     "pay": "pay",
     "slots": "Enter number of slots",
     "slotError": "Maximum slot is 9",
-    "slotShot": "Minimum slot is 1"
+    "slotShot": "Minimum slot is 1",
+    "payment": "< Payment"
+  },
+  "useCoins": {
+    "header": "Pay with coins.",
+    "useCoins": "Use coins",
+    "price": "Price",
+    "discount": "Discount",
+    "total": "Total"
   },
   "save": {
     "save": "Save",
@@ -117,12 +129,14 @@
     "code": "Enter code",
     "redeem": "Redeem",
     "logout": "Logout",
-    "moreText": "Your phone number is {{phone}}, please send us a mail using your registered email to edit your profile"
+    "moreText": "Your phone number is {{phone}}, please send us a mail using your registered email to edit your profile",
+    "myRequestsHeader": "My Requests",
+    "requestHeader": "Request are approved under 24 hours."
   },
   "contactUs": {
     "header": "Hello Ravr.",
     "subject": "Subject: How can I save with Ravr...",
     "buttonText": "Send",
-    "savings": "Message: Click on save with Ravr text on your profile",
+    "savings": "Message: Click on save with Ravr text on your profile"
   }
 }

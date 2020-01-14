@@ -13,6 +13,7 @@ import { Tab, Tabs } from 'native-base';
 import { translate } from "../../i18n";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
+import { setLocale } from 'yup';
 
 // redux
 import { connect } from "react-redux"
@@ -28,7 +29,7 @@ import { colors, fonts, images } from "../../theme";
 import { Button } from "../../components/button";
 import { TextField } from "../../components/text-field";
 import {formatSLots} from "../../utils/formatters";
-
+import {IUser} from "../../redux/user";
 
 interface DispatchProps {
 
@@ -37,15 +38,9 @@ interface DispatchProps {
 interface StateProps {
   isLoading: boolean
   selectedTour: ITours
+  User: IUser
 }
 
-
-const schema = Yup.object().shape({
-  months: Yup.string()
-    .required("payment.slotShot"),
-  slots: Yup.string()
-    .required("payment.slotShot")
-})
 
 interface MyFormValues {
   months: number
@@ -89,6 +84,13 @@ const BACKGROUND_IMAGE: ImageStyle = {
 const JOIN_BUTTON: ViewStyle = {
   borderRadius: 100,
   width: Layout.window.width / 2,
+  marginTop: 20,
+  backgroundColor: colors.purple,
+}
+
+const COINS_BUTTON: ViewStyle = {
+  borderRadius: 100,
+  width: Layout.window.width / 4,
   marginTop: 20,
   backgroundColor: colors.purple,
 }
@@ -205,6 +207,12 @@ const SAVE_BUTTON_TEXT: TextStyle = {
 
 class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
+  state={
+    initialPage: 0,
+    activeTab: 0
+  }
+  
+  scrollView: NativeMethodsMixinStatic | any
   monthsInput: NativeMethodsMixinStatic | any
   slotsInput: NativeMethodsMixinStatic | any
   
@@ -220,25 +228,44 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, selectedTour, isLoading
+      navigation, selectedTour, isLoading, User
     } = this.props
+    
+    const { initialPage, activeTab } = this.state
   
+    const coinsNeeded = selectedTour && selectedTour.userPays
     const today= moment()
-    let myTripDate = selectedTour && selectedTour.tripDate
+    const myTripDate = selectedTour && selectedTour.tripDate
     const selectedTripDate = moment(myTripDate);
     const monthDifference = selectedTripDate.diff(today, 'months')
-    // console.log(monthlyPay)
-    
-    // console.tron.log(selectedTour)
+    const maxMonth = monthDifference - 1
+  
+    const schema = Yup.object().shape({
+      months: Yup
+        .number()
+        .test('Max', 'viewTour.monthSavings', value => value <= maxMonth),
+      slots: Yup
+        .number()
+        .test('Max', 'payment.slotShot', value => value >= 1)
+        .required("payment.slotShot")
+    })
+  
+    const {
+      Tourists
+    } = User
     
     return (
       <ScrollView
+        ref={i => {
+          this.scrollView = i
+        }}
         // onScroll={this.handleScroll}
         scrollEnabled
         showsVerticalScrollIndicator={false}
         pinchGestureEnabled
         contentContainerStyle={{
-          justifyContent: "space-between"
+          justifyContent: "space-between",
+          paddingBottom: 20
         }}
         onContentSizeChange={(contentWidth, contentHeight)=>{
           // this.setState((state) => ({
@@ -306,13 +333,34 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
                   </Text>
   
-                  <Button
-                    style={JOIN_BUTTON}
-                    textStyle={JOIN_BUTTON_TEXT}
-                    // disabled={!isValid || isLoading}
-                    onPress={() => navigation.navigate('payment')}
-                    tx={`viewTour.join`}
-                  />
+                  <View
+                    style={{
+                      justifyContent: "space-evenly",
+                      flexDirection: "row",
+                      width: Layout.window.width / 1.5
+                    }}
+                  >
+                    <Button
+                      style={Tourists[0] !== undefined && Tourists[0].userCoins > coinsNeeded ? COINS_BUTTON : JOIN_BUTTON}
+                      textStyle={JOIN_BUTTON_TEXT}
+                      disabled={isLoading}
+                      onPress={() => navigation.navigate('payment')}
+                      tx={`viewTour.join`}
+                    />
+  
+                    {
+                      Tourists[0] !== undefined && Tourists[0].userCoins > coinsNeeded && (
+                        <Button
+                          style={COINS_BUTTON}
+                          textStyle={JOIN_BUTTON_TEXT}
+                          disabled={isLoading}
+                          onPress={() => navigation.navigate('useCoins')}
+                          tx={`viewTour.useCoins`}
+                        />
+                      )
+                    }
+                    
+                  </View>
     
                 </View>
   
@@ -325,7 +373,10 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                   }}
                 >
                   <TouchableOpacity
-                    // onPress={() => navigation.navigate('profile')}
+                    onPress={() => {
+                      this.setState({ initialPage: 2, activeTab: 2 })
+                      this.scrollView.scrollToEnd({ animated: true });
+                    }}
                     style={{
                       flexDirection: "row",
                       justifyContent: 'space-between',
@@ -343,7 +394,10 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                     style={{
                       marginTop: 15,
                     }}
-                    onPress={() => navigation.navigate('profile')}
+                    onPress={() => {
+                      this.setState({ initialPage: 2, activeTab: 2 })
+                      this.scrollView.scrollToEnd({ animated: true });
+                    }}
                   >
                     <Text
         
@@ -461,6 +515,8 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           tabBarUnderlineStyle={{
             backgroundColor: colors.purple,
           }}
+          initialPage={initialPage}
+          page={activeTab}
         >
           <Tab
             activeTabStyle={{
@@ -562,8 +618,8 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
             <Formik
               initialValues={{
-                months: 1,
-                slots: 1,
+                months: '',
+                slots: '',
               }}
               validationSchema={schema}
               onSubmit={this.submit}
@@ -579,22 +635,37 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                 }: FormikProps<MyFormValues>) => (
                 <View>
   
-                  <Text
-                    numberOfLines={100}
-                    style={TRIP_DETAILS}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
                   >
-                    Amount:
-                    {
-                      values.slots > 0 && values.months > 0 && (
-                        <Text
-                          numberOfLines={100}
-                          style={TRIP_DETAILS}
-                        >
-                          { } ₦ {selectedTour && Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        </Text>
-                      )
-                    }
-                  </Text>
+  
+                    <Text
+                      numberOfLines={100}
+                      style={TRIP_DETAILS}
+                    >
+                      Amount:
+                      {
+                        values.slots > 0 && values.months > 0 && (
+                          <Text
+                            numberOfLines={100}
+                            style={TRIP_DETAILS}
+                          >
+                            { } ₦ {selectedTour && Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                          </Text>
+                        )
+                      }
+                    </Text>
+  
+                    <Text
+                      numberOfLines={100}
+                      style={TRIP_DETAILS}
+                    >
+                      Max Months: {` ${maxMonth}`}
+                    </Text>
+                  </View>
         
                   <View
                     style={FIELD}
@@ -661,9 +732,9 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                     <Button
                       style={SAVE_BUTTON}
                       textStyle={SAVE_BUTTON_TEXT}
-                      disabled={!isValid || isLoading}
+                      disabled={!isValid || isLoading || values.months > maxMonth}
                       onPress={() => handleSubmit()}
-                      tx={`save.save`}
+                      tx={`viewTour.confirm`}
                     />
         
                   </View>
@@ -687,6 +758,7 @@ let mapStateToProps: (state: ApplicationState, dispatch: Dispatch<any>) => State
 mapStateToProps = (state: ApplicationState, dispatch): StateProps => ({
   isLoading: state.tour.loading,
   selectedTour: state.tour.selectedTour,
+  User: state.user.data,
 });
 
 export const ViewTourScreen = connect<StateProps>(

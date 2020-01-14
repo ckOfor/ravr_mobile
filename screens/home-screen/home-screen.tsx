@@ -291,34 +291,6 @@ class Home extends React.Component<NavigationScreenProps & Props> {
                   {translate(`home.findTour`)}
                 </Text>
               </View>
-              
-              {/*<TouchableOpacity*/}
-              {/*  onPress={() => navigation.navigate('profile')}*/}
-              {/*  disabled={isLoading}*/}
-              {/*>*/}
-              {/*  {*/}
-              {/*    userPicture === '' && (*/}
-              {/*      <Image*/}
-              {/*        style={PROFILE_IMAGE}*/}
-              {/*        source={images.appLogo}*/}
-              {/*        resizeMethod={'auto'}*/}
-              {/*        resizeMode='cover'*/}
-              {/*      />*/}
-              {/*    )*/}
-              {/*  }*/}
-              {/*  */}
-              {/*  {*/}
-              {/*    userPicture !== '' && (*/}
-              {/*      <Image*/}
-              {/*        style={PROFILE_IMAGE}*/}
-              {/*        source={{ uri: `${userPicture}` }}*/}
-              {/*        resizeMethod={'auto'}*/}
-              {/*        resizeMode='cover'*/}
-              {/*      />*/}
-              {/*    )*/}
-              {/*  }*/}
-              
-              {/*</TouchableOpacity>*/}
             
             </View>
             
