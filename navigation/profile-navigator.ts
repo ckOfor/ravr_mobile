@@ -5,6 +5,9 @@ import { TripsScreen } from "../screens/trips-screen";
 import { SavingsScreen } from "../screens/savings-screen";
 import { EditProfileScreen } from "../screens/edit-profile/edit-profile";
 import { RequestsScreen } from "../screens/requests- screen";
+import {SubscriptionsScreen} from "../screens/subscriptions-screen";
+import {CreatePlanScreen} from "../screens/create-plan";
+import {ViewPlansScreen} from "../screens/view-plans-screen";
 
 export const ProfileNavigator = createStackNavigator(
   {
@@ -34,6 +37,24 @@ export const ProfileNavigator = createStackNavigator(
     },
     edit: {
       screen: EditProfileScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    subscriptions: {
+      screen: SubscriptionsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    createPlan: {
+      screen: CreatePlanScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    viewPlans: {
+      screen: ViewPlansScreen,
       navigationOptions: {
         header: null
       }

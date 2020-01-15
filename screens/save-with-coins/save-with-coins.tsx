@@ -23,8 +23,7 @@ import { Formik, FormikProps } from "formik";
 
 // redux
 import { ApplicationState } from "../../redux";
-import {createRequestAsync, IUser} from "../../redux/user";
-import { updateUserAsync } from "../../redux/user";
+import { savePlanAsync, IUser} from "../../redux/user";
 
 // styles
 import { Layout } from "../../constants";
@@ -45,9 +44,7 @@ const schema = Yup.object().shape({
 })
 
 interface DispatchProps {
-  updateUserAsync: () => void
-  notify: (message: string, type: string) => void
-  createRequestAsync: (slots: number) => void
+  savePlanAsync: (data) => void
 }
 
 interface StateProps {
@@ -117,23 +114,32 @@ const USE_COINS_BUTTON_TEXT: TextStyle = {
   textTransform: 'uppercase'
 }
 
-class UseCoins extends React.Component<NavigationScreenProps & Props> {
-  
-  slotsInput: NativeMethodsMixinStatic | any
+class SaveWithCoins extends React.Component<NavigationScreenProps & Props> {
   
   submit  = (values) => {
-    const { notify, createRequestAsync } = this.props
-    if (values.slots < 1) {
-      notify(`Invalid slot`, 'danger')
-    } else {
-      createRequestAsync(values.slots)
+    const { savePlanAsync, selectedTour, User, navigation } = this.props
+    const months = navigation.getParam('months')
+    const amount = navigation.getParam('amount')
+    
+    let newObject;
+    
+    newObject = {
+      amount,
+      months,
+      planName: `Savings for ${selectedTour.tripName}`
     }
+    
+    savePlanAsync(newObject)
   }
   
   public render(): React.ReactNode {
     const {
       navigation, User, isLoading, selectedTour
     } = this.props
+  
+    const slots = navigation.getParam('slots')
+    const months = navigation.getParam('months')
+    const amount = navigation.getParam('amount')
     
     
     const {
@@ -166,7 +172,7 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
               
               style={HEADER_TEXT}
             >
-              {translate(`payment.payment`)}
+              {translate(`saveWithCoins.viewTour`)}
             </Text>
           </TouchableOpacity>
           
@@ -185,9 +191,32 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
             >
               <Text
                 
+                style={[discoverTextStyle, { fontSize: 22, marginBottom: 10 }]}
+              >
+                {translate(`saveWithCoins.receipt`)}
+              </Text>
+              
+            </TouchableOpacity>
+          </View>
+          
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                
                 style={discoverTextStyle}
               >
-                {translate(`useCoins.header`)}
+                {translate(`saveWithCoins.originalPrice`)}
               </Text>
               
               
@@ -195,7 +224,37 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
                 
                 style={savingsMoreTextStyle}
               >
-                {Tourists[0] !== undefined ? Tourists[0].userCoins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0 }
+                ₦ {selectedTour.tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                
+                style={discoverTextStyle}
+              >
+                {translate(`useCoins.discount`)}
+              </Text>
+              
+              
+              <Text
+                
+                style={savingsMoreTextStyle}
+              >
+                {selectedTour.userDiscount * 100} % off
               </Text>
             </TouchableOpacity>
           </View>
@@ -225,7 +284,7 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
         
                 style={savingsMoreTextStyle}
               >
-                {selectedTour.tripPrice}
+                ₦ {selectedTour.userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -247,7 +306,7 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
         
                 style={discoverTextStyle}
               >
-                {translate(`useCoins.discount`)}
+                {translate(`saveWithCoins.slot`)}
               </Text>
       
       
@@ -255,97 +314,113 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
         
                 style={savingsMoreTextStyle}
               >
-                Get {selectedTour.userDiscount * 100} % off
+                {slots}
               </Text>
             </TouchableOpacity>
           </View>
   
-  
-          <Formik
-            initialValues={{
-              slots: 1
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
             }}
-            validationSchema={schema}
-            onSubmit={this.submit}
-            enableReinitialize
           >
-            {({
-                values,
-                handleChange,
-                handleBlur,
-                errors,
-                isValid,
-                handleSubmit
-              }: FormikProps<MyFormValues>) => (
-              <View>
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+        
+                style={discoverTextStyle}
+              >
+                {translate(`saveWithCoins.plan`)}
+              </Text>
+      
+      
+              <Text
+        
+                style={savingsMoreTextStyle}
+              >
+                {translate(`saveWithCoins.monthly`)}
+              </Text>
+            </TouchableOpacity>
+          </View>
   
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <TouchableOpacity
-                    // onPress={() => navigation.navigate('profile')}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Text
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
         
-                      style={discoverTextStyle}
-                    >
-                      {translate(`useCoins.total`)}
-                    </Text>
+                style={[discoverTextStyle, { fontWeight: "900" }]}
+              >
+                {translate(`saveWithCoins.numberOfMonths`)}
+              </Text>
       
       
-                    <Text
+              <Text
         
-                      style={savingsMoreTextStyle}
-                    >
-                      {isNaN(selectedTour.userPays * parseInt(values.slots)) ? selectedTour.userPays : selectedTour.userPays * parseInt(values.slots)}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-        
-                <View
-                  style={FIELD}
-                >
-                  <TextField
-                    name="slots"
-                    keyboardType="number-pad"
-                    placeholderTx="payment.slots"
-                    value={formatSLots(values.slots.toString())}
-                    onChangeText={handleChange("slots")}
-                    onBlur={handleBlur("slots")}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    isInvalid={!isValid}
-                    fieldError={errors.slots}
-                    onSubmitEditing={() => handleSubmit()}
-                    forwardedRef={i => {
-                      this.slotsInput = i
-                    }}
-                  />
+                style={[savingsMoreTextStyle, { fontWeight: '900' }]}
+              >
+               {months}
+              </Text>
+            </TouchableOpacity>
+          </View>
           
-                  <Button
-                    style={USE_COINS_BUTTON}
-                    textStyle={USE_COINS_BUTTON_TEXT}
-                    disabled={!isValid || isLoading}
-                    onPress={() => handleSubmit()}
-                  >
-                    {
-                      isLoading
-                        ? <ActivityIndicator size="small" color={colors.white} />
-                        : <Text style={USE_COINS_BUTTON_TEXT}>{translate(`useCoins.useCoins`)}</Text>
-                    }
-                  </Button>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
         
-                </View>
-              </View>
-            )}
-          </Formik>
+                style={[discoverTextStyle, { fontWeight: "900" }]}
+              >
+                {translate(`saveWithCoins.monthlyFee`)}
+              </Text>
+      
+      
+              <Text
+        
+                style={[savingsMoreTextStyle, { fontWeight: '900' }]}
+              >
+                ₦ {amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+  
+          <Button
+            style={USE_COINS_BUTTON}
+            textStyle={USE_COINS_BUTTON_TEXT}
+            disabled={isLoading}
+            onPress={this.submit}
+          >
+            {
+              isLoading
+                ? <ActivityIndicator size="small" color={colors.white} />
+                : <Text style={USE_COINS_BUTTON_TEXT}>{translate(`saveWithCoins.confirm`)}</Text>
+            }
+          </Button>
         
         </ScrollView>
       </View>
@@ -354,9 +429,7 @@ class UseCoins extends React.Component<NavigationScreenProps & Props> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  updateUserAsync: () => dispatch(updateUserAsync()),
-  notify: (message: string, type: string) => dispatch(notify(message, type)),
-  createRequestAsync: (slots: number) => dispatch(createRequestAsync(slots))
+  savePlanAsync: (data) => dispatch(savePlanAsync(data)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -366,7 +439,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   selectedTour: state.tour.selectedTour,
 });
 
-export const UseCoinsScreen = connect<StateProps>(
+export const SaveWithCoinsScreen = connect<StateProps>(
   mapStateToProps,
   mapDispatchToProps
-)(UseCoins)
+)(SaveWithCoins)

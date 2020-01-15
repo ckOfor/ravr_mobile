@@ -216,14 +216,22 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   monthsInput: NativeMethodsMixinStatic | any
   slotsInput: NativeMethodsMixinStatic | any
   
-  submit = () => {
-    Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-      if (supported) {
-        Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-      } else {
-        console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-      }
-    });
+  submit = ({ slots, months }) => {
+    const {
+      selectedTour, navigation
+    } = this.props
+  
+    const userWillPay = selectedTour.userPays
+  
+    const amount =   selectedTour && ((parseInt(userWillPay) * slots) / months) < 2500 ? (0.015 * ((parseInt(userWillPay) * slots) / months)) + ((parseInt(userWillPay) * slots) / months) : (0.015 * ((parseInt(userWillPay) * slots) / months)) + ((parseInt(userWillPay) * slots) / months) + 100
+  
+    console.tron.log(amount, slots, months)
+  
+    navigation.navigate('saveWithCoins', {
+      slots,
+      months,
+      amount
+    })
   }
   
   public render(): React.ReactNode {
@@ -232,8 +240,11 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
     } = this.props
     
     const { initialPage, activeTab } = this.state
+    
+    console.tron.log(selectedTour, "selectedTour")
   
     const coinsNeeded = selectedTour && selectedTour.userPays
+    const userWillPay = coinsNeeded
     const today= moment()
     const myTripDate = selectedTour && selectedTour.tripDate
     const selectedTripDate = moment(myTripDate);
@@ -259,20 +270,12 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
         ref={i => {
           this.scrollView = i
         }}
-        // onScroll={this.handleScroll}
         scrollEnabled
         showsVerticalScrollIndicator={false}
         pinchGestureEnabled
         contentContainerStyle={{
           justifyContent: "space-between",
           paddingBottom: 20
-        }}
-        onContentSizeChange={(contentWidth, contentHeight)=>{
-          // this.setState((state) => ({
-          //   scrollTo: state.scrollTo + 100
-          // }), () => {
-          //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-          // } )
         }}
       >
   
@@ -326,12 +329,60 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
                   </Text>
   
-                  <Text
-                    style={PRICE}
+                  <View
+                    style={{
+                      marginTop: 10,
+                      width: Layout.window.width / 1.5,
+                      flexDirection: 'row',
+                      justifyContent: "space-evenly",
+                    }}
                   >
-                    Price: ₦ {selectedTour.userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    <Text
+                      style={{
+                        color: colors.blue1,
+                        fontFamily: fonts.latoRegular,
+                        textAlign: 'center',
+                      }}
+                    >
+                      Price:
+                    </Text>
+                    
+                    
+                    <Text
+                      style={{
+                        color: colors.blue1,
+                        fontFamily: fonts.latoRegular,
+                        textAlign: 'center',
+                        textDecorationLine: 'line-through',
+                        textDecorationStyle: 'solid'
+                      }}
+                    >
+                      ₦ {selectedTour.tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    </Text>
   
-                  </Text>
+  
+                    <Text
+    
+                      style={{
+                        color: colors.blue1,
+                        fontFamily: fonts.latoRegular,
+                        textAlign: 'center',
+                      }}
+                    >
+                      ₦ {selectedTour.userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    </Text>
+  
+                    <Text
+    
+                      style={{
+                        color: colors.blue1,
+                        fontFamily: fonts.latoRegular,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {selectedTour.userDiscount * 100}% off
+                    </Text>
+                  </View>
   
                   <View
                     style={{
@@ -424,7 +475,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
         }
   
         <ScrollView
-          // onScroll={this.handleScroll}
           scrollEnabled
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -437,24 +487,12 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
             marginTop: '5%',
             marginRight: '5%',
           }}
-          // ref={forwardedRef}
-          onContentSizeChange={(contentWidth, contentHeight)=>{
-            // this.setState((state) => ({
-            //   scrollTo: state.scrollTo + 100
-            // }), () => {
-            //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-            // } )
-          }}
         >
           <TouchableOpacity
             style={{
               flexDirection: "column",
               marginLeft: 20,
             }}
-            // onPress={() => {
-            //   setSelectedTours(tour)
-            //   viewTours()
-            // }}
           >
             <Image
               style={TRIP_IMAGE}
@@ -470,10 +508,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
               flexDirection: "column",
               marginLeft: 20,
             }}
-            // onPress={() => {
-            //   setSelectedTours(tour)
-            //   viewTours()
-            // }}
           >
             <Image
               style={TRIP_IMAGE}
@@ -489,10 +523,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
               flexDirection: "column",
               marginLeft: 20,
             }}
-            // onPress={() => {
-            //   setSelectedTours(tour)
-            //   viewTours()
-            // }}
           >
             <Image
               style={TRIP_IMAGE}
@@ -722,8 +752,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                               fontWeight: "bold"
                             }}
                           >
-                            { } ₦ {selectedTour && 0.015 * Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months + Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months + 100}
-                            {/*{ } ₦ {selectedTour && (0.015 * Math.round(Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months) + (Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots) / values.months) + 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}*/}
+                            {" "} ₦ {selectedTour && ((parseInt(userWillPay) * values.slots) / values.months) < 2500 ? (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) : (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) + 100}
                           </Text>
                         )
                       }

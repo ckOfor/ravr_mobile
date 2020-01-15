@@ -2,13 +2,28 @@ import {
   CLEAR_USER,
   CONTACT_US,
   CONTACT_US_FAILURE,
-  CONTACT_US_SUCCESS, CREATE_REQUEST,
+  CONTACT_US_SUCCESS,
+  CREATE_PLAN,
+  CREATE_PLAN_FAILURE,
+  CREATE_PLAN_SUCCESS,
+  CREATE_REQUEST,
   CREATE_TRANSACTION,
   CREATE_TRANSACTION_FAILURE,
   CREATE_TRANSACTION_SUCCESS,
-  IUser, REDEEM_COINS, REDEEM_COINS_FAILURE, REDEEM_COINS_SUCCESS, RESET_AUTH_REDEEM_KEY,
+  DISABLE_PLAN,
+  DISABLE_PLAN_FAILURE,
+  DISABLE_PLAN_SUCCESS, ENABLE_PLAN, ENABLE_PLAN_FAILURE, ENABLE_PLAN_SUCCESS,
+  IPlan,
+  IUser,
+  REDEEM_COINS,
+  REDEEM_COINS_FAILURE,
+  REDEEM_COINS_SUCCESS,
+  RESET_AUTH_REDEEM_KEY,
+  SAVE_DISABLED_PLAN,
+  SAVE_DISABLED_PLAN_FAILURE, SAVE_DISABLED_PLAN_SUCCESS, SAVE_ENABLED_PLAN, SAVE_ENABLED_PLAN_SUCCESS,
   SAVE_MESSAGE,
   SAVE_SUBJECT,
+  SET_PLAN,
   SET_USER_DETAILS,
   UPDATE_PHONE_NUMBER,
   UPDATE_PHONE_NUMBER_SUCCESS,
@@ -20,31 +35,27 @@ import {
   UPDATE_USER_SUCCESS
 } from "../user";
 import {
+  createPlan as apiCreatePlan,
   redeemCoins as apiRedeemCoins,
   createTransaction as apiCreateTransaction,
   createRequest as apiCreateRequest,
   logInWithEmail as apiLogInWithEmail,
   contactUs as apiContactUs,
   updatePhone as apiUpdatePhone,
-  updatePicture as apiUpdatePicture
+  updatePicture as apiUpdatePicture,
+  disablePlan as apiDisablePlan,
+  enablePlan as apiEnablePlan
 } from "../../services/api";
 import { ThunkAction } from "redux-thunk";
 import { ApplicationState } from "../index";
 import { Action } from "redux";
 import {
   notify,
-  setAuthEmail,
   setUser,
-  SOCIAL_AUTHENTICATION,
-  SOCIAL_AUTHENTICATION_FAILURE, SOCIAL_AUTHENTICATION_SUCCESS,
-  socialAuthenticationFailure
 } from "../auth";
 import {NavigationActions} from "react-navigation";
-import {searchToursFailure } from "../tour";
-import Firebase from '../../config/FirebaseClient'
-import {Toast} from "native-base";
-import {Layout} from "../../constants";
-import * as GoogleSignIn from 'expo-google-sign-in';
+import axios from "axios";
+import { PAYSTACK_SECRET_KEY } from "react-native-dotenv"
 
 export const setUserDetails = (user: IUser) => ({ type: SET_USER_DETAILS, payload: user })
 
@@ -394,3 +405,251 @@ export const redeemCoinsAsync = (code: string): ThunkAction<void, ApplicationSta
     dispatch(redeemCoinsFailure())
   }
 }
+
+export const createPlan = () => ({
+  type: CREATE_PLAN,
+})
+
+export const createPlanFailure = () => ({
+  type: CREATE_PLAN_FAILURE,
+})
+
+export const createPlanSuccess = () => ({
+  type: CREATE_PLAN_SUCCESS,
+})
+
+export const setPlan = (payload: IPlan) => ({
+  type: SET_PLAN,
+  payload
+})
+
+export const createPlanAsync = (reference?: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  dispatch(createPlan())
+  
+  const plan = getState().user.plan;
+  console.tron.log(plan, "PLAN", reference)
+  
+  try {
+    const result = await apiCreatePlan(plan)
+    const { status, message, data } = result.data
+    console.log(data)
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(createPlanSuccess())
+      dispatch(updateUserAsync())
+      dispatch(NavigationActions.back())
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(createPlanFailure())
+    }
+    
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(createPlanFailure())
+  }
+}
+
+export const savePlanAsync = ({
+    amount,
+    months,
+    planName,
+    type
+  }): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  
+  const state = getState();
+  const id = state.user.data.id
+  const fullName = state.user.data.fullName
+  const email = state.user.data.email
+  const amountInKobo = amount * 100
+  const invoiceLimit = months
+  const planType = type ? type : "trip"
+  const planMode = "monthly"
+  
+  const transaction = state.user.data.Transactions
+  const subscription = state.user.data.Subscriptions
+  
+  const plan = {
+    id,
+    fullName,
+    email,
+    amountInKobo,
+    invoiceLimit,
+    planType,
+    planMode,
+    planName
+  }
+  
+  console.tron.log(plan)
+  dispatch(setPlan(plan))
+  
+  console.tron.log(transaction)
+  console.tron.log(subscription)
+  return subscription.length < 1
+    ? dispatch(NavigationActions.navigate({ routeName: "planPayment" }))
+    : dispatch(createPlanAsync())
+}
+
+export const disablePlan = () => ({
+  type: DISABLE_PLAN,
+})
+
+export const disablePlanFailure = () => ({
+  type: DISABLE_PLAN_FAILURE,
+})
+
+export const disablePlanSuccess = () => ({
+  type: DISABLE_PLAN_SUCCESS,
+})
+
+
+export const disablePlanAsync = (code: string, token: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  dispatch(disablePlan())
+  
+  try {
+      await axios.post(`https://api.paystack.co/subscription/disable`, {
+        code,
+        token
+      }, { headers: { Authorization: `Bearer ${PAYSTACK_SECRET_KEY}` } })
+        .then((response) => {
+          console.tron.log(response)
+          dispatch(disablePlanSuccess())
+          dispatch(saveDisabledPlanAsync(code))
+        })
+        .catch(error  => {
+          console.tron.log(error)
+          dispatch(notify(`${error.message}`, 'danger'))
+          dispatch(disablePlanFailure())
+        })
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(disablePlanFailure())
+  }
+}
+
+export const saveDisabledPlan = () => ({
+  type: SAVE_DISABLED_PLAN,
+})
+
+export const saveDisabledPlanFailure = () => ({
+  type: SAVE_DISABLED_PLAN_FAILURE,
+})
+
+export const saveDisabledPlanSuccess = () => ({
+  type: SAVE_DISABLED_PLAN_SUCCESS,
+})
+
+export const saveDisabledPlanAsync = (code: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  dispatch(saveDisabledPlan())
+  console.tron.log(code)
+  
+  try {
+    const result = await apiDisablePlan(code)
+    const { status, message } = result.data
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(saveDisabledPlanSuccess())
+      dispatch(updateUserAsync())
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(saveDisabledPlanFailure())
+    }
+    
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(disablePlanFailure())
+  }
+}
+
+export const enablePlan = () => ({
+  type: ENABLE_PLAN,
+})
+
+export const enablePlanFailure = () => ({
+  type: ENABLE_PLAN_FAILURE,
+})
+
+export const enablePlanSuccess = () => ({
+  type: ENABLE_PLAN_SUCCESS,
+})
+
+export const enablePlanAsync = (code: string, token: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  dispatch(enablePlan())
+  
+  try {
+    await axios.post(`https://api.paystack.co/subscription/enable`, {
+      code,
+      token
+    }, { headers: { Authorization: `Bearer ${PAYSTACK_SECRET_KEY}` } })
+      .then((response) => {
+        console.tron.log(response)
+        dispatch(enablePlanSuccess())
+        dispatch(saveEnabledPlanAsync(code))
+      })
+      .catch(error  => {
+        console.tron.log(error)
+        dispatch(notify(`${error.message}`, 'danger'))
+        dispatch(enablePlanFailure())
+      })
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(enablePlanFailure())
+  }
+}
+
+
+export const saveEnabledPlan = () => ({
+  type: SAVE_ENABLED_PLAN,
+})
+
+export const saveEnabledPlanFailure = () => ({
+  type: SAVE_DISABLED_PLAN_FAILURE,
+})
+
+export const saveEnabledPlanSuccess = () => ({
+  type: SAVE_ENABLED_PLAN_SUCCESS,
+})
+
+
+export const saveEnabledPlanAsync = (code: string): ThunkAction<void, ApplicationState, null, Action<any>> => async (
+  dispatch,
+  getState
+) => {
+  dispatch(saveEnabledPlan())
+  console.tron.log(code)
+  
+  try {
+    const result = await apiEnablePlan(code)
+    const { status, message } = result.data
+    
+    if(status) {
+      dispatch(notify(`${message}`, 'success'))
+      dispatch(saveEnabledPlanSuccess())
+      dispatch(updateUserAsync())
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(saveEnabledPlanFailure())
+    }
+    
+  } catch ({ message }) {
+    dispatch(notify(`${message}`, 'danger'))
+    dispatch(saveEnabledPlanFailure())
+  }
+}
+

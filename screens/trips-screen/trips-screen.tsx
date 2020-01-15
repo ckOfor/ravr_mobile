@@ -14,7 +14,7 @@ import {
   ImageStyle,
   Linking,
   RefreshControl,
-  FlatList
+  FlatList, Platform
 } from "react-native"
 
 // third-party
@@ -153,7 +153,11 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
       <View
         style={ROOT}
       >
-        <StatusBar barStyle={"dark-content"} />
+        {
+          Platform.OS === "ios"
+            ? <StatusBar barStyle="dark-content" />
+            : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
+        }
         
         <ScrollView
           // onScroll={this.handleScroll}

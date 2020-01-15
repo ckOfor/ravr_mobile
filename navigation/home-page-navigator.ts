@@ -6,6 +6,8 @@ import { ViewToursScreen } from "../screens/view-tours-screen";
 import { WeekendToursScreen } from "../screens/weekend-tours-screen";
 import { PaymentScreen } from "../screens/payment-screen";
 import { UseCoinsScreen } from "../screens/use-coins-screen";
+import { SaveWithCoinsScreen } from "../screens/save-with-coins";
+import { PlanPaymentScreen } from "../screens/plan-payment-screen";
 
 export const TourNavigator = createStackNavigator(
   {
@@ -41,6 +43,18 @@ export const TourNavigator = createStackNavigator(
     },
     useCoins: {
       screen: UseCoinsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    saveWithCoins: {
+      screen: SaveWithCoinsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    planPayment: {
+      screen: PlanPaymentScreen,
       navigationOptions: {
         header: null
       }

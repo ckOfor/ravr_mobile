@@ -101,7 +101,7 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
         >
           {
             weekendTours && weekendTours.map((tour, index) => {
-              const { locationPictureOne, tripName, userPays } = tour
+              const { locationPictureOne, tripName, tripPrice } = tour
               return (
                 <TouchableOpacity
                   key={index}
@@ -131,14 +131,14 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
                 
                       style={discoverMoreTextStyle}
                     >
-                      {tripName.substring(0, 9)}
+                      {tripName && tripName.substring(0, 9)}
                     </Text>
               
                     <Text
                 
                       style={discoverMoreTextStyle}
                     >
-                      ₦ {userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      ₦ {tripName && tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </Text>
                   </View>
                 </TouchableOpacity>

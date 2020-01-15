@@ -122,15 +122,6 @@ const PROFILE_IMAGE: ImageStyle = {
   borderRadius: 60
 }
 
-
-const BACK_IMAGE: ImageStyle = {
-  marginLeft: 30,
-  marginTop: 50,
-  height: 30,
-  width: 30,
-  tintColor: colors.purple
-}
-
 const DETAILS: ViewStyle = {
   alignItems: 'center',
   justifyContent: 'center',
@@ -156,6 +147,26 @@ const SHADOW: ViewStyle = {
   justifyContent: "center",
 }
 
+const SUBSCRIPTION: ViewStyle = {
+  backgroundColor: colors.white,
+  height: Layout.window.height / 3.1,
+  width: Layout.window.width / 2,
+  marginLeft: 20,
+  marginTop: 10,
+  borderRadius: 8,
+  
+  shadowOpacity: 0.2,
+  shadowRadius: 3,
+  shadowOffset: {
+    height: 1,
+    width: 1
+  },
+  
+  elevation: 2,
+  alignItems: "center",
+  justifyContent: "center",
+}
+
 const HEADER_TEXT: TextStyle = {
   fontSize: 22,
   color: colors.black,
@@ -163,6 +174,11 @@ const HEADER_TEXT: TextStyle = {
   lineHeight: 40,
   textAlign: 'center',
   width: Layout.window.width / 1.9,
+}
+
+const PLAN_TEXT: TextStyle = {
+  ...HEADER_TEXT,
+  fontSize: 13,
 }
 
 const LABEL_TEXT: TextStyle = {
@@ -276,9 +292,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   getPermissionAsync = async () => {
     const { notify, openSettings } = this.props
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    console.tron.log('Called', status)
     if (status !== 'granted') {
-      console.tron.log(status)
       notify('Sorry, we need camera roll permissions to make this work!', 'danger')
       this.setState({
         imagePermissions: false
@@ -303,7 +317,6 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   
   
   submit = (value) => {
-    console.tron.log(value.redeemKey)
     this.props.redeemCoinsAsync(value.redeemKey)
   }
   
@@ -360,7 +373,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       navigation, User, authRedeemKey, isLoading, openSettings, isUploading
     } = this.props
     const {
-      fullName, Tourists, pictureURL, Transactions, email
+      fullName, Tourists, pictureURL, Transactions, email, Subscriptions, Savings
     } = User
   
     const {
@@ -378,6 +391,11 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     const requests = Transactions[0] !== undefined &&  Transactions.filter((transaction) => {
       const { reference } = transaction
       return reference === "request"
+    })
+  
+    const activeSub = Subscriptions.length > 0 &&  Subscriptions.filter((sub) => {
+      const { status } = sub
+      return status === "active"
     })
     
     return (
@@ -593,15 +611,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                     }}
                   >
                     <TouchableOpacity
-                      onPress={() => {
-                        Linking.canOpenURL('https://paystack.com/pay/t4gm7oivkj').then(supported => {
-                          if (supported) {
-                            Linking.openURL('https://paystack.com/pay/t4gm7oivkj');
-                          } else {
-                            console.tron.log("Don't know how to open URI: " + 'https://paystack.com/pay/t4gm7oivkj');
-                          }
-                        });
-                      }}
+                      onPress={() => navigation.navigate('createPlan')}
                       
                     >
                       <Text
@@ -1155,6 +1165,304 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       
       
                 </ScrollView>
+              )
+            }
+  
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+                marginLeft: 20,
+                marginTop: 20,
+                width: Layout.window.width / 1.15
+              }}
+              onPress={() => navigation.navigate('subscriptions')}
+            >
+              <Text
+      
+                style={discoverTextStyle}
+              >
+                {translate(`subscription.headerText`)}
+              </Text>
+    
+              <Text
+      
+                style={infoTextStyle}
+              >
+                {translate(`home.more`)}
+              </Text>
+            </TouchableOpacity>
+  
+            {
+              activeSub.length > 0 && (
+                <ScrollView
+                  scrollEnabled
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  pinchGestureEnabled
+                  contentContainerStyle={{
+                    justifyContent: "space-between",
+                    height: 233,
+                  }}
+                  style={{
+                    marginTop: '5%',
+                  }}
+                >
+        
+        
+                  {
+                    activeSub.reverse().map((subscription) => {
+                      const {
+                        planName, planType, planMode, invoiceLimit, status, createdAt, amount
+                      } = subscription
+                     
+                      const today= moment()
+                      const createdDate = moment(createdAt)
+                      const monthDifference = createdDate.diff(today, 'months')
+                      const monthLeft = invoiceLimit - monthDifference
+    
+                      return (
+                        <TouchableOpacity
+                          style={SUBSCRIPTION}
+                          onPress={() => navigation.navigate('viewPlans')}
+                        >
+                          <Text
+                            style={PLAN_TEXT}
+                          >
+                            {planName}
+  
+                          </Text>
+  
+                          <View
+                            style={{
+                              marginTop: 5,
+                              width: Layout.window.width / 1.5,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Type:
+                            </Text>
+  
+  
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {planType}
+                            </Text>
+                            
+                          </View>
+                          
+                          <View
+                            style={{
+                              marginTop: 10,
+                              width: Layout.window.width / 1.5,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Amount:
+                            </Text>
+  
+  
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {amount}
+                            </Text>
+                            
+                          </View>
+  
+                          <View
+                            style={{
+                              marginTop: 10,
+                              width: Layout.window.width / 1.5,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Mode:
+                            </Text>
+    
+    
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {planMode}
+                            </Text>
+  
+                          </View>
+                          
+                          <View
+                            style={{
+                              marginTop: 10,
+                              width: Layout.window.width / 1.2,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Interval:
+                            </Text>
+    
+    
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {invoiceLimit}
+                            </Text>
+  
+                          </View>
+                          
+                          <View
+                            style={{
+                              marginTop: 10,
+                              width: Layout.window.width / 1.4,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Status:
+                            </Text>
+    
+    
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {status}
+                            </Text>
+  
+                          </View>
+  
+                          <View
+                            style={{
+                              marginTop: 10,
+                              width: Layout.window.width / 1.5,
+                              flexDirection: 'row',
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                              }}
+                            >
+                              Payment Left:
+                            </Text>
+    
+    
+                            <Text
+                              style={{
+                                color: colors.blue1,
+                                fontFamily: fonts.latoRegular,
+                                textAlign: 'center',
+                                textTransform: "capitalize"
+                              }}
+                            >
+                              {monthLeft}
+                            </Text>
+  
+                          </View>
+                          
+              
+                        </TouchableOpacity>
+                      )
+                    })
+                  }
+      
+      
+      
+                </ScrollView>
+              )
+            }
+  
+            {
+              Savings[0] !== undefined && (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: 'space-between',
+                    marginLeft: 20,
+                    marginTop: 20,
+                    width: Layout.window.width / 1.15
+                  }}
+                  // onPress={() => navigation.navigate('requests')}
+                >
+                  <Text
+          
+                    style={discoverTextStyle}
+                  >
+                    {translate(`savings.headerText`)}
+                  </Text>
+        
+                  <Text
+          
+                    style={infoTextStyle}
+                  >
+                    {translate(`home.more`)}
+                  </Text>
+                </TouchableOpacity>
               )
             }
     

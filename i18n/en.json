@@ -62,7 +62,7 @@
     "more": "More",
     "go": "Go >",
     "quote": "Search",
-    "findTour": "Find my freedom.",
+    "findTour": "Find your freedom.",
     "findTourMore": "We can help you find the perfect vacation to match your budget.",
     "recommendedTours": "Discover",
     "recommendedMore": "With us, you get the best local and international tourism deals and packages",
@@ -101,7 +101,7 @@
     "payment": "< Payment"
   },
   "useCoins": {
-    "header": "Pay with coins.",
+    "header": "Available coins.",
     "useCoins": "Use coins",
     "price": "Price",
     "discount": "Discount",
@@ -138,5 +138,42 @@
     "subject": "Subject: How can I save with Ravr...",
     "buttonText": "Send",
     "savings": "Message: Click on save with Ravr text on your profile"
+  },
+  "saveWithCoins": {
+    "amountToCharge": "Amount to charge",
+    "viewTour": "< View Tour",
+    "receipt": "Invoice",
+    "originalPrice": "Original price",
+    "price": "Price",
+    "slot": "Slot(s)",
+    "plan": "Plan",
+    "monthly": "Monthly",
+    "numberOfMonths": "Number of months",
+    "monthlyFee": "Monthly Fee",
+    "confirm": "Confirm"
+  },
+  "planPayment": {
+    "start": "submit"
+  },
+  "subscription": {
+    "headerText": "My Subscriptions",
+    "createPlan": "Create Plan",
+    "viewPlan": "View Plans"
+  },
+  "savings": {
+    "headerText": "My Savings"
+  },
+  "createPlan": {
+    "amountError": "Minimum amount to save is ₦ 1000",
+    "minTimesError": "Minimum number of month is 1",
+    "maxTimesError": "Maximum number of month is 12",
+    "amountPlaceholder": "Enter amount to save monthly",
+    "timesPlaceholder": "How many months?",
+    "start": "START PLAN"
+  },
+  "viewPlan": {
+    "headerText": "My Plans",
+    "disable": "disable",
+    "enable": "enable",
   }
 }

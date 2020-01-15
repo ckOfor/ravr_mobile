@@ -39,6 +39,34 @@ const processResponse = async (response): Promise<any> => {
 }
 
 
+const createPlan = async (data: Types.IPlan): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/subscription/create", {
+    ...data
+  })
+  return processResponse(response)
+}
+
+const disablePlan = async (code: string): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/subscription/cancel", {
+    code
+  })
+  return processResponse(response)
+}
+
+const enablePlan = async (code: string): Promise<
+  Types.logInUserResponse
+  > => {
+  const response = await api.post("/users/subscription/enable", {
+    code
+  })
+  return processResponse(response)
+}
+
+
 const updatePicture = async (pictureURL: string, email: string, password: string): Promise<
   Types.logInUserResponse
   > => {
@@ -588,4 +616,7 @@ export {
   addReferralCode,
   createRequest,
   redeemCoins,
+  createPlan,
+  disablePlan,
+  enablePlan
 }

@@ -4,7 +4,7 @@ import {
   getDiscoverTours as apiGetDiscoverTours,
   getPopularTours as apiGetPopularTours,
   searchTextTours as apiSearchTextTours,
-  searchAmountTours as apiSearchAmountTours, logInUserPayload, logInWithEmail as apiLogInWithEmail,
+  searchAmountTours as apiSearchAmountTours,
 } from "../../services/api"
 
 import {
@@ -19,11 +19,11 @@ import {
   SET_DISCOVER_TOURS, SET_SEARCH_KEY, SET_SEARCH_TOURS,
   SET_WEEKEND_TOURS
 } from "./";
-import {logInUserAsync, notify, setUser, socialAuthenticationFailure} from "../auth";
-import {ThunkAction} from "redux-thunk";
-import {ApplicationState} from "../index";
-import {Action} from "redux";
-import {NavigationActions} from "react-navigation";
+import { notify } from "../auth";
+import { ThunkAction } from "redux-thunk";
+import { ApplicationState } from "../index";
+import { Action } from "redux";
+import { NavigationActions } from "react-navigation";
 
 export const getWeekendTours = () => ({
   type: GET_WEEKEND_TOURS,

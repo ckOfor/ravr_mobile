@@ -6,6 +6,17 @@ export type createTransactionPayload = {
   slots: number
 }
 
+export type IPlan = {
+  id: number
+  fullName: string,
+  email: string,
+  amountInKobo: number,
+  invoiceLimit: string,
+  planType: string,
+  planMode: string,
+  planName: string
+}
+
 export type createRequestPayload = {
   id: number
   code: string
