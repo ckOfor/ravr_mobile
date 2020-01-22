@@ -192,6 +192,9 @@ class PlanPayment extends React.Component<NavigationScreenProps & Props> {
     const {
       navigation, isLoading
     } = this.props
+  
+    const page = navigation.getParam('page')
+    
     return (
       <KeyboardAvoidingView
         enabled={true}
@@ -206,7 +209,7 @@ class PlanPayment extends React.Component<NavigationScreenProps & Props> {
           <ScrollView>
             
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate(`${page}`)}
             >
               <Text
                 

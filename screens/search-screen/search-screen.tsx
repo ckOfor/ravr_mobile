@@ -166,6 +166,8 @@ class Search extends React.Component<NavigationScreenProps & Props> {
   
   handleDatePicked = (date: any) => {
     console.tron.log("A date has been picked: ",moment(`${date}`).format('YYYY-MM-DD'));
+  
+    this.props.searchTextToursAsync('', date)
     
     this.setState({ chosenDate: moment(`${date}`).format('YYYY-MM-DD') })
     
@@ -193,22 +195,13 @@ class Search extends React.Component<NavigationScreenProps & Props> {
         <ScrollView
           showsVerticalScrollIndicator={false}
         >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-          >
-            <Text
-      
-              style={appNameTextStyle}
-            >
-              {translate(`viewTour.welcomeText`)}
-            </Text>
-          </TouchableOpacity>
   
           <View
             style={{
               flexDirection: 'row',
               justifyContent: "space-between",
-              width: Layout.window.width / 1.1
+              width: Layout.window.width / 1.1,
+              marginTop: Layout.window.height / 15,
             }}
           >
             

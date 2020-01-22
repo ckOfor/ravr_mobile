@@ -242,6 +242,14 @@ const infoTextStyle: TextStyle = {
   marginTop: 10,
 }
 
+const moreTextStyle: TextStyle = {
+  color: colors.white,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'center',
+  width: Layout.window.width / 3,
+  textTransform: 'uppercase'
+}
+
 class Profile extends React.Component<NavigationScreenProps & Props> {
   
   state={
@@ -391,6 +399,11 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
     const requests = Transactions[0] !== undefined &&  Transactions.filter((transaction) => {
       const { reference } = transaction
       return reference === "request"
+    })
+  
+    const completeTransactions = Transactions[0] !== undefined &&  Transactions.filter((transaction) => {
+      const { paymentStatus } = transaction
+      return paymentStatus === "complete"
     })
   
     const activeSub = Subscriptions.length > 0 &&  Subscriptions.filter((sub) => {
@@ -628,14 +641,39 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                         {translate(`profile.saveMore`)}
                       </Text>
                     </TouchableOpacity>
-                    
                   </View>
-      
-      
-      
                 </View>
               </View>
             }
+  
+            <View
+              style={{
+                width: Layout.window.width / 5,
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                margin: 20,
+                // marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => navigation.navigate('createPlan')}
+                style={{
+                  borderColor: colors.purple,
+                  borderWidth: 1,
+                  height: Layout.window.height / 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 8,
+                  backgroundColor: colors.purple
+                }}
+              >
+                <Text
+                  style={moreTextStyle}
+                >
+                  {translate(`profile.startNow`)}
+                </Text>
+              </TouchableOpacity>
+            </View>
             
             {
               Transactions[0] !== undefined && (
@@ -667,7 +705,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
             }
             
             {
-              Transactions[0] !== undefined && (
+              completeTransactions[0] !== undefined && (
                 <ScrollView
                   // onScroll={this.handleScroll}
                   scrollEnabled
@@ -695,7 +733,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                   
                   
                   {
-                    Transactions.reverse().map((transaction) => {
+                    completeTransactions.reverse().map((transaction) => {
                       const { tripName, slots, userPays, createdAt, reference, contactNumber, tripImage } = transaction
                       return (
                         <TouchableOpacity
@@ -1434,35 +1472,6 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
       
       
                 </ScrollView>
-              )
-            }
-  
-            {
-              Savings[0] !== undefined && (
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: 'space-between',
-                    marginLeft: 20,
-                    marginTop: 20,
-                    width: Layout.window.width / 1.15
-                  }}
-                  // onPress={() => navigation.navigate('requests')}
-                >
-                  <Text
-          
-                    style={discoverTextStyle}
-                  >
-                    {translate(`savings.headerText`)}
-                  </Text>
-        
-                  <Text
-          
-                    style={infoTextStyle}
-                  >
-                    {translate(`home.more`)}
-                  </Text>
-                </TouchableOpacity>
               )
             }
     

@@ -62,7 +62,7 @@
     "more": "More",
     "go": "Go >",
     "quote": "Search",
-    "findTour": "Find your freedom.",
+    "findTour": "Find your freedom",
     "findTourMore": "We can help you find the perfect vacation to match your budget.",
     "recommendedTours": "Discover",
     "recommendedMore": "With us, you get the best local and international tourism deals and packages",
@@ -72,8 +72,8 @@
     "join": "Pay now",
     "save": "Save for this trip",
     "saveMore": "You don’t want to lose sleep over calculating an exact budget — plan one with some wiggle room. It’s all about staying flexible.",
-    "tabOne": "Content",
-    "tabTwo": "itinerary",
+    "tabOne": "Itinerary",
+    "tabTwo": "Details",
     "tabThree": "Savings",
     "experience": "Check out offbeat things to do and get an authentic experience.",
     "welcomeText": "< Welcome to Ravr.",
@@ -81,7 +81,8 @@
     "confirm": "Confirm",
     "monthSavings": "Maximum months to save exceeded",
     "number": "Invalid Input",
-    "useCoins": "Use Coins"
+    "useCoins": "Use Coins",
+    "yes": "Yes"
   },
   "weekends": {
     "header": "Weekends.",
@@ -116,31 +117,32 @@
     "trips": "Trips",
     "sent": "Sent",
     "received": "Received",
-    "save": "Save with  Ravr.",
+    "save": "Save with  Ravr",
     "saveMore": "Just remember, whatever your around-the-world travel budget is, it's best to have a plan in place! Create a savings plan.",
-    "myTrips": "My Trips",
+    "myTrips": "My trips",
     "mySavings": "My savings",
     "mySavingsHeader": "My Savings",
     "myTripsHeader": "My Trips",
     "myProfileHeader": "Personal Info",
     "editHeader": "Edit",
     "tripHeader": "Have a nice trip from us at Ravr.",
-    "redeemHeader": "Redeem coins.",
+    "redeemHeader": "Redeem coins",
     "code": "Enter code",
     "redeem": "Redeem",
     "logout": "Logout",
     "moreText": "Your phone number is {{phone}}, please send us a mail using your registered email to edit your profile",
-    "myRequestsHeader": "My Requests",
-    "requestHeader": "Request are approved under 24 hours."
+    "myRequestsHeader": "My requests",
+    "requestHeader": "Request are approved under 24 hours.",
+    "startNow": "start now"
   },
   "contactUs": {
-    "header": "Hello Ravr.",
+    "header": "Hello Ravr",
     "subject": "Subject: How can I save with Ravr...",
     "buttonText": "Send",
     "savings": "Message: Click on save with Ravr text on your profile"
   },
   "saveWithCoins": {
-    "amountToCharge": "Amount to charge",
+    "amountToCharge": "Monthly charge",
     "viewTour": "< View Tour",
     "receipt": "Invoice",
     "originalPrice": "Original price",
@@ -156,7 +158,7 @@
     "start": "submit"
   },
   "subscription": {
-    "headerText": "My Subscriptions",
+    "headerText": "My subscriptions",
     "createPlan": "Create Plan",
     "viewPlan": "View Plans"
   },
@@ -169,7 +171,8 @@
     "maxTimesError": "Maximum number of month is 12",
     "amountPlaceholder": "Enter amount to save monthly",
     "timesPlaceholder": "How many months?",
-    "start": "START PLAN"
+    "start": "START PLAN",
+    "profile": "< Profile"
   },
   "viewPlan": {
     "headerText": "My Plans",

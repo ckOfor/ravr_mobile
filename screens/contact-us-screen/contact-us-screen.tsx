@@ -70,6 +70,7 @@ const appNameTextStyle: TextStyle = {
   lineHeight: 40,
   textAlign: 'left',
   width: Layout.window.width / 1.5,
+  fontSize: 20
 }
 
 const CONTINUE_BUTTON: ViewStyle = {
@@ -166,7 +167,6 @@ class ContactUs extends React.Component<NavigationScreenProps & Props> {
             <Item
               rounded
               style={{
-                marginTop: 20,
                 backgroundColor: '#FFF',
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },

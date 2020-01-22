@@ -36,33 +36,10 @@ const moreTextStyle: TextStyle = {
   width: Layout.window.width / 3,
 }
 
-
-
 export class WeekendScreen extends React.Component<WeekendScreenProps> {
   state = {
     // isPickerCollapsed: !this.props.visible
   }
-  
-  // componentDidMount() {
-  //   const { scrollTo } = this.state
-  //   this.interval = setInterval(() =>
-  //       this.setState((state, props) => ({
-  //         scrollTo: state.scrollTo + 100
-  //       }))
-  //     , 100);
-  // }
-  //
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // }
-  //
-  // scrollView: any
-  //
-  // handleScroll = (event: Object) => {
-  //   const { scrollTo } = this.state
-  //   console.tron.log(event.nativeEvent.contentOffset.x, "YAH");
-  //   // this.scrollView.scrollTo({ x: scrollTo, animated: true });
-  // }
   
   render() {
     const {
@@ -79,7 +56,6 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
             : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
         }
         <ScrollView
-          // onScroll={this.handleScroll}
           scrollEnabled
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -89,14 +65,6 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
           pinchGestureEnabled
           contentContainerStyle={{
             justifyContent: "space-between"
-          }}
-          // ref={forwardedRef}
-          onContentSizeChange={(contentWidth, contentHeight)=>{
-            // this.setState((state) => ({
-            //   scrollTo: state.scrollTo + 100
-            // }), () => {
-            //   this.scrollView.scrollTo({ x: scrollTo, animated: true });
-            // } )
           }}
         >
           {

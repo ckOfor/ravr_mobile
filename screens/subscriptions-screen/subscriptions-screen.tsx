@@ -69,7 +69,8 @@ const SUBSCRIPTION: ViewStyle = {
   width: Layout.window.width / 1.2,
   marginLeft: 30,
   marginTop: 10,
-  borderRadius: 12,
+  marginBottom: 10,
+  borderRadius: 8,
   
   shadowOpacity: 0.2,
   shadowRadius: 3,
@@ -78,7 +79,7 @@ const SUBSCRIPTION: ViewStyle = {
     width: 1
   },
   
-  elevation: 2,
+  elevation: 4,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "center",

@@ -102,7 +102,7 @@ const SOCIAL_ICONS: ImageStyle = {
 }
 
 class Trips extends React.Component<NavigationScreenProps & Props> {
-  
+
   state={
     isVisible: false,
     name: '',
@@ -113,15 +113,14 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
     call: '',
   }
 
-  
   componentDidMount(): void {
     this.updateUser()
   }
-  
+
   updateUser = () => {
     this.props.updateUserAsync()
   }
-  
+
   handlePhoneCall = (phoneNumber) => {
     const args = {
       number: phoneNumber, // String value with the number to call
@@ -148,6 +147,13 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
     
     console.tron.log(tours, "skd IWIQIWIQWUQ")
     console.tron.log(tours)
+  
+    const completeTransactions = tours[0] !== undefined &&  tours.filter((transaction) => {
+      const { paymentStatus } = transaction
+      return paymentStatus === "complete"
+    })
+    
+    console.tron.log(completeTransactions, "completeTransactions")
     
     return (
       <View
@@ -220,9 +226,9 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
             showsHorizontalScrollIndicator={false}
           >
             {
-              tours[0].id !== null && (
+              completeTransactions[0].id !== null && (
                 <FlatList
-                  data={tours}
+                  data={completeTransactions}
                   numColumns={1}
                   style={{
                     marginRight: 15,
@@ -231,11 +237,11 @@ class Trips extends React.Component<NavigationScreenProps & Props> {
                   contentContainerStyle={{
                     paddingBottom: 120
                   }}
-                  renderItem={(tours) => {
-                    const { index } = tours
+                  renderItem={(completeTransactions) => {
+                    const { index } = completeTransactions
                     const {
                       tripImage, tripName, userPays, tripLocation, tripDate, createdAt, slots, reference, contactNumber
-                    } = tours.item
+                    } = completeTransactions.item
   
                     return (
                       <TouchableOpacity

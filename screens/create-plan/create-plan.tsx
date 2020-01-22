@@ -110,7 +110,8 @@ class CreatePlan extends React.Component<NavigationScreenProps & Props> {
       amount: newAmount,
       months: times,
       planName: `Ravr Savings for ${User.fullName}`,
-      type: 'personal'
+      type: 'personal',
+      page: 'createPlan'
     }
 
     savePlanAsync(newObject)
@@ -156,7 +157,7 @@ class CreatePlan extends React.Component<NavigationScreenProps & Props> {
               
               style={HEADER_TEXT}
             >
-              {translate(`saveWithCoins.viewTour`)}
+              {translate(`createPlan.profile`)}
             </Text>
           </TouchableOpacity>
   

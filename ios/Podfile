@@ -44,6 +44,9 @@ target 'ravr' do
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
   pod 'react-native-paystack', :path => '../node_modules/react-native-paystack'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
   # Automatically detect installed unimodules
   use_unimodules!

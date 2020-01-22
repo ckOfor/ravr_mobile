@@ -128,12 +128,11 @@ const SHADOW: ViewStyle = {
 
 const HEADER_TEXT: TextStyle = {
   fontSize: 22,
-  marginLeft: 40,
   marginBottom: 10,
   color: colors.black,
   fontFamily: fonts.latoRegular,
   lineHeight: 40,
-  // textAlign: 'center',
+  textAlign: 'center',
   width: Layout.window.width / 1.9,
 }
 
@@ -202,6 +201,14 @@ const SAVE_BUTTON_TEXT: TextStyle = {
   fontSize: 12,
   fontFamily: fonts.gibsonRegular,
   color: colors.white,
+  textTransform: 'uppercase'
+}
+
+const moreTextStyle: TextStyle = {
+  color: colors.white,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'center',
+  width: Layout.window.width / 3,
   textTransform: 'uppercase'
 }
 
@@ -440,24 +447,6 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                       {translate(`viewTour.save`)}
                     </Text>
                   </TouchableOpacity>
-    
-                  <TouchableOpacity
-                    style={{
-                      marginTop: 15,
-                    }}
-                    onPress={() => {
-                      this.setState({ initialPage: 2, activeTab: 2 })
-                      this.scrollView.scrollToEnd({ animated: true });
-                    }}
-                  >
-                    <Text
-        
-                      style={discoverMoreTextStyle}
-                    >
-                      {translate(`home.more`)}
-                    </Text>
-    
-                  </TouchableOpacity>
                 </View>
   
                 <Text
@@ -466,13 +455,43 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                 >
                   {translate(`viewTour.saveMore`)}
                 </Text>
-  
-                
                 
               </View>
             </View>
           )
         }
+  
+        <View
+          style={{
+            width: Layout.window.width / 5,
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            margin: 30,
+            // marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({ initialPage: 2, activeTab: 2 })
+              this.scrollView.scrollToEnd({ animated: true });
+            }}
+            style={{
+              borderColor: colors.purple,
+              borderWidth: 1,
+              height: Layout.window.height / 20,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 8,
+              backgroundColor: colors.purple
+            }}
+          >
+            <Text
+              style={moreTextStyle}
+            >
+              {translate(`viewTour.yes`)}
+            </Text>
+          </TouchableOpacity>
+        </View>
   
         <ScrollView
           scrollEnabled
@@ -580,29 +599,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
             }}
             heading={translate("viewTour.tabTwo")}
           >
-            <Text
-              numberOfLines={100}
-              style={TRIP_DETAILS}
-            >
-              Trip Price: ₦ {selectedTour.tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            </Text>
-  
-            <Text
-              numberOfLines={100}
-              style={TRIP_DETAILS}
-            >
-              Trip Discount: {selectedTour.tripDiscount * 100}% off
-            </Text>
-  
-            <Text
-              numberOfLines={100}
-              style={[TRIP_DETAILS, {
-                color: colors.purple,
-                fontWeight: "bold"
-              }]}
-            >
-              Price: ₦ {selectedTour.userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            </Text>
+            
   
             <Text
               numberOfLines={100}
@@ -741,7 +738,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                         marginBottom: 10
                       }}
                     >
-                      Amount to charge:
+                      Monthly charge:
                       
                       {
                         values.slots > 0 && values.months > 0 && (

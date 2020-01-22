@@ -126,7 +126,8 @@ class SaveWithCoins extends React.Component<NavigationScreenProps & Props> {
     newObject = {
       amount,
       months,
-      planName: `Savings for ${selectedTour.tripName}`
+      planName: `Savings for ${selectedTour.tripName}`,
+      page: 'viewTour'
     }
     
     savePlanAsync(newObject)

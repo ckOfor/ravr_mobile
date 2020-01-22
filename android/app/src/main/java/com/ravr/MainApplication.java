@@ -1,6 +1,7 @@
 package com.ravr;
 
 import android.app.Application;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.arttitude360.reactnative.rnpaystack.RNPaystackPackage;
 import com.facebook.react.ReactApplication;
@@ -38,13 +39,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SplashScreenReactPackage(),
+          new SplashScreenReactPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
           new RNScreensPackage(),
           new ModuleRegistryAdapter(mModuleRegistryProvider),
           new AndroidOpenSettingsPackage(),
-          new RNPaystackPackage()
+          new RNPaystackPackage(),
+          new FBSDKPackage()
 
       );
     }

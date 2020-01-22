@@ -8,6 +8,7 @@ import {
 
 // third-party libraries
 import { NavigationScreenProps } from "react-navigation"
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from "react-native-fbsdk";
 
 // redux
 import { connect } from "react-redux"
@@ -15,7 +16,7 @@ import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
 import {
   googleAuthenticationSignInAsync,
-  facebookAuthenticationSignInAsync
+  facebookAuthenticationSignInAsync, socialAuthentication, socialAuthenticationFailure
 } from "../../redux/auth"
 
 // styles
@@ -30,8 +31,10 @@ import {corePlugins} from "reactotron-core-client";
 import {translate} from "../../i18n";
 
 interface DispatchProps {
-  facebookAuthenticationSignInAsync: () => void
+  facebookAuthenticationSignInAsync: (user: object) => void
   googleAuthenticationSignInAsync: () => void
+  socialAuthentication: () => void
+  socialAuthenticationFailure: () => void
 }
 
 interface StateProps {
@@ -137,6 +140,106 @@ const termsAndConditions: TextStyle = {
 
 class Landing extends React.Component<NavigationScreenProps & Props> {
   
+  /**
+   * onClickFacebookbutton
+   *
+   */
+  onClickFacebookbutton = () => {
+    const { socialAuthentication, socialAuthenticationFailure} = this.props
+    socialAuthentication()
+    LoginManager.logInWithPermissions(["public_profile", 'email']).then(
+      (result) => {
+        if (result.isCancelled) {
+          console.log("Login cancelled");
+          socialAuthenticationFailure()
+        } else {
+          console.tron.log(
+            "Login success with permissions: " +
+            result.grantedPermissions.toString(), result
+          );
+  
+          AccessToken.getCurrentAccessToken()
+            .then((data) => {
+              this.getFacebookUser(data.accessToken)
+              console.tron.log(data.accessToken)
+            })
+            .catch((error) => {
+              socialAuthenticationFailure()
+              console.tron.log(error)
+            })
+        }
+      },
+      (error) =>  {
+        console.tron.log("Login fail with error: " + error);
+        socialAuthenticationFailure()
+      }
+    );
+  }
+  
+  /**
+   * getFacebookUser
+   *
+   * Get facebook user information
+   * @param {string} token - user's access token
+   * @return {void}
+   */
+  getFacebookUser = (token: string) => {
+    console.tron.log("Called getFacebookUser", token)
+    const infoRequest = new GraphRequest(
+      '/me',
+      {
+        accessToken: token,
+        parameters: {
+          fields: {
+            string: 'name,first_name,middle_name,last_name,picture,email'
+          }
+        }
+      },
+      this._responseInfoCallback
+    );
+
+    new GraphRequestManager().addRequest(infoRequest).start()
+  }
+  
+  /**
+   * _responseInfoCallback
+   *
+   * GraphRequest call back handler
+   * @param {object} error - error containing error message
+   * @param {object} result - object containg user information
+   * @private
+   * @return {void}
+   */
+  _responseInfoCallback = (error?:Object, result?: Object) => {
+    console.tron.log("_responseInfoCallback")
+    if (error) {
+      LoginManager.logOut()
+      console.tron.log(error)
+      this.props.socialAuthenticationFailure
+    } else {
+      this.facebookLoginSucces(result);
+    }
+  }
+  
+  /**
+   * facebookLoginSucces
+   *
+   * Sets the state with the user's details
+   * @param {object} userDetails - User's information
+   * @return {void}
+   */
+  facebookLoginSucces = (userDetails) => {
+    console.tron.log(userDetails, 'UUUUUESSSER')
+    this.props.facebookAuthenticationSignInAsync(userDetails)
+    // this.setState({
+    //   firstName: userDetails.first_name,
+    //   lastName: userDetails.last_name,
+    //   socialEmail: userDetails.email,
+    //   imgURL: userDetails.picture.data['url'],
+    //   userAuthID: userDetails.id,
+    // }, () => this.facebookSignIn());
+  };
+  
   public render(): React.ReactNode {
     const {
       navigation, facebookAuthenticationSignInAsync, isLoading, googleAuthenticationSignInAsync
@@ -199,7 +302,7 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
           >
             <Button
               style={IMAGE_BUTTON}
-              onPress={() => facebookAuthenticationSignInAsync()}
+              onPress={() => this.onClickFacebookbutton()}
               disabled={isLoading}
             >
               <Image
@@ -260,16 +363,16 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
           </Text>
           
         </Text>
-  
-        
       </ImageBackground>
     )
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  facebookAuthenticationSignInAsync: () => dispatch(facebookAuthenticationSignInAsync()),
+  facebookAuthenticationSignInAsync: (user: object) => dispatch(facebookAuthenticationSignInAsync(user)),
   googleAuthenticationSignInAsync: () => dispatch(googleAuthenticationSignInAsync()),
+  socialAuthentication: () => dispatch(socialAuthentication()),
+  socialAuthenticationFailure: () => dispatch(socialAuthenticationFailure())
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;

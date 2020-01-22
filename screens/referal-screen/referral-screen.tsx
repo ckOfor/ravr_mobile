@@ -133,132 +133,119 @@ class Referral extends React.Component<NavigationScreenProps & Props> {
       navigation, isLoading
     } = this.props
     return (
-      <KeyboardAvoidingView
-        enabled={true}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <ImageBackground
+        source={images.referralBk}
+        style={backgroundImageStyle}
+        resizeMethod={'scale'}
+        resizeMode='cover'
       >
-        <ScrollView
-          contentContainerStyle={{
-            height: '100%'
+    
+        <View
+          style={{
+            height: '10%',
+            marginTop: Layout.window.height / 20,
           }}
         >
-          <ImageBackground
-            source={images.referralBk}
-            style={backgroundImageStyle}
-            resizeMethod={'scale'}
-            resizeMode='cover'
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
           >
-            
-            <View
-              style={{
-                height: '10%',
-                marginTop: Layout.window.height / 20,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-              >
-                <Image
-                  style={APP_LOGO}
-                  source={images.appLogo}
-                  resizeMethod={'auto'}
-                  resizeMode='cover'
-                />
-              </TouchableOpacity>
-            </View>
-            
-            <View
-              style={{
-                height: '15%',
-              }}
-            >
-              <Text
-                
-                style={signInTextStyle}
-              >
-                {translate(`referralScreen.welcomeText`)}
-              </Text>
-            </View>
-            
-            <Formik
-              initialValues={{
-                referralCode: "",
-              }}
-              onSubmit={this.submit}
-              enableReinitialize
-            >
-              {({
-                  values,
-                  handleChange,
-                  handleBlur,
-                  errors,
-                  isValid,
-                  handleSubmit
-                }: FormikProps<MyFormValues>) => (
-                <View>
-                  
-                  <View
-                    style={FIELD}
-                  >
-                    <TextField
-                      name="referralCode"
-                      keyboardType="email-address"
-                      placeholderTx="referralScreen.code"
-                      value={values.referralCode}
-                      onChangeText={handleChange("referralCode")}
-                      onBlur={handleBlur("referralCode")}
-                      autoCapitalize="none"
-                      returnKeyType="next"
-                      isInvalid={!isValid}
-                      fieldError={errors.referralCode}
-                      onSubmitEditing={() => handleSubmit()}
-                      forwardedRef={i => {
-                        this.referralCodeInput = i
-                      }}
-                    />
-                    
-                    <Button
-                      style={CONTINUE_BUTTON}
-                      textStyle={CONTINUE_BUTTON_TEXT}
-                      disabled={!isValid || isLoading}
-                      onPress={() => handleSubmit()}
-                    >
-                      {
-                        isLoading
-                          ? <ActivityIndicator size="small" color={colors.palette.white} />
-                          : <Text style={CONTINUE_BUTTON_TEXT}>{translate(`referralScreen.send`)}</Text>
-                      }
-                    </Button>
-                  </View>
-                </View>
-              )}
-            </Formik>
-            
-            <Text
-              
-              style={bottomTextStyle}
-            >
-              {translate("referralScreen.question")}
-            </Text>
-            
-            <TouchableOpacity
-              onPress={() => navigation.navigate('home')}
-            >
-              
-              <Text
-                
-                style={termsAndConditions}
-              >
-                {translate(`referralScreen.answer`)}
-              
-              </Text>
-            </TouchableOpacity>
+            <Image
+              style={APP_LOGO}
+              source={images.appLogo}
+              resizeMethod={'auto'}
+              resizeMode='cover'
+            />
+          </TouchableOpacity>
+        </View>
+    
+        <View
+          style={{
+            height: '15%',
+          }}
+        >
+          <Text
+        
+            style={signInTextStyle}
+          >
+            {translate(`referralScreen.welcomeText`)}
+          </Text>
+        </View>
+    
+        <Formik
+          initialValues={{
+            referralCode: "",
+          }}
+          onSubmit={this.submit}
+          enableReinitialize
+        >
+          {({
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              isValid,
+              handleSubmit
+            }: FormikProps<MyFormValues>) => (
+            <View>
           
-          </ImageBackground>
-        </ScrollView>
+              <View
+                style={FIELD}
+              >
+                <TextField
+                  name="referralCode"
+                  keyboardType="email-address"
+                  placeholderTx="referralScreen.code"
+                  value={values.referralCode}
+                  onChangeText={handleChange("referralCode")}
+                  onBlur={handleBlur("referralCode")}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  isInvalid={!isValid}
+                  fieldError={errors.referralCode}
+                  onSubmitEditing={() => handleSubmit()}
+                  forwardedRef={i => {
+                    this.referralCodeInput = i
+                  }}
+                />
+            
+                <Button
+                  style={CONTINUE_BUTTON}
+                  textStyle={CONTINUE_BUTTON_TEXT}
+                  disabled={!isValid || isLoading}
+                  onPress={() => handleSubmit()}
+                >
+                  {
+                    isLoading
+                      ? <ActivityIndicator size="small" color={colors.palette.white} />
+                      : <Text style={CONTINUE_BUTTON_TEXT}>{translate(`referralScreen.send`)}</Text>
+                  }
+                </Button>
+              </View>
+            </View>
+          )}
+        </Formik>
+    
+        <Text
       
-      </KeyboardAvoidingView>
+          style={bottomTextStyle}
+        >
+          {translate("referralScreen.question")}
+        </Text>
+    
+        <TouchableOpacity
+          onPress={() => navigation.navigate('home')}
+        >
+      
+          <Text
+        
+            style={termsAndConditions}
+          >
+            {translate(`referralScreen.answer`)}
+      
+          </Text>
+        </TouchableOpacity>
+  
+      </ImageBackground>
     )
   }
 }

@@ -5,12 +5,14 @@ import {
 import {colors, fonts, images} from "../../theme"
 import { ITours } from "../../services/api";
 import {Layout} from "../../constants";
+import {translate} from "../../i18n";
 
 interface WeekendScreenProps {
   forwardedRef?: (ref: any) => void
   discoverTours: [ITours]
   viewTours: () => void
   setSelectedTours: (tour: ITours) => void
+  navigation: any
 }
 
 const TRIP_IMAGE: ImageStyle = {
@@ -27,41 +29,26 @@ const discoverMoreTextStyle: TextStyle = {
   marginTop: 10,
 }
 
+const moreTextStyle: TextStyle = {
+  color: colors.white,
+  fontFamily: fonts.latoRegular,
+  textAlign: 'center',
+  width: Layout.window.width / 3,
+}
 
 export class DiscoverScreen extends React.Component<WeekendScreenProps> {
-  state = {
-    // isPickerCollapsed: !this.props.visible
-  }
-  
-  // componentDidMount() {
-  //   const { scrollTo } = this.state
-  //   this.interval = setInterval(() =>
-  //       this.setState((state, props) => ({
-  //         scrollTo: state.scrollTo + 100
-  //       }))
-  //     , 100);
-  // }
-  //
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // }
-  //
-  // scrollView: any
-  //
-  // handleScroll = (event: Object) => {
-  //   const { scrollTo } = this.state
-  //   console.tron.log(event.nativeEvent.contentOffset.x, "YAH");
-  //   // this.scrollView.scrollTo({ x: scrollTo, animated: true });
-  // }
-  
   
   render() {
     const {
-      forwardedRef, discoverTours, viewTours, setSelectedTours
+      forwardedRef, discoverTours, viewTours, setSelectedTours, navigation
     } = this.props
     
     return (
-      <View>
+      <View
+        style={{
+          // marginBottom: 50
+        }}
+      >
         {
           Platform.OS === "ios"
             ? <StatusBar barStyle="dark-content" />
@@ -72,9 +59,6 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
             <FlatList
               data={discoverTours}
               numColumns={2}
-              style={{
-                marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
-              }}
               contentContainerStyle={{
                 paddingBottom: 0
               }}
@@ -120,6 +104,35 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
             />
           )
         }
+  
+        <View
+          style={{
+            width: Layout.window.width / 2,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 50,
+            marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.navigate('viewTours')}
+            style={{
+              borderColor: colors.purple,
+              borderWidth: 1,
+              height: Layout.window.height / 20,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 8,
+              backgroundColor: colors.purple
+            }}
+          >
+            <Text
+              style={moreTextStyle}
+            >
+              {translate(`home.more`)}
+            </Text>
+          </TouchableOpacity>
+        </View>
         
       </View>
     )

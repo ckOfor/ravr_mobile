@@ -1,23 +1,17 @@
 import { ThunkAction } from "redux-thunk"
-import {Alert, Platform} from "react-native"
 import { Action } from "redux"
 import * as GoogleSignIn from 'expo-google-sign-in';
-import * as Facebook from 'expo-facebook';
 import { ApplicationState } from ".."
-import firebase from 'react-native-firebase';
-import { AsyncStorage } from 'react-native';
 import Firebase from '../../config/FirebaseClient'
 import {NavigationActions} from "react-navigation";
 import {
   logInUserPayload, IUser,
   logInWithEmail as apiLogInWithEmail,
-  forgotPassword as apiForgotPassword,
   logInWithSocialAuth as apiLogInWithSocial,
   signUpWithSocialAuth as apiSignUpWithSocialAuth,
   addReferralCode as apiAddReferralCode,
 } from "../../services/api"
 import { Toast } from "native-base";
-// import {setUser, updateUserAsync} from "../user";
 import {
   SOCIAL_AUTHENTICATION,
   FACEBOOK_AUTH,
@@ -52,8 +46,6 @@ import {
 } from "./auth.types";
 import {Layout} from "../../constants";
 import {CLEAR_USER, setUserDetails, updateUserAsync} from "../user";
-
-
 
 export const setUser = (user: IUser) => ({ type: SET_USER, payload: user })
 
@@ -224,44 +216,20 @@ export const googleAuthenticationSignOutAsync = (): ThunkAction<
   }
 }
 
-export const facebookAuthenticationSignInAsync = (): ThunkAction<
+export const facebookAuthenticationSignInAsync = (user): ThunkAction<
   void,
   ApplicationState,
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  dispatch(socialAuthentication())
-  try {
-    const {
-      type,
-      token,
-      expires,
-    } = await Facebook.logInWithReadPermissionsAsync('863575403830061', {
-      permissions: ['public_profile'],
-    });
-    if (type === 'success') {
-      // Get the user's name using Facebook's Graph API
-      const response = await fetch(`https://graph.facebook.com/me?fields=id,email,first_name,last_name,picture&access_token=${token}`);
-      const user = (await response.json())
-      
-      console.tron.log(user, "USER")
-
-      dispatch(setAuthFullName(`${user.first_name} ${user.last_name}`))
-      dispatch(setAuthEmail(user.email))
-      dispatch(setAuthPicture(user.picture.data.url))
-      dispatch(setAuthUserID(user.id))
-      dispatch(setAuthType('facebook'))
-      dispatch(socialAuthenticationSuccess())
-      
-      dispatch(logInWithSocialAuth())
-    } else {
-      // type === 'cancel'
-      dispatch(socialAuthenticationFailure())
-    }
-  } catch ({ message }) {
-    dispatch(socialAuthenticationFailure())
-    dispatch(notify(`${message}`, 'danger'))
-  }
+  console.tron.log(user)
+  dispatch(setAuthFullName(`${user.first_name} ${user.last_name}`))
+  dispatch(setAuthEmail(user.email))
+  dispatch(setAuthPicture(user.picture.data.url))
+  dispatch(setAuthUserID(user.id))
+  dispatch(setAuthType('facebook'))
+  dispatch(socialAuthenticationSuccess())
+  dispatch(logInWithSocialAuth())
 }
 
 

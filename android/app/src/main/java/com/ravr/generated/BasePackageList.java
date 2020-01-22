@@ -9,7 +9,6 @@ public class BasePackageList {
     return Arrays.<Package>asList(
         new expo.modules.constants.ConstantsPackage(),
         new expo.modules.errorrecovery.ErrorRecoveryPackage(),
-        new expo.modules.facebook.FacebookPackage(),
         new expo.modules.filesystem.FileSystemPackage(),
         new expo.modules.font.FontLoaderPackage(),
         new expo.modules.google.signin.GoogleSignInPackage(),

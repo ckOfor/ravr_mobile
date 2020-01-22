@@ -413,21 +413,21 @@ class Home extends React.Component<NavigationScreenProps & Props> {
                 </Text>
               </TouchableOpacity>
               
-              <TouchableOpacity
-                style={{
-                  marginTop: 15,
-                }}
-                disabled={isLoading}
-                onPress={() => navigation.navigate('viewTours')}
-              >
-                <Text
-                  
-                  style={discoverMoreTextStyle}
-                >
-                  {translate(`home.more`)}
-                </Text>
+              {/*<TouchableOpacity*/}
+              {/*  style={{*/}
+              {/*    marginTop: 15,*/}
+              {/*  }}*/}
+              {/*  disabled={isLoading}*/}
+              {/*  onPress={() => navigation.navigate('viewTours')}*/}
+              {/*>*/}
+              {/*  <Text*/}
+              {/*    */}
+              {/*    style={discoverMoreTextStyle}*/}
+              {/*  >*/}
+              {/*    {translate(`home.more`)}*/}
+              {/*  </Text>*/}
               
-              </TouchableOpacity>
+              {/*</TouchableOpacity>*/}
             </View>
             
             <Text

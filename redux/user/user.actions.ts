@@ -246,8 +246,7 @@ export const updatePhoneNumberAsync = (phoneNumber: string): ThunkAction<
       console.tron.log(data)
       dispatch(updatePhoneNumberSuccess())
       dispatch(updateUserAsync())
-      // dispatch(NavigationActions.navigate({ routeName: "referral" }))
-      dispatch(NavigationActions.navigate({ routeName: "home" }))
+      dispatch(NavigationActions.navigate({ routeName: "referral" }))
     } else {
       dispatch(notify(`${message}`, 'danger'))
       dispatch(updatePhoneNumberFailure())
@@ -457,7 +456,8 @@ export const savePlanAsync = ({
     amount,
     months,
     planName,
-    type
+    type,
+    page
   }): ThunkAction<void, ApplicationState, null, Action<any>> => async (
   dispatch,
   getState
@@ -492,7 +492,9 @@ export const savePlanAsync = ({
   console.tron.log(transaction)
   console.tron.log(subscription)
   return subscription.length < 1
-    ? dispatch(NavigationActions.navigate({ routeName: "planPayment" }))
+    ? dispatch(NavigationActions.navigate({ routeName: "planPayment", params: {
+      page
+      } }))
     : dispatch(createPlanAsync())
 }
 
