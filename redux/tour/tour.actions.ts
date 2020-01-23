@@ -24,6 +24,9 @@ import { ThunkAction } from "redux-thunk";
 import { ApplicationState } from "../index";
 import { Action } from "redux";
 import { NavigationActions } from "react-navigation";
+import moment from "moment";
+
+const _ = require('lodash');
 
 export const getWeekendTours = () => ({
   type: GET_WEEKEND_TOURS,
@@ -53,10 +56,13 @@ export const getWeekendToursAsync = (limit): ThunkAction<
     const result = await apiGetWeekendTours(limit)
     const { status, message, data } = result.data
     console.tron.log(data)
-    
+  
+    let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
+    console.tron.log(filteredTours, "apiGetWeekendTours")
+  
     if (status) {
       dispatch(getWeekendToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setWeekendTours(data))
+      Object.keys(data).length > 0 && dispatch(setWeekendTours(filteredTours))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -98,10 +104,13 @@ export const getDiscoverToursAsync = (limit): ThunkAction<
     const result = await apiGetDiscoverTours(limit)
     const { status, message, data } = result.data
     console.tron.log(data)
+  
+    let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
+    console.tron.log(filteredTours, "filteredTours")
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setDiscoverTours(data))
+      Object.keys(data).length > 0 && dispatch(setDiscoverTours(filteredTours))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -128,10 +137,13 @@ export const getPopularToursAsync = (limit): ThunkAction<
     const result = await apiGetPopularTours(limit)
     const { status, message, data } = result.data
     console.tron.log(data)
+  
+    let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
+    console.tron.log(filteredTours, "filteredTours")
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setDiscoverTours(data))
+      Object.keys(data).length > 0 && dispatch(setDiscoverTours(filteredTours))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
