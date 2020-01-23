@@ -35,8 +35,6 @@ target 'ravr' do
   pod 'DoubleConversion', :podspec => "#{rnPrefix}/third-party-podspecs/DoubleConversion.podspec"
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
-  pod 'FBSDKCoreKit'
-  pod 'FBSDKLoginKit'
 
   # Other native modules
   pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
@@ -46,6 +44,7 @@ target 'ravr' do
   pod 'react-native-paystack', :path => '../node_modules/react-native-paystack'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
   # Automatically detect installed unimodules
