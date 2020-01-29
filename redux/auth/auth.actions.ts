@@ -503,5 +503,3 @@ export const addReferralCodeAsync = (code): ThunkAction<void, ApplicationState, 
   }
 }
 
-
-

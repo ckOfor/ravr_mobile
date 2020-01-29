@@ -1,8 +1,8 @@
 {
-  "name": "ravr",
-  "displayName": "Ravr",
+  "name": "ravrapp",
+  "displayName": "ravrappapp",
   "expo": {
-    "name": "ravr",
+    "name": "ravrapp",
     "slug": "expo-template-bare",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",

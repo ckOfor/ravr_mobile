@@ -30,15 +30,36 @@ import { Button } from "../../components/button";
 import {corePlugins} from "reactotron-core-client";
 import {translate} from "../../i18n";
 
+import {
+  checkLocationPermissionAsync,
+  askLocationPermissionAsync,
+  openSettingsAsync, checkNotificationPermissionAsync, requestNotificationPermissionAsync, getFirebasetokenAsync,
+} from "../../redux/startup";
+import * as Permissions from "expo-permissions";
+import {fetchUserLocationAsync} from "../../redux/device";
+
 interface DispatchProps {
   facebookAuthenticationSignInAsync: (user: object) => void
   googleAuthenticationSignInAsync: () => void
   socialAuthentication: () => void
   socialAuthenticationFailure: () => void
+  
+  checkLocation: () => Permissions.PermissionStatus | any
+  askLocation: () => Permissions.PermissionStatus | any
+  openSettings: () => void
+  checkNotificationPermission: () => Permissions.PermissionStatus | any
+  requestNotificationPermission: () => Permissions.PermissionStatus | any
+  getFirebaseToken: () => void
+  getUserLocation: () => void
 }
 
 interface StateProps {
   isLoading: boolean
+  appState: object,
+  hasLocation: boolean,
+  hasNotificationPermissions: boolean,
+  hasDenied: boolean,
+  disabledNotifications: boolean,
 }
 
 interface LandingProps extends NavigationScreenProps {}
@@ -139,6 +160,10 @@ const termsAndConditions: TextStyle = {
 }
 
 class Landing extends React.Component<NavigationScreenProps & Props> {
+  
+  componentDidMount(): void {
+    this.props.checkNotificationPermission()
+  }
   
   /**
    * onClickFacebookbutton
@@ -372,12 +397,24 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   facebookAuthenticationSignInAsync: (user: object) => dispatch(facebookAuthenticationSignInAsync(user)),
   googleAuthenticationSignInAsync: () => dispatch(googleAuthenticationSignInAsync()),
   socialAuthentication: () => dispatch(socialAuthentication()),
-  socialAuthenticationFailure: () => dispatch(socialAuthenticationFailure())
+  socialAuthenticationFailure: () => dispatch(socialAuthenticationFailure()),
+  checkLocation: () => dispatch(checkLocationPermissionAsync()),
+  askLocation: () => dispatch(askLocationPermissionAsync()),
+  openSettings: () => dispatch(openSettingsAsync()),
+  checkNotificationPermission: () => dispatch(checkNotificationPermissionAsync()),
+  requestNotificationPermission: () => dispatch(requestNotificationPermissionAsync()),
+  getFirebaseToken: () => dispatch(getFirebasetokenAsync()),
+  getUserLocation: () => dispatch(fetchUserLocationAsync()),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
 mapStateToProps = (state: ApplicationState): StateProps => ({
-  isLoading: state.auth.loading
+  isLoading: state.auth.loading,
+  appState: {},
+  hasLocation: false,
+  hasNotificationPermissions: false,
+  hasDenied: false,
+  disabledNotifications: false,
 });
 
 export const LandingScreen = connect<StateProps>(

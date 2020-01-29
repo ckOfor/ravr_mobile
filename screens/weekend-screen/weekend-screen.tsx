@@ -46,7 +46,7 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
       forwardedRef, weekendTours, viewTours, setSelectedTours, navigation
     } = this.props
     
-    console.tron.log(weekendTours, "weekendToursweekendToursweekendToursweekendToursweekendTours")
+    console.tron.log(weekendTours[0].id, "weekendToursweekendToursweekendToursweekendToursweekendTours")
     
     return (
       <View>
@@ -55,93 +55,99 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
             ? <StatusBar barStyle="dark-content" />
             : <StatusBar barStyle={"light-content"} translucent backgroundColor={colors.purple} />
         }
-        <ScrollView
-          scrollEnabled
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{
-            marginTop: '5%',
-          }}
-          pinchGestureEnabled
-          contentContainerStyle={{
-            justifyContent: "space-between"
-          }}
-        >
-          {
-            weekendTours && weekendTours.map((tour, index) => {
-              const { locationPictureOne, tripName, tripPrice } = tour
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={{
-                    flexDirection: "column",
-                    marginLeft: 20,
-                  }}
-                  onPress={() => {
-                    setSelectedTours(tour)
-                    viewTours()
-                  }}
-                >
-                  <Image
-                    style={TRIP_IMAGE}
-                    source={{ uri: `${locationPictureOne}` }}
-                    resizeMethod={'auto'}
-                    resizeMode='cover'
-                  />
-            
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-                    <Text
-                
-                      style={discoverMoreTextStyle}
-                    >
-                      {tripName && tripName.substring(0, 9)}
-                    </Text>
-              
-                    <Text
-                
-                      style={discoverMoreTextStyle}
-                    >
-                      ₦ {tripName && tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            })
-          }
-          
-          <View
-            style={{
-              width: Layout.window.width / 2,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.navigate('weekendTours')}
+        
+        {
+          weekendTours[0].id !== null && (
+            <ScrollView
+              scrollEnabled
+              horizontal
+              showsHorizontalScrollIndicator={false}
               style={{
-                borderColor: colors.purple,
-                borderWidth: 1,
-                height: Layout.window.height / 20,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 8,
-                backgroundColor: colors.purple
+                marginTop: '5%',
+              }}
+              pinchGestureEnabled
+              contentContainerStyle={{
+                justifyContent: "space-between"
               }}
             >
-              <Text
-                style={moreTextStyle}
-              >
-                {translate(`home.more`)}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {
+                weekendTours && weekendTours.map((tour, index) => {
+                  const { locationPictureOne, tripName, tripPrice } = tour
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={{
+                        flexDirection: "column",
+                        marginLeft: 20,
+                      }}
+                      onPress={() => {
+                        setSelectedTours(tour)
+                        viewTours()
+                      }}
+                    >
+                      <Image
+                        style={TRIP_IMAGE}
+                        source={{ uri: `${locationPictureOne}` }}
+                        resizeMethod={'auto'}
+                        resizeMode='cover'
+                      />
+            
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between"
+                        }}
+                      >
+                        <Text
+                
+                          style={discoverMoreTextStyle}
+                        >
+                          {tripName && tripName.substring(0, 9)}
+                        </Text>
+              
+                        <Text
+                
+                          style={discoverMoreTextStyle}
+                        >
+                          ₦ {tripName && tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
+                })
+              }
     
-        </ScrollView>
+              <View
+                style={{
+                  width: Layout.window.width / 2,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('weekendTours')}
+                  style={{
+                    borderColor: colors.purple,
+                    borderWidth: 1,
+                    height: Layout.window.height / 20,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 8,
+                    backgroundColor: colors.purple
+                  }}
+                >
+                  <Text
+                    style={moreTextStyle}
+                  >
+                    {translate(`home.more`)}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+  
+            </ScrollView>
+          )
+        }
+        
       </View>
       
     )

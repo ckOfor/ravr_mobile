@@ -11,6 +11,9 @@ import {
 } from "./startup.types"
 import { ApplicationState } from ".."
 import {Linking, Platform} from "react-native";
+import firebase from 'react-native-firebase';
+import { AsyncStorage } from 'react-native';
+import {notify, setFCMToken} from "../auth";
 
 
 const isIos = Platform.OS === "ios"
@@ -108,6 +111,68 @@ export const openSettingsAsync = (): ThunkAction<
     }
   } catch (error) {
     console.tron.error(error)
+  }
+}
+
+
+export const checkNotificationPermissionAsync = (): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  try {
+    console.tron.log("Called")
+    const hasPermission = await firebase.messaging().hasPermission();
+    if(hasPermission) {
+      dispatch(getFirebasetokenAsync())
+    }
+    return hasPermission
+  } catch ({ message }) {
+    console.tron.log("failed", message)
+    dispatch(notify(message, 'danger'))
+  }
+}
+
+export const requestNotificationPermissionAsync = (): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch) => {
+  console.tron.log("called =>", requestNotificationPermissionAsync)
+  try {
+    const requestPermission =  await firebase.messaging().requestPermission();
+    dispatch(getFirebasetokenAsync())
+  } catch ({ message }) {
+    console.tron.log("failed =>", message)
+  
+    dispatch(notify(message, 'danger'))
+  }
+}
+
+export const getFirebasetokenAsync = (): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  console.tron.log("called =>", getFirebasetokenAsync)
+  try {
+    
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if (!fcmToken) {
+      fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        // user has a device token
+        dispatch(setFCMToken(fcmToken))
+        await AsyncStorage.setItem('fcmToken', fcmToken);
+      }
+    }
+  } catch ({ message }) {
+    console.tron.log("failed =>", message)
+    setTimeout(() => dispatch(getFirebasetokenAsync()) , 10000);
+    dispatch(notify(message, 'danger'))
   }
 }
 

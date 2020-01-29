@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ravr">
+    package="com.ravrapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -27,7 +27,7 @@
     <!-- END OPTIONAL PERMISSIONS -->
 
     <application
-      android:name=".MainApplication"
+      android:name="com.ravrapp.MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
@@ -36,7 +36,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_login_protocol_scheme"/>
 
         <activity
-            android:name=".SplashActivity"
+            android:name="com.ravrapp.SplashActivity"
             android:theme="@style/SplashTheme"
             android:label="@string/app_name">
             <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_login_protocol_scheme"/>
@@ -47,7 +47,7 @@
         </activity>
 
       <activity
-        android:name=".MainActivity"
+        android:name="com.ravrapp.MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize"
@@ -71,7 +71,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -360,88 +360,92 @@ class Home extends React.Component<NavigationScreenProps & Props> {
               )}
             </Formik>
             
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: "space-between",
-                marginTop: Layout.window.height / 25
-              }}
-            >
-              <TouchableOpacity
-                // onPress={() => navigation.navigate('profile')}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text
-                  
-                  style={discoverTextStyle}
+            {
+              weekendTours[0].id !== null && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: "space-between",
+                    marginTop: Layout.window.height / 25
+                  }}
                 >
-                  {translate(`home.weekend`)}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            
-            
-            <WeekendScreen
-              navigation={navigation}
-              weekendTours={weekendTours}
-              viewTours={() => navigation.navigate('viewTour')}
-              {...this.props}
-            />
-            
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: "space-between",
-                marginTop: Layout.window.height / 25
-              }}
-            >
-              <TouchableOpacity
-                // onPress={() => navigation.navigate('profile')}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text
-                  
-                  style={discoverTextStyle}
+                  <TouchableOpacity
+                    // onPress={() => navigation.navigate('profile')}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Text
+        
+                      style={discoverTextStyle}
+                    >
+                      {translate(`home.weekend`)}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+  
+            {
+              weekendTours[0].id !== null && (
+                <WeekendScreen
+                  navigation={navigation}
+                  weekendTours={weekendTours}
+                  viewTours={() => navigation.navigate('viewTour')}
+                  {...this.props}
+                />
+              )
+            }
+  
+            {
+              discoverTours[0].id !== null && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: "space-between",
+                    marginTop: Layout.window.height / 25
+                  }}
                 >
-                  {translate(`home.recommendedTours`)}
+                  <TouchableOpacity
+                    // onPress={() => navigation.navigate('profile')}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Text
+        
+                      style={discoverTextStyle}
+                    >
+                      {translate(`home.recommendedTours`)}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+  
+            {
+              discoverTours[0].id !== null && (
+                <Text
+    
+                  style={discoverMoreTextStyle}
+                >
+                  {translate(`home.recommendedMore`)}
                 </Text>
-              </TouchableOpacity>
-              
-              {/*<TouchableOpacity*/}
-              {/*  style={{*/}
-              {/*    marginTop: 15,*/}
-              {/*  }}*/}
-              {/*  disabled={isLoading}*/}
-              {/*  onPress={() => navigation.navigate('viewTours')}*/}
-              {/*>*/}
-              {/*  <Text*/}
-              {/*    */}
-              {/*    style={discoverMoreTextStyle}*/}
-              {/*  >*/}
-              {/*    {translate(`home.more`)}*/}
-              {/*  </Text>*/}
-              
-              {/*</TouchableOpacity>*/}
-            </View>
+              )
+            }
+  
+            {
+              discoverTours[0].id !== null && (
+                <DiscoverScreen
+                  discoverTours={discoverTours}
+                  viewTours={() => navigation.navigate('viewTour')}
+                  {...this.props}
+                />
+              )
+            }
             
-            <Text
-              
-              style={discoverMoreTextStyle}
-            >
-              {translate(`home.recommendedMore`)}
-            </Text>
-            
-            <DiscoverScreen
-              discoverTours={discoverTours}
-              viewTours={() => navigation.navigate('viewTour')}
-              {...this.props}
-            />
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
