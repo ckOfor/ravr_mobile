@@ -42,7 +42,8 @@ const processResponse = async (response): Promise<any> => {
 const createPlan = async (data: Types.IPlan): Promise<
   Types.logInUserResponse
   > => {
-  const response = await api.post("/users/subscription/create", {
+  const response = await api.post("/users/" +
+    "subscription/create", {
     ...data
   })
   return processResponse(response)

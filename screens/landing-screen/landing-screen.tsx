@@ -162,7 +162,7 @@ const termsAndConditions: TextStyle = {
 class Landing extends React.Component<NavigationScreenProps & Props> {
   
   componentDidMount(): void {
-    this.props.checkNotificationPermission()
+    // this.props.checkNotificationPermission()
   }
   
   /**

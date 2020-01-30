@@ -46,6 +46,7 @@ target 'ravrapp' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
 
   # Automatically detect installed unimodules
   use_unimodules!
