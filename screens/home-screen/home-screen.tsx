@@ -267,6 +267,10 @@ class Home extends React.Component<NavigationScreenProps & Props> {
           
           <ScrollView
             showsVerticalScrollIndicator={false}
+            
+            style={{
+              marginBottom: Platform.OS === "ios" ? 0 : Layout.window.height / 15
+            }}
           >
             
             <View

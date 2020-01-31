@@ -95,7 +95,7 @@ const REDEEM_BUTTON: ViewStyle = {
   width: Layout.window.width / 1.4,
   marginTop: 10,
   backgroundColor: colors.purple,
-  marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
+  marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 8,
 }
 
 const REDEEM_BUTTON_TEXT: TextStyle = {
@@ -1240,10 +1240,12 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                   pinchGestureEnabled
                   contentContainerStyle={{
                     justifyContent: "space-between",
-                    height: 233,
+                    height: Layout.window.height / 2.8,
+                    width: Layout.window.width / 1.8,
+                    // marginBottom: '1%',
                   }}
                   style={{
-                    marginTop: '5%',
+                    marginTop: '2%',
                   }}
                 >
         
@@ -1330,7 +1332,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                                 textTransform: "capitalize"
                               }}
                             >
-                              {amount}
+                              {Math.floor(amount)}
                             </Text>
                             
                           </View>

@@ -38,8 +38,7 @@ interface ViewTourScreenProps extends NavigationScreenProps {}
 type Props = DispatchProps & StateProps & ViewTourScreenProps
 
 const TRIP_IMAGE: ImageStyle = {
-  alignSelf: "flex-end",
-  height: 235.5,
+  height: 235,
   width: Layout.window.width / 1.1,
   borderRadius: 12,
 }
@@ -141,35 +140,7 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
             {translate(`viewTour.welcomeText`)}
           </Text>
         </TouchableOpacity>
-      
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            // onPress={() => navigation.navigate('profile')}
-            style={{
-              flexDirection: "row",
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-          
-              style={discoverTextStyle}
-            >
-              {translate(`viewTour.popular`)}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      
-        <Text
-      
-          style={discoverMoreTextStyle}
-        >
-          {translate(`viewTour.experience`)}
-        </Text>
+        
         
         <ScrollView
           refreshControl={
@@ -186,8 +157,39 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
               })
             }
           }}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
+  
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+        
+                style={discoverTextStyle}
+              >
+                {translate(`viewTour.popular`)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+  
+          <Text
+    
+            style={discoverMoreTextStyle}
+          >
+            {translate(`viewTour.experience`)}
+          </Text>
+          
+          
           {
             tours[0].id !== null && (
               <FlatList
@@ -222,7 +224,7 @@ class ViewTours extends React.Component<NavigationScreenProps & Props> {
                       <Image
                         style={TRIP_IMAGE}
                         source={{ uri: `${locationPictureOne}` }}
-                        resizeMethod={'auto'}
+                        // resizeMethod={'resize'}
                         resizeMode='cover'
                       />
           

@@ -141,35 +141,6 @@ class WeekendTours extends React.Component<NavigationScreenProps & Props> {
             {translate(`viewTour.welcomeText`)}
           </Text>
         </TouchableOpacity>
-        
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity
-            // onPress={() => navigation.navigate('profile')}
-            style={{
-              flexDirection: "row",
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              
-              style={discoverTextStyle}
-            >
-              {translate(`weekends.header`)}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        
-        <Text
-          
-          style={discoverMoreTextStyle}
-        >
-          {translate(`weekends.prices`)}
-        </Text>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -186,8 +157,38 @@ class WeekendTours extends React.Component<NavigationScreenProps & Props> {
               })
             }
           }}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('profile')}
+              style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+        
+                style={discoverTextStyle}
+              >
+                {translate(`weekends.header`)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+  
+          <Text
+    
+            style={discoverMoreTextStyle}
+          >
+            {translate(`weekends.prices`)}
+          </Text>
+          
+          
           {
             tours[0].id !== null && (
               <FlatList
