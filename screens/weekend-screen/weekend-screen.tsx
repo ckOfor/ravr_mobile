@@ -61,6 +61,8 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
             <ScrollView
               scrollEnabled
               horizontal
+              bounces={false}
+              showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               style={{
                 marginTop: '5%',

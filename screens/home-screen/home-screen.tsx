@@ -18,11 +18,12 @@ import {
 } from "react-native"
 
 // third-party
-import {NavigationScreenProps, NavigationState} from "react-navigation"
+import { NavigationScreenProps } from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
+import firebase from 'react-native-firebase';
 
 // redux
 import { ApplicationState } from "../../redux";
@@ -78,25 +79,6 @@ const ROOT: ViewStyle = {
   height: Layout.window.height,
 }
 
-const appNameTextStyle: TextStyle = {
-  marginLeft: 20,
-  marginTop: Layout.window.height / 15,
-  color: colors.purple,
-  fontFamily: fonts.latoRegular,
-  lineHeight: 40,
-  textAlign: 'left',
-  width: Layout.window.width / 1.5,
-}
-
-const weekendTextStyle: TextStyle = {
-  fontSize: 22,
-  color: colors.black,
-  fontFamily: fonts.latoRegular,
-  lineHeight: 40,
-  textAlign: 'left',
-  width: Layout.window.width,
-}
-
 const discoverTextStyle: TextStyle = {
   fontSize: 22,
   marginLeft: 40,
@@ -114,14 +96,6 @@ const discoverMoreTextStyle: TextStyle = {
   textAlign: 'left',
   width: Layout.window.width / 1.5,
   marginLeft: 40,
-}
-
-
-const PROFILE_IMAGE: ImageStyle = {
-  // alignSelf: "flex-start",
-  height: 30,
-  width: 30,
-  borderRadius: 15,
 }
 
 const findMyTourTextStyle: TextStyle = {
@@ -152,59 +126,89 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   }
   
   searchKeyInput: NativeMethodsMixinStatic | any
+  notificationListener: () => any;
+  notificationOpenedListener: () => any;
+  messageListener: () => any;
   
   constructor(props) {
     super(props)
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
   
-  componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-  
   componentDidMount(): void {
+    this.createNotificationListeners();
+    
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     AppState.addEventListener("change", this.handleAppStateChange)
     this.getFeeds()
-    
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow,
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide,
-    );
   }
   
+  _handleNotification = notification => {
+    console.log("_handleNotification")
+    // do whatever you want to do with the notification
+    this.setState({ notification: notification });
+  };
+  
   componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
+    this.notificationListener();
+    this.notificationOpenedListener();
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  async createNotificationListeners() {
+    console.log("Clled");
+  
+    /*
+     * Triggered when a particular notification has been received in foreground
+     * */
+    this.notificationListener = firebase.notifications().onNotification((notification) => {
+      const { title, body } = notification;
+      this.showAlert(title, body);
+    });
+  
+    /*
+    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+    * */
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+      const { title, body } = notificationOpen.notification;
+      this.showAlert(title, body);
+    });
+  
+    /*
+    * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+    * */
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+      const { title, body } = notificationOpen.notification;
+      this.showAlert(title, body);
+    }
+    /*
+    * Triggered for data only payload in foreground
+    * */
+    this.messageListener = firebase.messaging().onMessage((message) => {
+      //process data message
+      console.log(JSON.stringify(message));
+    });
+  }
+  
+  showAlert(title, body) {
+    Alert.alert(
+      title, body,
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ],
+      { cancelable: false },
+    );
   }
   
   handleBackButtonClick = () => {
     if (this.props.navigation.isFocused()) {
-      // Alert.alert(
-      //   "Exit App",
-      //   "Do you want to exit?",
-      //   [
-      //     {
-      //       text: "No",
-      //       onPress: () => console.log("Cancel Pressed"),
-      //       style: "cancel"
-      //     },
-      //     { text: "Yes", onPress: () => BackHandler.exitApp() }
-      //   ],
-      //   { cancelable: false }
-      // );
       BackHandler.exitApp()
-      
       return
     }
     this.props.navigation.goBack(null);
     return true;
   }
-  
   
   _keyboardDidShow = () => {
     this.setState({
@@ -218,6 +222,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     })
   }
   
+  
   getFeeds = () => {
     const { getWeekendToursAsync, getDiscoverToursAsync } = this.props
     getWeekendToursAsync(8)
@@ -225,8 +230,8 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   }
   
   
-  handleAppStateChange = nextAppState => {
-    console.tron.log('CAlleds', this.state.appState)
+  handleAppStateChange = async (nextAppState) => {
+    console.log('CAlleds', this.state.appState)
     if (this.state.appState.match(/background/)) {
       this.getFeeds()
     }

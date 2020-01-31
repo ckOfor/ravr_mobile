@@ -14,6 +14,7 @@ import {Linking, Platform} from "react-native";
 import firebase from 'react-native-firebase';
 import { AsyncStorage } from 'react-native';
 import {notify, setFCMToken} from "../auth";
+import {Toast} from "native-base";
 
 
 const isIos = Platform.OS === "ios"
@@ -124,15 +125,19 @@ export const checkNotificationPermissionAsync = (): ThunkAction<
   try {
     console.tron.log("Called")
     const hasPermission = await firebase.messaging().hasPermission();
+  
+    console.tron.log("hasPermission", hasPermission)
     if(hasPermission) {
       dispatch(getFirebasetokenAsync())
+    } else {
+      dispatch(requestNotificationPermissionAsync())
     }
-    return hasPermission
   } catch ({ message }) {
     console.tron.log("failed", message)
     dispatch(notify(message, 'danger'))
   }
 }
+
 
 export const requestNotificationPermissionAsync = (): ThunkAction<
   void,
@@ -157,17 +162,21 @@ export const getFirebasetokenAsync = (): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  console.tron.log("called =>", getFirebasetokenAsync)
+  console.log("called =>", "getFirebasetokenAsync")
   try {
     
     let fcmToken = await AsyncStorage.getItem('fcmToken');
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
+        console.log("Passed =>", fcmToken)
         // user has a device token
         dispatch(setFCMToken(fcmToken))
         await AsyncStorage.setItem('fcmToken', fcmToken);
       }
+    } else {
+      dispatch(setFCMToken(fcmToken))
+      console.log("Passed =>", fcmToken)
     }
   } catch ({ message }) {
     console.tron.log("failed =>", message)

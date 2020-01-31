@@ -3,7 +3,7 @@ import React from "react"
 
 // react-native
 import {
-  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator
+  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert
 } from "react-native"
 
 // third-party libraries
@@ -37,6 +37,7 @@ import {
 } from "../../redux/startup";
 import * as Permissions from "expo-permissions";
 import {fetchUserLocationAsync} from "../../redux/device";
+import firebase from "react-native-firebase";
 
 interface DispatchProps {
   facebookAuthenticationSignInAsync: (user: object) => void
@@ -162,8 +163,19 @@ const termsAndConditions: TextStyle = {
 class Landing extends React.Component<NavigationScreenProps & Props> {
   
   componentDidMount(): void {
-    // this.props.checkNotificationPermission()
+    this.props.checkNotificationPermission()
   }
+  
+  showAlert(title, body) {
+    Alert.alert(
+      title, body,
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ],
+      { cancelable: false },
+    );
+  }
+  
   
   /**
    * onClickFacebookbutton
