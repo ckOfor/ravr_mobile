@@ -1241,8 +1241,6 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
                   contentContainerStyle={{
                     justifyContent: "space-between",
                     height: Layout.window.height / 2.8,
-                    width: Layout.window.width / 1.8,
-                    // marginBottom: '1%',
                   }}
                   style={{
                     marginTop: '2%',
