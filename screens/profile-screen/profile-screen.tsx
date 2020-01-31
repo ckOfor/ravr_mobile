@@ -152,6 +152,7 @@ const SUBSCRIPTION: ViewStyle = {
   height: Layout.window.height / 3.1,
   width: Layout.window.width / 2,
   marginLeft: 20,
+  marginRight: 10,
   marginTop: 10,
   borderRadius: 8,
   
