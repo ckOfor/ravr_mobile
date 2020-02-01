@@ -92,7 +92,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow ravrapp to access your calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow ravrapp to use the camera</string>
+	<string>Allow ravrapp to use image to recognise you when you go on trips.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow ravrapp experiences to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -108,7 +108,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give ravrapp periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give ravrapp periences permission to access your photos</string>
+	<string>Give ravrapp periences permission to access your photos so ravrapp can recognise you when you go on trips</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow ravrapp to access your reminders</string>
 	<key>UIBackgroundModes</key>
