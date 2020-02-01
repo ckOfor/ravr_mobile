@@ -13,21 +13,9 @@
 		6E2CF33823B8514C00BA41A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E2CF33723B8514C00BA41A3 /* GoogleService-Info.plist */; };
 		6E5CFC7323B8C9F600A737A1 /* client_151859030837-io5d5ic4b356gfu2dnof5kj2u0jb1e5u.apps.googleusercontent.com.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E5CFC7223B8C9F500A737A1 /* client_151859030837-io5d5ic4b356gfu2dnof5kj2u0jb1e5u.apps.googleusercontent.com.plist */; };
 		6E752B4023E4DC6B0074682B /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E752B3F23E4DC6B0074682B /* UserNotifications.framework */; };
-		6E752B4223E4DC770074682B /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E752B4123E4DC770074682B /* libRNFirebase.a */; };
-		6E752B4A23E4EEE90074682B /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E752B4923E4EED60074682B /* libRNFirebase.a */; };
 		6E761D3423E36A1500404B58 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E761D3323E36A1500404B58 /* Images.xcassets */; };
 		7B0C5784998A29E517983E0C /* libPods-ravrapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2502ACF51380E8237829647D /* libPods-ravrapp.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		6E752B4823E4EED60074682B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6E752B4423E4EED60074682B /* RNFirebase.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNFirebase;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -45,7 +33,6 @@
 		6E752B3E23E4A3EC0074682B /* ravrapp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ravrapp.entitlements; path = ravrapp/ravrapp.entitlements; sourceTree = "<group>"; };
 		6E752B3F23E4DC6B0074682B /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		6E752B4123E4DC770074682B /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNFirebase.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6E752B4423E4EED60074682B /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		6E761D3323E36A1500404B58 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ravrapp/Images.xcassets; sourceTree = "<group>"; };
 		E40B1F720DE0D29BF6B90074 /* Pods-ravrapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ravrapp.release.xcconfig"; path = "Target Support Files/Pods-ravrapp/Pods-ravrapp.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -57,8 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6E752B4223E4DC770074682B /* libRNFirebase.a in Frameworks */,
-				6E752B4A23E4EEE90074682B /* libRNFirebase.a in Frameworks */,
 				6E752B4023E4DC6B0074682B /* UserNotifications.framework in Frameworks */,
 				7B0C5784998A29E517983E0C /* libPods-ravrapp.a in Frameworks */,
 			);
@@ -106,18 +91,9 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		6E752B4523E4EED60074682B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6E752B4923E4EED60074682B /* libRNFirebase.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				6E752B4423E4EED60074682B /* RNFirebase.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -194,28 +170,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 6E752B4523E4EED60074682B /* Products */;
-					ProjectRef = 6E752B4423E4EED60074682B /* RNFirebase.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* ravrapp */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		6E752B4923E4EED60074682B /* libRNFirebase.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFirebase.a;
-			remoteRef = 6E752B4823E4EED60074682B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
@@ -479,6 +439,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.sympleInc.ravrapp;
 				PRODUCT_NAME = ravrapp;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -559,6 +520,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.sympleInc.ravrapp;
 				PRODUCT_NAME = ravrapp;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
