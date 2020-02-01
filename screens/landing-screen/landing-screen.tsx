@@ -3,12 +3,13 @@ import React from "react"
 
 // react-native
 import {
-  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert
+  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert, Platform
 } from "react-native"
 
 // third-party libraries
 import { NavigationScreenProps } from "react-navigation"
 import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from "react-native-fbsdk";
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 // redux
 import { connect } from "react-redux"
@@ -16,7 +17,7 @@ import { Dispatch } from "redux";
 import { ApplicationState } from "../../redux";
 import {
   googleAuthenticationSignInAsync,
-  facebookAuthenticationSignInAsync, socialAuthentication, socialAuthenticationFailure
+  facebookAuthenticationSignInAsync, socialAuthentication, socialAuthenticationFailure, AppleAuthenticationSignInAsync
 } from "../../redux/auth"
 
 // styles
@@ -41,6 +42,7 @@ import firebase from "react-native-firebase";
 
 interface DispatchProps {
   facebookAuthenticationSignInAsync: (user: object) => void
+  AppleAuthenticationSignInAsync: (user: object) => void
   googleAuthenticationSignInAsync: () => void
   socialAuthentication: () => void
   socialAuthenticationFailure: () => void
@@ -279,7 +281,7 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, facebookAuthenticationSignInAsync, isLoading, googleAuthenticationSignInAsync
+      navigation, AppleAuthenticationSignInAsync, isLoading, googleAuthenticationSignInAsync
     } = this.props
     return (
       <ImageBackground
@@ -370,6 +372,67 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
               />
             </Button>
           </View>
+  
+          {
+            Platform.OS === "ios" && (
+              <AppleAuthentication.AppleAuthenticationButton
+                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                cornerRadius={5}
+                style={{
+                  height: 44,
+                  alignSelf: "center",
+                  justifyContent: "center",
+                  borderRadius: 100,
+                  width: Layout.window.width / 1.4,
+                  marginTop: 15,
+                  // backgroundColor: colors.white
+                }}
+                onPress={async () => {
+                  console.tron.log("credential")
+                  try {
+                    const credential = await AppleAuthentication.signInAsync({
+                      requestedScopes: [
+                        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                      ],
+                    });
+                    // {identityToken: "eyJraWQiOiJBSURPUEsxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3M…AS5Tx9IwkTQXt72KW8EbwF2-bX7ulsGcVMEB6goa9MH7iY4jg", realUserStatus: 1, authorizationCode: "cbe0cad488c94464da18e613d448e4f82.0.nrqw.-pSs3LR2LmtsNfLgrjchCg", fullName: {…}, email: null, …}
+                    // identityToken: "eyJraWQiOiJBSURPUEsxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoib3JnLnN5bXBsZUluYy5yYXZyYXBwIiwiZXhwIjoxNTgwNTgwOTgwLCJpYXQiOjE1ODA1ODAzODAsInN1YiI6IjAwMDEwNi5hM2I5ODczOWIyNmI0NDQ1ODMwNTdlZWY3MDgwOWZhZi4xODA0IiwiY19oYXNoIjoiRHNLZTF1WmtaVEFINHRpSzc4eW13ZyIsImVtYWlsIjoib2ZvcmNoaW5lZHUxMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6InRydWUiLCJhdXRoX3RpbWUiOjE1ODA1ODAzODB9.RghzE-082PLBJTLdWDqtBAQTUwXffo3_xdGls8kl5OORQT0B-u8RA6mrGA-1SflVvnkMA8rhtGsl8jMdWfGZcMdSkFslhYVPyeGa1_sJa4UCs0OZQxSqAv89INfX4m-iJxzZr4rq1Smtog6eN-pjEjWUJC-pa1xMlg7U0Fh5h6ok8fjhgrMZhaHgQHOO2Zh8vXz2Y7bQSKWzLD6VmVdtsHkKDT_RlNBSf7TdpzTS8hQ67QRZBpB4D1U6OYxRRS4OTV79i67j0K8pZi50WDJ07NrhT_NwPMlMLqpu9AS5Tx9IwkTQXt72KW8EbwF2-bX7ulsGcVMEB6goa9MH7iY4jg"
+                    // realUserStatus: 1
+                    // authorizationCode: "cbe0cad488c94464da18e613d448e4f82.0.nrqw.-pSs3LR2LmtsNfLgrjchCg"
+                    // fullName:
+                    //   namePrefix: null
+                    // givenName: null
+                    // nameSuffix: null
+                    // nickname: null
+                    // familyName: null
+                    // middleName: null
+                    // __proto__: Object
+                    // email: null
+                    // state: null
+                    // user: "000106.a3b98739b26b444583057eef70809faf.1804"
+                    // __proto__: Object
+                    // signed in
+                    console.log(credential)
+                    const user = {
+                      fullName: `${credential.fullName.givenName } ${credential.fullName.familyName }`,
+                      email: `${credential.email}`,
+                      password: `${credential.email}`,
+                      id: `${credential.user}`,
+                    }
+                    AppleAuthenticationSignInAsync(user)
+                  } catch (e) {
+                    if (e.code === 'ERR_CANCELED') {
+                      // handle that the user canceled the sign-in flow
+                    } else {
+                      // handle other errors
+                    }
+                  }
+                }}
+              />
+            )
+          }
           
         </View>
   
@@ -407,6 +470,7 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   facebookAuthenticationSignInAsync: (user: object) => dispatch(facebookAuthenticationSignInAsync(user)),
+  AppleAuthenticationSignInAsync: (user: object) => dispatch(AppleAuthenticationSignInAsync(user)),
   googleAuthenticationSignInAsync: () => dispatch(googleAuthenticationSignInAsync()),
   socialAuthentication: () => dispatch(socialAuthentication()),
   socialAuthenticationFailure: () => dispatch(socialAuthenticationFailure()),

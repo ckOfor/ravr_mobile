@@ -108,7 +108,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give ravrapp periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give ravrapp periences permission to access your photos so ravrapp can recognise you when you go on trips</string>
+	<string>Ravr wants to recognise you when you pay for trips, please select a clear image.</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow ravrapp to access your reminders</string>
 	<key>UIBackgroundModes</key>

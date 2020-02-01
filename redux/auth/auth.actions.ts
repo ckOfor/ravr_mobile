@@ -232,6 +232,21 @@ export const facebookAuthenticationSignInAsync = (user): ThunkAction<
   dispatch(logInWithSocialAuth())
 }
 
+export const AppleAuthenticationSignInAsync = (user): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  console.log(user)
+  dispatch(setAuthFullName(`${user.fullName}`))
+  dispatch(setAuthEmail(user.email))
+  dispatch(setAuthPicture(''))
+  dispatch(setAuthUserID(user.id))
+  dispatch(setAuthType('apple'))
+  dispatch(socialAuthenticationSuccess())
+  dispatch(logInWithSocialAuth())
+}
 
 export const notify = (message, type): ThunkAction<
   void,
@@ -239,12 +254,7 @@ export const notify = (message, type): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  Toast.show({ text: `${message}`, type: `${type}`, position: 'top', duration: 3000,
-    style: {
-      // marginTop: Layout.window.height / 2,
-      // width: Layout.window.width / 3,
-      // alignSelf: 'center'
-    } })
+  Toast.show({ text: `${message}`, type: `${type}`, position: 'top', duration: 3000 })
 }
 
 export const logInWithSocialAuth = (): ThunkAction<void, ApplicationState, null, Action<any>> => async (
@@ -296,7 +306,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  console.tron.log(getState().auth, "getState().authgetState().auth")
+  console.log(getState().auth, "getState().authgetState().auth")
   const fullName = getState().auth.fullName
   const email = getState().auth.email
   const password = getState().auth.uid
