@@ -13,6 +13,7 @@ interface WeekendScreenProps {
   weekendTours: [ITours]
   setSelectedTours: (tour: ITours) => void
   navigation: any
+  page: string
 }
 
 const TRIP_IMAGE: ImageStyle = {
@@ -43,7 +44,7 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
   
   render() {
     const {
-      forwardedRef, weekendTours, viewTours, setSelectedTours, navigation
+      weekendTours, viewTours, setSelectedTours, navigation, page
     } = this.props
     
     console.tron.log(weekendTours[0].id, "weekendToursweekendToursweekendToursweekendToursweekendTours")
@@ -127,7 +128,7 @@ export class WeekendScreen extends React.Component<WeekendScreenProps> {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('weekendTours')}
+                  onPress={() => navigation.navigate(`${page}`)}
                   style={{
                     borderColor: colors.purple,
                     borderWidth: 1,

@@ -238,7 +238,7 @@ export const AppleAuthenticationSignInAsync = (user): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  console.log(user)
+  // console.log(user)
   dispatch(setAuthFullName(`${user.fullName}`))
   dispatch(setAuthEmail(user.email))
   dispatch(setAuthPicture(''))
@@ -306,7 +306,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  console.log(getState().auth, "getState().authgetState().auth")
+  // console.log(getState().auth, "getState().authgetState().auth")
   const fullName = getState().auth.fullName
   const email = getState().auth.email
   const password = getState().auth.uid
@@ -332,7 +332,7 @@ export const signUpWithSocialAuth = (): ThunkAction<
   try {
     const result = await apiSignUpWithSocialAuth(payload)
     const { status, message, data } = result.data
-    console.log(result)
+    // console.log(result)
 
     if (status) {
       dispatch(socialAuthenticationSuccess())
@@ -383,7 +383,7 @@ export const signUpWithEmailAuth = ({ email, fullName }, password: string): Thun
   try {
     const result = await apiSignUpWithSocialAuth(payload)
     const { status, message, data } = result.data
-    console.log(result)
+    // console.log(result)
     
     if (status) {
       dispatch(socialAuthenticationSuccess())
@@ -465,7 +465,7 @@ export const logInUserAsync = ({
       dispatch(logInUserWithEmailFailure())
     }
   } catch ({ message }) {
-    console.log(message )
+    // console.log(message )
     dispatch(logInUserWithEmailFailure())
     dispatch(notify(`${message}`, 'danger'))
   }
@@ -490,7 +490,7 @@ export const addReferralCodeSuccess = () => ({
 export const addReferralCodeAsync = (code): ThunkAction<void, ApplicationState, null, Action<any>> => async (
   dispatch, getState
 ) => {
-  console.log(code)
+  // console.log(code)
   dispatch(addReferralCode())
   
   try {

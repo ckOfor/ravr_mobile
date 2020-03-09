@@ -1508,7 +1508,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
           
                   style={discoverMoreTextStyle}
                 >
-                  {Tourists[0] !== undefined && Tourists[0].userCoins} coins
+                  ₦ {Tourists[0] !== undefined && Tourists[0].userCoins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
       
               </View>

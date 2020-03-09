@@ -184,7 +184,7 @@ class LocationPermissionsPage extends React.Component<Props> {
   // }
   //
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-    console.log(this.state)
+    // console.log(this.state)
     // const { hasDenied, hasLocation, disabledNotifications } = this.state
     
     

@@ -3,7 +3,17 @@ import React from "react"
 
 // react-native
 import {
-  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert, Platform
+  ImageBackground,
+  ImageStyle,
+  Image,
+  TextStyle,
+  ViewStyle,
+  View,
+  Text,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  TouchableOpacity
 } from "react-native"
 
 // third-party libraries
@@ -414,7 +424,7 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
                     // user: "000106.a3b98739b26b444583057eef70809faf.1804"
                     // __proto__: Object
                     // signed in
-                    console.log(credential)
+                    // console.log(credential)
                     const user = {
                       fullName: `${credential.fullName.givenName } ${credential.fullName.familyName }`,
                       email: `${credential.email}`,
@@ -436,12 +446,16 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
           
         </View>
   
-        <Text
-          
-          style={bottomTextStyle}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
         >
-          {translate("landingScreen.more")}
-        </Text>
+          <Text
+    
+            style={bottomTextStyle}
+          >
+            {translate("landingScreen.more")}
+          </Text>
+        </TouchableOpacity>
   
   
         <Text

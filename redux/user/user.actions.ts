@@ -91,7 +91,7 @@ export const createTransactionAsync = (reference: string, slots: number): ThunkA
       slots
     })
     const { status, message, data } = result.data
-    console.log(data)
+    // console.log(data)
     
     if(status) {
       dispatch(notify(`${message}`, 'success'))
@@ -340,7 +340,7 @@ export const createRequestAsync = (slots: number): ThunkAction<void, Application
       slots
     })
     const { status, message, data } = result.data
-    console.log(data)
+    // console.log(data)
     
     if(status) {
       dispatch(notify(`${message}`, 'success'))
@@ -387,7 +387,7 @@ export const redeemCoinsAsync = (code: string): ThunkAction<void, ApplicationSta
       code,
     })
     const { status, message, data } = result.data
-    console.log(data)
+    // console.log(data)
     
     if(status) {
       dispatch(notify(`${message}`, 'success'))
@@ -434,7 +434,7 @@ export const createPlanAsync = (reference?: string): ThunkAction<void, Applicati
   try {
     const result = await apiCreatePlan(plan)
     const { status, message, data } = result.data
-    console.log(data)
+    // console.log(data)
     
     if(status) {
       dispatch(notify(`${message}`, 'success'))

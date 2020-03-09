@@ -176,7 +176,7 @@ class Savings extends React.Component<NavigationScreenProps & Props> {
     
                 style={savingsMoreTextStyle}
               >
-                {Tourists[0] !== undefined ? Tourists[0].userCoins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0} coins
+                ₦ {Tourists[0] !== undefined ? Tourists[0].userCoins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}
               </Text>
             </TouchableOpacity>
           </View>

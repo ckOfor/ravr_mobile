@@ -160,7 +160,7 @@ const searchTextTours = async (searchKey: string, date?: string): Promise<
     searchKey,
     date
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -171,7 +171,7 @@ const searchAmountTours = async (searchKey: number, date?: string): Promise<
     searchKey,
     date
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -182,7 +182,7 @@ const getWeekendTours = async (limit: number): Promise<
   const response = await api.post("/users/post/weekend", {
     limit
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -193,7 +193,7 @@ const getDiscoverTours = async (limit: number): Promise<
   const response = await api.post("/users/post/discover", {
     limit
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -204,7 +204,7 @@ const getPopularTours = async (limit: number): Promise<
   const response = await api.post("/users/post/all", {
     limit
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -314,7 +314,7 @@ const getAllSchools = async (): Promise<
   Types.getResponse
   > => {
   const response = await api.get("/auth/select_college")
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 
@@ -450,7 +450,7 @@ const requestMoov = async ({
     to_long,
     collegeid
   })
-  console.log(response)
+  // console.log(response)
   return processResponse(response)
 }
 

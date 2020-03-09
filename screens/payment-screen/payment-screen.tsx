@@ -193,6 +193,7 @@ class Payment extends React.Component<NavigationScreenProps & Props> {
   }
   
   submit  = (values) => {
+    console.tron.log(this.state)
     if (values.slots < 1) {
       this.props.notify(`Invalid slot`, 'danger')
     } else {

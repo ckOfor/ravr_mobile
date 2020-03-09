@@ -15,7 +15,7 @@
   "landingScreen": {
     "email": "Continue with Email",
     "or": "or",
-    "more": "More Options",
+    "more": "< Back",
     "termsAndConditions": "By tapping Continue a user linked agreements and then must click the ",
     "termsAndConditions_01": "“Agree and Continue”",
     "termsAndConditions_02": " box which further makes it clear to the user that an agreement is taking place."
@@ -81,7 +81,7 @@
     "confirm": "Confirm",
     "monthSavings": "Maximum months to save exceeded",
     "number": "Invalid Input",
-    "useCoins": "Use Coins",
+    "useCoins": "Use Cash",
     "yes": "Yes"
   },
   "weekends": {
@@ -126,7 +126,7 @@
     "myProfileHeader": "Personal Info",
     "editHeader": "Edit",
     "tripHeader": "Have a nice trip from us at Ravr.",
-    "redeemHeader": "Redeem coins",
+    "redeemHeader": "Redeem cash",
     "code": "Enter code",
     "redeem": "Redeem",
     "logout": "Logout",

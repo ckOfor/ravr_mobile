@@ -258,6 +258,11 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
     const monthDifference = selectedTripDate.diff(today, 'months')
     const maxMonth = monthDifference - 1
   
+    console.tron.log(maxMonth, "maxMonth")
+  
+  
+    console.tron.log(coinsNeeded, "coinsNeeded")
+  
     const schema = Yup.object().shape({
       months: Yup
         .number()
@@ -340,55 +345,71 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                     style={{
                       marginTop: 10,
                       width: Layout.window.width / 1.5,
-                      flexDirection: 'row',
+                      flexDirection: 'column',
                       justifyContent: "space-evenly",
                     }}
                   >
-                    <Text
-                      style={{
-                        color: colors.blue1,
-                        fontFamily: fonts.latoRegular,
-                        textAlign: 'center',
-                      }}
-                    >
-                      Price:
-                    </Text>
-                    
-                    
-                    <Text
-                      style={{
-                        color: colors.blue1,
-                        fontFamily: fonts.latoRegular,
-                        textAlign: 'center',
-                        textDecorationLine: 'line-through',
-                        textDecorationStyle: 'solid'
-                      }}
-                    >
-                      ₦ {selectedTour.tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </Text>
   
-  
-                    <Text
-    
+                    <View
                       style={{
-                        color: colors.blue1,
-                        fontFamily: fonts.latoRegular,
-                        textAlign: 'center',
+                        width: '60%',
+                        flexDirection: 'row',
+                        alignSelf: 'center',
+                        justifyContent: "space-between",
                       }}
                     >
-                      ₦ {selectedTour.userPays.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </Text>
+                      <Text
+                        style={{
+                          color: colors.blue1,
+                          fontFamily: fonts.latoRegular,
+                          textAlign: 'center',
+                        }}
+                      >
+                        Price:
+                      </Text>
+                      
+                      
+                      <Text
+                        style={{
+                          color: colors.blue1,
+                          fontFamily: fonts.latoRegular,
+                          textAlign: 'center',
+                          textDecorationStyle: 'solid'
+                        }}
+                      >
+                        ₦ {selectedTour.tripPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </Text>
+                    </View>
   
-                    <Text
-    
+                    <View
                       style={{
-                        color: colors.blue1,
-                        fontFamily: fonts.latoRegular,
-                        textAlign: 'center',
+                        width: '60%',
+                        flexDirection: 'row',
+                        alignSelf: 'center',
+                        justifyContent: "space-between",
                       }}
                     >
-                      {selectedTour.userDiscount * 100}% off
-                    </Text>
+                      <Text
+                        style={{
+                          color: colors.blue1,
+                          fontFamily: fonts.latoRegular,
+                          textAlign: 'center',
+                        }}
+                      >
+                        Cash Back:
+                      </Text>
+                      
+                      <Text
+      
+                        style={{
+                          color: colors.blue1,
+                          fontFamily: fonts.latoRegular,
+                          textAlign: 'center',
+                        }}
+                      >
+                        ₦ {selectedTour.userCoins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </Text>
+                    </View>
                   </View>
   
                   <View
@@ -440,12 +461,16 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                       justifyContent: 'space-between',
                     }}
                   >
-                    <Text
-        
-                      style={discoverTextStyle}
-                    >
-                      {translate(`viewTour.save`)}
-                    </Text>
+                    {
+                      maxMonth > 0 && (
+                        <Text
+    
+                          style={discoverTextStyle}
+                        >
+                          {translate(`viewTour.save`)}
+                        </Text>
+                      )
+                    }
                   </TouchableOpacity>
                 </View>
   
@@ -453,7 +478,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
     
                   style={discoverMoreTextStyle}
                 >
-                  {translate(`viewTour.saveMore`)}
+                  {maxMonth > 0 && translate(`viewTour.saveMore`)}
                 </Text>
                 
               </View>
@@ -461,37 +486,40 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           )
         }
   
-        <View
-          style={{
-            width: Layout.window.width / 5,
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-            margin: 30,
-            // marginBottom: Platform.OS === "ios" ? Layout.window.height / 7 : Layout.window.height / 15,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ initialPage: 2, activeTab: 2 })
-              this.scrollView.scrollToEnd({ animated: true });
-            }}
-            style={{
-              borderColor: colors.purple,
-              borderWidth: 1,
-              height: Layout.window.height / 20,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
-              backgroundColor: colors.purple
-            }}
-          >
-            <Text
-              style={moreTextStyle}
+        {
+          maxMonth > 0 && (
+            <View
+              style={{
+                width: Layout.window.width / 5,
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+                margin: 30,
+              }}
             >
-              {translate(`viewTour.yes`)}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ initialPage: 2, activeTab: 2 })
+                  this.scrollView.scrollToEnd({ animated: true });
+                }}
+                style={{
+                  borderColor: colors.purple,
+                  borderWidth: 1,
+                  height: Layout.window.height / 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 8,
+                  backgroundColor: colors.purple
+                }}
+              >
+                <Text
+                  style={moreTextStyle}
+                >
+                  {translate(`viewTour.yes`)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
+        }
   
         <ScrollView
           scrollEnabled
@@ -567,6 +595,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
           initialPage={initialPage}
           page={activeTab}
         >
+          
           <Tab
             activeTabStyle={{
               backgroundColor: colors.white,
@@ -587,6 +616,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
               {selectedTour.tripContent}
             </Text>
           </Tab>
+          
           <Tab
             activeTabStyle={{
               backgroundColor: colors.white
@@ -630,145 +660,152 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
             </Text>
             
           </Tab>
-          <Tab
-            activeTabStyle={{
-              backgroundColor: colors.white
-            }}
-            activeTextStyle={{
-              color: colors.purple,
-            }}
-            tabStyle={{
-              backgroundColor: colors.white
-            }}
-            heading={translate("viewTour.tabThree")}
-          >
-  
-            <Formik
-              initialValues={{
-                months: '',
-                slots: '',
-              }}
-              validationSchema={schema}
-              onSubmit={this.submit}
-              enableReinitialize
-            >
-              {({
-                  values,
-                  handleChange,
-                  handleBlur,
-                  errors,
-                  isValid,
-                  handleSubmit
-                }: FormikProps<MyFormValues>) => (
-                <View>
-  
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between"
-                    }}
-                  >
-  
-                    <Text
-                      numberOfLines={100}
-                      style={TRIP_DETAILS}
-                    >
-                      Amount:
-                      {
-                        values.slots > 0 && values.months > 0 && (
-                          <Text
-                            numberOfLines={100}
-                            style={TRIP_DETAILS}
-                          >
-                            { } ₦ {selectedTour && Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                          </Text>
-                        )
-                      }
-                    </Text>
-  
-                    <Text
-                      numberOfLines={100}
-                      style={TRIP_DETAILS}
-                    >
-                      Max Months: {` ${maxMonth}`}
-                    </Text>
-                  </View>
-        
-                  <View
-                    style={FIELD}
-                  >
-  
-                    <TextField
-                      name="slots"
-                      keyboardType="number-pad"
-                      placeholderTx="payment.slots"
-                      value={formatSLots(values.slots.toString())}
-                      onChangeText={handleChange("slots")}
-                      onBlur={handleBlur("slots")}
-                      autoCapitalize="none"
-                      returnKeyType="next"
-                      isInvalid={!isValid}
-                      fieldError={errors.slots}
-                      onSubmitEditing={() => handleSubmit()}
-                      forwardedRef={i => {
-                        this.slotsInput = i
-                      }}
-                    />
-                    
-                    <TextField
-                      name="months"
-                      keyboardType="number-pad"
-                      placeholderTx="save.month"
-                      value={values.months.toString()}
-                      onChangeText={handleChange("months")}
-                      onBlur={handleBlur("months")}
-                      autoCapitalize="none"
-                      returnKeyType="next"
-                      isInvalid={!isValid}
-                      fieldError={errors.months}
-                      onSubmitEditing={() => handleSubmit()}
-                      forwardedRef={i => {
-                        this.monthsInput = i
-                      }}
-                    />
-                    
-                    <Text
-                      numberOfLines={100}
-                      style={{
-                        marginBottom: 10
-                      }}
-                    >
-                      Monthly charge:
-                      
-                      {
-                        values.slots > 0 && values.months > 0 && (
-                          <Text
-                            numberOfLines={100}
-                            style={{
-                              marginBottom: 10,
-                              fontWeight: "bold"
-                            }}
-                          >
-                            {" "} ₦ {selectedTour && ((parseInt(userWillPay) * values.slots) / values.months) < 2500 ? (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) : (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) + 100}
-                          </Text>
-                        )
-                      }
-                    </Text>
           
-                    <Button
-                      style={SAVE_BUTTON}
-                      textStyle={SAVE_BUTTON_TEXT}
-                      disabled={!isValid || isLoading || values.months > maxMonth}
-                      onPress={() => handleSubmit()}
-                      tx={`viewTour.confirm`}
-                    />
-        
-                  </View>
-                </View>
-              )}
-            </Formik>
+          {
+            maxMonth > 0 && (
+              <Tab
+                activeTabStyle={{
+                  backgroundColor: colors.white
+                }}
+                activeTextStyle={{
+                  color: colors.purple,
+                }}
+                tabStyle={{
+                  backgroundColor: colors.white
+                }}
+                heading={translate("viewTour.tabThree")}
+              >
+    
+                <Formik
+                  initialValues={{
+                    months: '',
+                    slots: '',
+                  }}
+                  validationSchema={schema}
+                  onSubmit={this.submit}
+                  enableReinitialize
+                >
+                  {({
+                      values,
+                      handleChange,
+                      handleBlur,
+                      errors,
+                      isValid,
+                      handleSubmit
+                    }: FormikProps<MyFormValues>) => (
+                    <View>
+          
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between"
+                        }}
+                      >
             
-          </Tab>
+                        <Text
+                          numberOfLines={100}
+                          style={TRIP_DETAILS}
+                        >
+                          Amount:
+                          {
+                            values.slots > 0 && values.months > 0 && (
+                              <Text
+                                numberOfLines={100}
+                                style={TRIP_DETAILS}
+                              >
+                                { } ₦ {selectedTour && Math.abs(selectedTour.userPays / (monthDifference - 1) * values.slots).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                              </Text>
+                            )
+                          }
+                        </Text>
+            
+                        <Text
+                          numberOfLines={100}
+                          style={TRIP_DETAILS}
+                        >
+                          Max Months: {` ${maxMonth}`}
+                        </Text>
+                      </View>
+          
+                      <View
+                        style={FIELD}
+                      >
+            
+                        <TextField
+                          name="slots"
+                          keyboardType="number-pad"
+                          placeholderTx="payment.slots"
+                          value={formatSLots(values.slots.toString())}
+                          onChangeText={handleChange("slots")}
+                          onBlur={handleBlur("slots")}
+                          autoCapitalize="none"
+                          returnKeyType="next"
+                          isInvalid={!isValid}
+                          fieldError={errors.slots}
+                          onSubmitEditing={() => handleSubmit()}
+                          forwardedRef={i => {
+                            this.slotsInput = i
+                          }}
+                        />
+            
+                        <TextField
+                          name="months"
+                          keyboardType="number-pad"
+                          placeholderTx="save.month"
+                          value={values.months.toString()}
+                          onChangeText={handleChange("months")}
+                          onBlur={handleBlur("months")}
+                          autoCapitalize="none"
+                          returnKeyType="next"
+                          isInvalid={!isValid}
+                          fieldError={errors.months}
+                          onSubmitEditing={() => handleSubmit()}
+                          forwardedRef={i => {
+                            this.monthsInput = i
+                          }}
+                        />
+            
+                        <Text
+                          numberOfLines={100}
+                          style={{
+                            marginBottom: 10
+                          }}
+                        >
+                          Monthly charge:
+              
+                          {
+                            values.slots > 0 && values.months > 0 && (
+                              <Text
+                                numberOfLines={100}
+                                style={{
+                                  marginBottom: 10,
+                                  fontWeight: "bold"
+                                }}
+                              >
+                                {" "} ₦ {selectedTour && ((parseInt(userWillPay) * values.slots) / values.months) < 2500 ? (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) : (0.015 * ((parseInt(userWillPay) * values.slots) / values.months)) + ((parseInt(userWillPay) * values.slots) / values.months) + 100}
+                              </Text>
+                            )
+                          }
+                        </Text>
+            
+                        <Button
+                          style={SAVE_BUTTON}
+                          textStyle={SAVE_BUTTON_TEXT}
+                          disabled={!isValid || isLoading || values.months > maxMonth}
+                          onPress={() => handleSubmit()}
+                          tx={`viewTour.confirm`}
+                        />
+          
+                      </View>
+                    </View>
+                  )}
+                </Formik>
+  
+              </Tab>
+            )
+          }
+          
+          
         </Tabs>
       
       </ScrollView>

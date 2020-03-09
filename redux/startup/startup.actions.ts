@@ -162,21 +162,20 @@ export const getFirebasetokenAsync = (): ThunkAction<
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  console.log("called =>", "getFirebasetokenAsync")
   try {
     
     let fcmToken = await AsyncStorage.getItem('fcmToken');
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log("Passed =>", fcmToken)
+        // console.log("Passed =>", fcmToken)
         // user has a device token
         dispatch(setFCMToken(fcmToken))
         await AsyncStorage.setItem('fcmToken', fcmToken);
       }
     } else {
       dispatch(setFCMToken(fcmToken))
-      console.log("Passed =>", fcmToken)
+      // console.log("Passed =>", fcmToken)
     }
   } catch ({ message }) {
     console.tron.log("failed =>", message)

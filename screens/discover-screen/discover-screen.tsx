@@ -13,6 +13,7 @@ interface WeekendScreenProps {
   viewTours: () => void
   setSelectedTours: (tour: ITours) => void
   navigation: any
+  page: string
 }
 
 const TRIP_IMAGE: ImageStyle = {
@@ -40,9 +41,9 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
   
   render() {
     const {
-      forwardedRef, discoverTours, viewTours, setSelectedTours, navigation
+      discoverTours, viewTours, setSelectedTours, navigation, page
     } = this.props
-    
+
     return (
       <View
         style={{
@@ -115,7 +116,7 @@ export class DiscoverScreen extends React.Component<WeekendScreenProps> {
           }}
         >
           <TouchableOpacity
-            onPress={() => navigation.navigate('viewTours')}
+            onPress={() => navigation.navigate(`${page}`)}
             style={{
               borderColor: colors.purple,
               borderWidth: 1,

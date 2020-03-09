@@ -144,7 +144,7 @@ const NEXT_BUTTON_TEXT: TextStyle = {
 }
 
 function Screen(props: ScreenProps) {
-  console.log(props.disabled)
+  // console.log(props.disabled)
   
   return (
     <Formik

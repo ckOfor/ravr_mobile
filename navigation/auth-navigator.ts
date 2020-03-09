@@ -6,10 +6,31 @@ import { AuthSignInScreen } from "../screens/auth-sign-in-screen";
 import { ForgotPasswordScreen } from "../screens/forgot-password-screen";
 import { AuthSignUpScreen } from "../screens/auth-sign-up-screen";
 import { PhoneVerificationScreen } from "../screens/phone-verification-screen";
-import {ReferralScreen} from "../screens/referal-screen";
+import { ReferralScreen } from "../screens/referal-screen";
+import { IntroScreen } from "../screens/intro-screen";
+import { IntroSearchScreen } from "../screens/intro-search-screen";
+import { IntroViewTourScreen } from "../screens/intro-view-tour";
 
 export const AuthNavigator = createStackNavigator(
   {
+    intro: {
+      screen: IntroScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    introSearch: {
+      screen: IntroSearchScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    introViewTour: {
+      screen: IntroViewTourScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
     landing: {
       screen: LandingScreen,
       navigationOptions: {

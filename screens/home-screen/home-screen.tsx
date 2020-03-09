@@ -14,7 +14,7 @@ import {
   ImageStyle,
   AppState,
   NativeMethodsMixinStatic,
-  KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator, BackHandler, Alert
+  KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator, BackHandler, Alert, RefreshControl
 } from "react-native"
 
 // third-party
@@ -144,7 +144,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   }
   
   _handleNotification = notification => {
-    console.log("_handleNotification")
+    // console.log("_handleNotification")
     // do whatever you want to do with the notification
     this.setState({ notification: notification });
   };
@@ -156,7 +156,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   }
   
   async createNotificationListeners() {
-    console.log("Clled");
+    // console.log("Clled");
   
     /*
      * Triggered when a particular notification has been received in foreground
@@ -187,7 +187,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     * */
     this.messageListener = firebase.messaging().onMessage((message) => {
       //process data message
-      console.log(JSON.stringify(message));
+      // console.log(JSON.stringify(message));
     });
   }
   
@@ -231,7 +231,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
   
   
   handleAppStateChange = async (nextAppState) => {
-    console.log('CAlleds', this.state.appState)
+    // console.log('CAlleds', this.state.appState)
     if (this.state.appState.match(/background/)) {
       this.getFeeds()
     }
@@ -272,7 +272,12 @@ class Home extends React.Component<NavigationScreenProps & Props> {
           
           <ScrollView
             showsVerticalScrollIndicator={false}
-            
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={() => this.getFeeds()}
+              />
+            }
             style={{
               marginBottom: Platform.OS === "ios" ? 0 : Layout.window.height / 15
             }}
@@ -399,6 +404,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             {
               weekendTours[0].id !== null && (
                 <WeekendScreen
+                  page={'weekendTours'}
                   navigation={navigation}
                   weekendTours={weekendTours}
                   viewTours={() => navigation.navigate('viewTour')}
@@ -448,6 +454,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             {
               discoverTours[0].id !== null && (
                 <DiscoverScreen
+                  page={'viewTours'}
                   discoverTours={discoverTours}
                   viewTours={() => navigation.navigate('viewTour')}
                   {...this.props}

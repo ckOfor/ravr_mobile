@@ -103,13 +103,13 @@ android {
         applicationId "com.ravrapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "2.1"
+        versionCode 6
+        versionName "2.3"
 //        signingConfig signingConfigs.release
     }
     signingConfigs {
         release {
-            storeFile file('/Users/oforchinedu/Desktop/ravr/android/releaseKeystore.jks')
+            storeFile file('/Users/oforchinedu/Documents/ravr/keystore.jks')
             storePassword 'ravrapp'
             keyAlias = 'ravrapp'
             keyPassword 'ravrapp'

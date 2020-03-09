@@ -150,7 +150,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
   
   submit = (value) => {
     const { chosenDate } = this.state
-    console.tron.log(chosenDate)
+    // console.tron.log(chosenDate)
     return /^-{0,1}\d+$/.test(value.searchKey)
       ? this.props.searchAmountToursAsync(value.searchKey, chosenDate)
       : this.props.searchTextToursAsync(value.searchKey, chosenDate)
@@ -165,7 +165,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
   };
   
   handleDatePicked = (date: any) => {
-    console.tron.log("A date has been picked: ",moment(`${date}`).format('YYYY-MM-DD'));
+    // console.tron.log("A date has been picked: ",moment(`${date}`).format('YYYY-MM-DD'));
   
     this.props.searchTextToursAsync('', date)
     
@@ -179,7 +179,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
       navigation, tours, setSelectedTours, isLoading, clearSearchTourAsync, authSearchKey, setSearchKeyAsync
     } = this.props
     
-    console.tron.log(authSearchKey, "authSearchKey")
+    // console.tron.log(authSearchKey, "authSearchKey")
     return (
       <View
         style={{

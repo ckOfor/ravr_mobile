@@ -206,6 +206,38 @@ export const searchTextToursAsync = (searchKey: string, date?: string): ThunkAct
   }
 }
 
+export const introSearchTextToursAsync = (searchKey: string, date?: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  
+  dispatch(searchTours())
+  dispatch(clearSearchTourAsync())
+  dispatch(setSearchKeyAsync(searchKey))
+  
+  try {
+    const result = await apiSearchTextTours(searchKey, date)
+    const { status, message, data } = result.data
+    console.tron.log(data)
+    
+    if (status) {
+      dispatch(searchToursSuccess())
+      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
+      dispatch(NavigationActions.navigate({ routeName: "introSearch" }))
+      dispatch(notify(`${message}`, 'success'))
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(searchToursFailure())
+    }
+    
+  } catch ({ message }){
+    console.tron.log(message)
+    dispatch(searchToursFailure())
+  }
+}
+
 export const searchAmountToursAsync = (amount: number, date?: string): ThunkAction<
   void,
   ApplicationState,
@@ -225,8 +257,41 @@ export const searchAmountToursAsync = (amount: number, date?: string): ThunkActi
       dispatch(searchToursSuccess())
       Object.keys(data).length > 0 && dispatch(setSearchTours(data))
       dispatch(notify(`${message}`, 'success'))
-      if(Object.keys(data).length > 1) {
+      if(Object.keys(data).length > 0) {
         dispatch(NavigationActions.navigate({ routeName: "search" }))
+      }
+    } else {
+      dispatch(notify(`${message}`, 'danger'))
+      dispatch(searchToursFailure())
+    }
+    
+  } catch ({ message }){
+    console.tron.log(message)
+    dispatch(searchToursFailure())
+  }
+}
+
+export const introSearchAmountToursAsync = (amount: number, date?: string): ThunkAction<
+  void,
+  ApplicationState,
+  null,
+  Action<any>
+  > => async (dispatch, getState) => {
+  dispatch(searchTours())
+  dispatch(clearSearchTourAsync())
+  dispatch(setSearchKeyAsync(amount.toString()))
+  
+  try {
+    const result = await apiSearchAmountTours(amount, date)
+    const { status, message, data } = result.data
+    console.tron.log(data)
+    
+    if (status) {
+      dispatch(searchToursSuccess())
+      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
+      dispatch(notify(`${message}`, 'success'))
+      if(Object.keys(data).length > 0) {
+        dispatch(NavigationActions.navigate({ routeName: "introSearch" }))
       }
     } else {
       dispatch(notify(`${message}`, 'danger'))
