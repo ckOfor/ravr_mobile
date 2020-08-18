@@ -36,7 +36,7 @@ type Props = MyProps & DispatchProps
 class App extends React.Component<Props, State> {
   state = {
     isLoadingComplete: false
-  }
+  };
   
   componentDidMount() {
     this.loadResourcesAsync()
@@ -47,7 +47,7 @@ class App extends React.Component<Props, State> {
   }
   
   render() {
-    if (!this.state.isLoadingComplete) return null
+    if (!this.state.isLoadingComplete) return null;
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={<Text> Loading... </Text>}>

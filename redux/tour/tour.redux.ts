@@ -54,13 +54,13 @@ export const ITours = {
 }
 
 const initialState: TourState = {
-  weekendTours: [ITours],
-  discoverTours: [ITours],
+  weekendTours: [],
+  discoverTours: [],
   selectedTour: {
     ...ITours
   },
   loading: false,
-  searchedTours: [ITours],
+  searchedTours: [],
   searchKey: '',
 }
 
@@ -122,7 +122,7 @@ export function tourReducer(
     case CLEAR_SEARCH:
       return {
         ...state,
-        searchedTours: [ITours]
+        searchedTours: []
       }
   
     case CLEAR_TOURS:

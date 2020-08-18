@@ -67,27 +67,25 @@ const schema = Yup.object().shape({
   searchKey: Yup.string()
     .min(3, "common.fieldTooShort")
     .required("common.fieldRequired"),
-})
+});
 
 interface MyFormValues {
   searchKey: string
 }
-
 
 const SEARCH_BUTTON: ViewStyle = {
   borderRadius: 100,
   width: Layout.window.width / 1.4,
   marginTop: 10,
   backgroundColor: colors.purple,
-}
+};
 
 const SEARCH_BUTTON_TEXT: TextStyle = {
   fontSize: 12,
   fontFamily: fonts.gibsonRegular,
   color: colors.palette.white,
   textTransform: 'uppercase'
-}
-
+};
 
 const TRIP_IMAGE: ImageStyle = {
   alignSelf: "flex-end",
@@ -179,7 +177,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
       navigation, tours, setSelectedTours, isLoading, clearSearchTourAsync, authSearchKey, setSearchKeyAsync
     } = this.props
     
-    console.tron.log(authSearchKey, "authSearchKey")
+    console.tron.log(tours, "authSearchKey")
     return (
       <View
         style={{
@@ -293,7 +291,7 @@ class Search extends React.Component<NavigationScreenProps & Props> {
           </Formik>
           
           {
-            tours[0].id !== null && (
+             Object.keys(tours).length > 0 &&(
               <FlatList
                 // onEndReached={() => this.fetchTours(limit)}
                 data={tours}

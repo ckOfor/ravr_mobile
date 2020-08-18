@@ -7,7 +7,7 @@
     "passwordPlaceHolder": "Password",
     "confirmPasswordPlaceHolder": "Confirm Password",
     "fieldRequired": "This field is required",
-    "fieldValidEmail": "Must be a valid email",
+    "fieldValidEmailheaderText": "Must be a valid email",
     "fieldTooShort": "This field is too short!",
     "passwordMatch": "Passwords must match",
     "fieldError": "{{fieldName}} is too short"
@@ -47,6 +47,7 @@
     "oops": "< Ooops! Log me in.",
     "member": "I am a member of this awesome community.",
     "social": "< Continue with Facebook or Gmail.",
+    "goBack": "< Click here to go back and keep exploring..."
   },
   "phoneVerify": {
     "headerText": "Update my number.",

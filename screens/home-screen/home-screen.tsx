@@ -12,13 +12,14 @@ import {
   Image,
   TouchableOpacity,
   ImageStyle,
+  RefreshControl,
   AppState,
   NativeMethodsMixinStatic,
   KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator, BackHandler, Alert
 } from "react-native"
 
 // third-party
-import { NavigationScreenProps } from "react-navigation"
+import { NavigationScreenProps, NavigationEvents } from "react-navigation"
 import { connect } from "react-redux"
 import { Dispatch } from "redux";
 import { Formik, FormikProps } from "formik";
@@ -28,7 +29,7 @@ import firebase from 'react-native-firebase';
 // redux
 import { ApplicationState } from "../../redux";
 import {
-  getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours, searchTextToursAsync, searchAmountToursAsync
+  getWeekendToursAsync, getDiscoverToursAsync, setSelectedTours, searchTextToursAsync, searchAmountToursAsync, clearSearchTourAsync, setSearchKeyAsync
 } from "../../redux/tour";
 
 // styles
@@ -51,14 +52,14 @@ interface DispatchProps {
   setSelectedTours: (tour: ITours) => void
   searchTextToursAsync: (searchKey: string) => void
   searchAmountToursAsync: (amount: number) => void
+  setSearchKeyAsync: (searchKey: string) => void
+
 }
 interface StateProps {
-  userPicture: string
-  weekendTours: [ITours]
-  discoverTours: [ITours]
+  weekendTours: any
+  discoverTours: any
   authSearchKey: string
   isLoading: boolean
-  nav: any
 }
 
 interface MyFormValues {
@@ -190,7 +191,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
       console.log(JSON.stringify(message));
     });
   }
-  
+
   showAlert(title, body) {
     Alert.alert(
       title, body,
@@ -200,7 +201,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
       { cancelable: false },
     );
   }
-  
+
   handleBackButtonClick = () => {
     if (this.props.navigation.isFocused()) {
       BackHandler.exitApp()
@@ -234,6 +235,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
     console.log('CAlleds', this.state.appState)
     if (this.state.appState.match(/background/)) {
       this.getFeeds()
+
     }
     
     this.setState({ appState: nextAppState })
@@ -245,16 +247,15 @@ class Home extends React.Component<NavigationScreenProps & Props> {
       ? this.props.searchAmountToursAsync(value.searchKey)
       : this.props.searchTextToursAsync(value.searchKey)
   }
-  
+
   public render(): React.ReactNode {
     const {
-      navigation, userPicture, weekendTours, discoverTours, authSearchKey, isLoading
+      navigation, weekendTours, discoverTours, authSearchKey, isLoading, setSearchKeyAsync
     } = this.props
     const {
       keyboardUp
     } = this.state
-    
-    // console.tron.log(userPicture === '')
+
     return (
       <KeyboardAvoidingView
         enabled={true}
@@ -272,6 +273,12 @@ class Home extends React.Component<NavigationScreenProps & Props> {
           
           <ScrollView
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={() => this.getFeeds()}
+              />
+            }
             
             style={{
               marginBottom: Platform.OS === "ios" ? 0 : Layout.window.height / 15
@@ -370,7 +377,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             </Formik>
             
             {
-              weekendTours[0].id !== null && (
+              Object.keys(weekendTours).length > 0 && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -397,7 +404,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }
   
             {
-              weekendTours[0].id !== null && (
+              Object.keys(weekendTours).length > 0 && (
                 <WeekendScreen
                   navigation={navigation}
                   weekendTours={weekendTours}
@@ -408,7 +415,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }
   
             {
-              discoverTours[0].id !== null && (
+              Object.keys(discoverTours).length > 0 && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -435,7 +442,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }
   
             {
-              discoverTours[0].id !== null && (
+              Object.keys(discoverTours).length > 0 && (
                 <Text
     
                   style={discoverMoreTextStyle}
@@ -446,7 +453,7 @@ class Home extends React.Component<NavigationScreenProps & Props> {
             }
   
             {
-              discoverTours[0].id !== null && (
+              Object.keys(discoverTours).length > 0 && (
                 <DiscoverScreen
                   discoverTours={discoverTours}
                   viewTours={() => navigation.navigate('viewTour')}
@@ -454,6 +461,8 @@ class Home extends React.Component<NavigationScreenProps & Props> {
                 />
               )
             }
+
+          <NavigationEvents onDidFocus={() => setSearchKeyAsync('')} />      
             
           </ScrollView>
         </View>
@@ -468,6 +477,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   setSelectedTours: (tour: ITours) => dispatch(setSelectedTours(tour)),
   searchTextToursAsync: (searchKey: string) => dispatch(searchTextToursAsync(searchKey)),
   searchAmountToursAsync: (amount: number) => dispatch(searchAmountToursAsync(amount)),
+  setSearchKeyAsync: (searchKey: string) => dispatch(setSearchKeyAsync(searchKey)),
 })
 
 let mapStateToProps: (state: ApplicationState) => StateProps;
@@ -476,7 +486,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   weekendTours: state.tour.weekendTours,
   discoverTours: state.tour.discoverTours,
   isLoading: state.tour.loading,
-  nav: state.nav,
+  authSearchKey: state.tour.searchKey,
 }) as StateProps;
 
 export const HomeScreen = connect<StateProps>(

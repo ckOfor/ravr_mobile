@@ -89,11 +89,11 @@ type clearTours = {
 }
 
 export type TourState = {
-  weekendTours: [ITours],
-  discoverTours: [ITours],
+  weekendTours: [],
+  discoverTours: [],
   selectedTour: ITours,
   loading: boolean,
-  searchedTours: [ITours],
+  searchedTours: [],
   searchKey: string,
 }
 

@@ -73,8 +73,11 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
+    enableHermes: false,  // clean and rebuild if changing
     entryFile: "index.js",
-    enableHermes: false
+    bundleAssetName: "index.android.bundle",
+    bundleInDebug: true,
+    bundleInRelease: true
 ]
 
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
@@ -103,13 +106,13 @@ android {
         applicationId "com.ravrapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "2.1"
+        versionCode 11
+        versionName "9"
 //        signingConfig signingConfigs.release
     }
     signingConfigs {
         release {
-            storeFile file('/Users/oforchinedu/Desktop/ravr/android/releaseKeystore.jks')
+            storeFile file('/Users/chineduofor/Documents/ravr/mobile/ravr_mobile/android/release.jks')
             storePassword 'ravrapp'
             keyAlias = 'ravrapp'
             keyPassword 'ravrapp'

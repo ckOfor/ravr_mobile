@@ -80,7 +80,7 @@ const APP_LOGO: ImageStyle = {
   marginLeft: 20,
   height: 30,
   width: 30,
-}
+};
 
 const signInTextStyle: TextStyle = {
   fontSize: 25,

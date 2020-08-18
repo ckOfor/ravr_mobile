@@ -30,6 +30,7 @@ import { Button } from "../../components/button";
 import { TextField } from "../../components/text-field";
 import {formatSLots} from "../../utils/formatters";
 import {IUser} from "../../redux/user";
+import { auth } from "react-native-firebase";
 
 interface DispatchProps {
 
@@ -39,6 +40,7 @@ interface StateProps {
   isLoading: boolean
   selectedTour: ITours
   User: IUser
+  isLoggedIn: boolean
 }
 
 
@@ -243,7 +245,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, selectedTour, isLoading, User
+      navigation, selectedTour, isLoading, User, isLoggedIn
     } = this.props
     
     const { initialPage, activeTab } = this.state
@@ -402,7 +404,7 @@ class ViewTour extends React.Component<NavigationScreenProps & Props> {
                       style={Tourists[0] !== undefined && Tourists[0].userCoins > coinsNeeded ? COINS_BUTTON : JOIN_BUTTON}
                       textStyle={JOIN_BUTTON_TEXT}
                       disabled={isLoading}
-                      onPress={() => navigation.navigate('payment')}
+                      onPress={() => isLoggedIn ? navigation.navigate('payment') : navigation.navigate('landing')}
                       tx={`viewTour.join`}
                     />
   
@@ -785,6 +787,7 @@ mapStateToProps = (state: ApplicationState, dispatch): StateProps => ({
   isLoading: state.tour.loading,
   selectedTour: state.tour.selectedTour,
   User: state.user.data,
+  isLoggedIn: state.user.data.id !== null,
 });
 
 export const ViewTourScreen = connect<StateProps>(

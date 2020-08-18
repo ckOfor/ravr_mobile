@@ -83,7 +83,4 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
   completionHandler();
 }
 
-
-
-
 @end

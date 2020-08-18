@@ -141,11 +141,6 @@ export function authReducer(
         loading: false
       }
       
-    case SOCIAL_AUTHENTICATION_SUCCESS:
-      return {
-        ...state,
-        loading: false
-      }
       
     case CLEAR_AUTH:
       return initialState

@@ -3,7 +3,7 @@ import React from "react"
 
 // react-native
 import {
-  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert
+  ImageBackground, ImageStyle, Image, TextStyle, ViewStyle, View, Text, ActivityIndicator, Alert, TouchableOpacity
 } from "react-native"
 
 // third-party libraries
@@ -36,7 +36,7 @@ import {
   openSettingsAsync, checkNotificationPermissionAsync, requestNotificationPermissionAsync, getFirebasetokenAsync,
 } from "../../redux/startup";
 import * as Permissions from "expo-permissions";
-import {fetchUserLocationAsync} from "../../redux/device";
+import { fetchUserLocationAsync } from "../../redux/device";
 import firebase from "react-native-firebase";
 
 interface DispatchProps {
@@ -373,12 +373,24 @@ class Landing extends React.Component<NavigationScreenProps & Props> {
           
         </View>
   
-        <Text
+        {/* <Text
           
           style={bottomTextStyle}
         >
           {translate("landingScreen.more")}
-        </Text>
+        </Text> */}
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Main')}
+        >
+          <Text
+    
+            style={termsAndConditions}
+          >
+            {translate(`signUp.goBack`)}
+  
+          </Text>
+        </TouchableOpacity>
   
   
         <Text

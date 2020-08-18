@@ -96,6 +96,8 @@ export const IUser = {
 
 const initialState: UserState = {
   data: IUser,
+  
+  
   loading: false,
   subject: '',
   message: '',

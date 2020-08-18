@@ -21,11 +21,11 @@ export function Text(props: TextProps) {
     style: styleOverride,
     txOptions,
     ...rest
-  } = props
+  } = props;
 
   // figure out which content to use
-  const i18nText = tx && translate(tx, txOptions)
-  const content = i18nText || text || children
+  const i18nText = tx && translate(tx, txOptions);
+  const content = i18nText || text || children;
 
   const style = mergeAll(
     flatten([presets[preset] || presets.default, styleOverride])

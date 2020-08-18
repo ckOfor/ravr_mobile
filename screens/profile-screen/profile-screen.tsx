@@ -68,6 +68,7 @@ interface StateProps {
   authRedeemKey: string
   isLoading: boolean
   isUploading: boolean
+  isLoggedIn: boolean
 }
 
 interface MyFormValues {
@@ -379,7 +380,7 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
   
   public render(): React.ReactNode {
     const {
-      navigation, User, authRedeemKey, isLoading, openSettings, isUploading
+      navigation, User, authRedeemKey, isLoading, openSettings, isUploading, isLoggedIn
     } = this.props
     const {
       fullName, Tourists, pictureURL, Transactions, email, Subscriptions, Savings
@@ -657,7 +658,8 @@ class Profile extends React.Component<NavigationScreenProps & Props> {
               }}
             >
               <TouchableOpacity
-                onPress={() => navigation.navigate('createPlan')}
+                // onPress={() => navigation.navigate('createPlan')}
+                onPress={() => isLoggedIn ? navigation.navigate('createPlan') : navigation.navigate('landing')}
                 style={{
                   borderColor: colors.purple,
                   borderWidth: 1,
@@ -1595,6 +1597,7 @@ mapStateToProps = (state: ApplicationState): StateProps => ({
   authRedeemKey: state.user.authRedeemKey,
   isLoading: state.user.loading,
   isUploading: state.user.uploading,
+  isLoggedIn: state.user.data.id !== null,
 });
 
 export const ProfileScreen = connect<StateProps>(

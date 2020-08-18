@@ -49,7 +49,6 @@ import {CLEAR_USER, setUserDetails, updateUserAsync} from "../user";
 
 export const setUser = (user: IUser) => ({ type: SET_USER, payload: user })
 
-
 export const facebookAuth = () => ({
   type: FACEBOOK_AUTH
 })

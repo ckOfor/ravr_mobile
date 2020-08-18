@@ -55,14 +55,12 @@ export const getWeekendToursAsync = (limit): ThunkAction<
   try {
     const result = await apiGetWeekendTours(limit)
     const { status, message, data } = result.data
-    console.tron.log(data)
   
     let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
-    console.tron.log(filteredTours, "apiGetWeekendTours")
   
     if (status) {
       dispatch(getWeekendToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setWeekendTours(filteredTours))
+      Object.keys(filteredTours).length > 0 && dispatch(setWeekendTours(filteredTours))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -103,15 +101,11 @@ export const getDiscoverToursAsync = (limit): ThunkAction<
   try {
     const result = await apiGetDiscoverTours(limit)
     const { status, message, data } = result.data
-    console.tron.log(data)
-  
     let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
-    console.tron.log(filteredTours, "filteredTours")
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setDiscoverTours(filteredTours))
-      
+      Object.keys(filteredTours).length > 0 && dispatch(setDiscoverTours(filteredTours))
     } else {
       dispatch(notify(`${message}`, 'danger'))
       dispatch(getDiscoverToursFailure())
@@ -124,7 +118,7 @@ export const getDiscoverToursAsync = (limit): ThunkAction<
 }
 
 
-export const getPopularToursAsync = (limit): ThunkAction<
+export const getPopularToursAsync = (limit: any): ThunkAction<
   void,
   ApplicationState,
   null,
@@ -143,7 +137,7 @@ export const getPopularToursAsync = (limit): ThunkAction<
     
     if (status) {
       dispatch(getDiscoverToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setDiscoverTours(filteredTours))
+      Object.keys(filteredTours).length > 0 && dispatch(setDiscoverTours(filteredTours))
       
     } else {
       dispatch(notify(`${message}`, 'danger'))
@@ -180,21 +174,22 @@ export const searchTextToursAsync = (searchKey: string, date?: string): ThunkAct
   null,
   Action<any>
   > => async (dispatch, getState) => {
-  
+
   dispatch(searchTours())
   dispatch(clearSearchTourAsync())
   dispatch(setSearchKeyAsync(searchKey))
-  
+
   try {
     const result = await apiSearchTextTours(searchKey, date)
     const { status, message, data } = result.data
     console.tron.log(data)
+
+    let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
     
     if (status) {
       dispatch(searchToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
+      Object.keys(filteredTours).length > 0 && dispatch(setSearchTours(filteredTours))
       dispatch(NavigationActions.navigate({ routeName: "search" }))
-      dispatch(notify(`${message}`, 'success'))
     } else {
       dispatch(notify(`${message}`, 'danger'))
       dispatch(searchToursFailure())
@@ -215,17 +210,17 @@ export const searchAmountToursAsync = (amount: number, date?: string): ThunkActi
   dispatch(searchTours())
   dispatch(clearSearchTourAsync())
   dispatch(setSearchKeyAsync(amount.toString()))
-  
+
   try {
     const result = await apiSearchAmountTours(amount, date)
     const { status, message, data } = result.data
     console.tron.log(data)
+    let filteredTours = _.filter(data, ({tripDate} : any) => moment().isBefore(moment(`${tripDate}`)))
     
     if (status) {
       dispatch(searchToursSuccess())
-      Object.keys(data).length > 0 && dispatch(setSearchTours(data))
-      dispatch(notify(`${message}`, 'success'))
-      if(Object.keys(data).length > 1) {
+      Object.keys(filteredTours).length > 0 && dispatch(setSearchTours(filteredTours))
+      if(Object.keys(filteredTours).length > 1) {
         dispatch(NavigationActions.navigate({ routeName: "search" }))
       }
     } else {
